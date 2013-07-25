@@ -33,7 +33,7 @@ from pprint import pprint
 
 
 
-dr = dialogs.DialogsReader('data/annotatedData_corrected.csv')
+dr = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/annotatedData_corrected.csv')
 
 id_column = 'iteration'
 dialog_rows = dr.getRows(id_column, '1')

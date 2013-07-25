@@ -58,4 +58,4 @@ def filterByFieldValue(l, field_name, field_value):
         if value == field_value:
             filtered_objects.append(obj)
             
-    return obj
+    return filtered_objects

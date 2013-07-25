@@ -1,2 +1,9 @@
 eclipse.preferences.version=1
+encoding//src/analyse/cross_validation.py=utf-8
 encoding//src/classifier.py=utf-8
+encoding//src/dialogs.py=utf-8
+encoding//src/measures.py=utf-8
+encoding//src/ngram.py=utf-8
+encoding//src/spielwiese.py=utf-8
+encoding//src/spielwiese_2.py=utf-8
+encoding//src/util/list.py=utf-8

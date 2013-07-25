@@ -33,8 +33,13 @@ class FoldValidator:
         for class_name in classes:
             class_documents = lu.filterByFieldValue(training_set, 'label', class_name)
             
-            # collect content of all documents (of the current class, and )            
-            n_grams = ngram.create_ngrams(class_documents, n)
+            # collect content of all documents (of the current class, and ...)
+            document_contents = []            
+            for document in class_documents:
+                document_contents.append(document.content)
+            
+            # ... create the n-grams for training
+            n_grams = ngram.create_ngrams(document_contents, n)
             self.classifier.addClass(class_name, n_grams)
             
     
@@ -45,7 +50,7 @@ class FoldValidator:
         Classify each document in test_set and returns the single results.
         """
         for document in self.test_set:
-            n_grams = ngram.create_ngrams(document.content, self.n)
+            n_grams = ngram.create_ngrams([document.content], self.n)
             
             classification_result = self.classifier.classify(n_grams)
             result = SingleTestResult(document, self.classifier.name, classification_result, self.n)
