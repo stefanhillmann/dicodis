@@ -8,7 +8,7 @@ Created on Fri Jun  7 11:13:50 2013
 """
 Collects unique items from a list.
 
-Example: If l = [1 1 2 3 3], then uniqueValues(l) retunrs [1 2 3].
+Example: If l = [1 1 2 3 3], then uniqueValues(l) returns [1 2 3].
 
 Parameter:
     l: list of items to searched for unique items.
@@ -22,7 +22,7 @@ def uniqueValues(l):
     return unique_values
     
 """
-Collects unique items from a list of items. The unique propertie of an item
+Collects unique items from a list of items. The unique property of an item
 is defined by a particular field of that item
 
 Parameter:
@@ -46,7 +46,7 @@ value in a particular field.
 
 Parameter:
     l: list of items
-    field_name: Name of field inside an item that will be used for the comparement.
+    field_name: Name of field inside an item that will be used for the compartment.
     fiel_value: Each item with value field_value in field field_name is added to
     the result list.
 """    

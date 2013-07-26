@@ -7,6 +7,7 @@ Created on Thu Jun  6 15:59:01 2013
 
 import csv
 import util.list as lu
+import logging
 
 
 def createDialogDocument(id_column, system_parameter, user_parameter, dialog, dialogLabel):
@@ -27,6 +28,19 @@ def createDialogDocument(id_column, system_parameter, user_parameter, dialog, di
     document = Document(dialogLabel, content, dialog_id)
     
     return document
+
+def createDialogsDocuments(dialog_reader, id_column_name, class_name):
+    iterations_ids = dialog_reader.getUniqueValues(id_column_name)
+    
+    dialogs_documents = []
+    for iteration_id in iterations_ids:
+        dialog_rows = dialog_reader.getRows(id_column_name, iteration_id) 
+        dialog_document = createDialogDocument(id_column_name,
+        ['sysSA', 'sysRep.field'], ['userSA', 'userFields'], dialog_rows, class_name)
+        
+        dialogs_documents.append(dialog_document)
+        
+    return dialogs_documents
 
 
 def createSubDocument(exchange, parameter):
@@ -54,6 +68,9 @@ class DialogsReader:
     Constructor method.
     """    
     def __init__(self, filename):
+        self.logger = logging.getLogger('dialogs.DialogsReader')
+        self.logger.info("Start reading file: %s", filename)
+        
         dataFile = open(filename, 'r')
         dataReader = csv.DictReader(dataFile, delimiter=';')
         

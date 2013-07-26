@@ -8,15 +8,21 @@ Created on Fri Jun  7 15:05:29 2013
 import measures
 import util.list as lu
 import ngram
+import logging
 
 class Classifier:
     
     def __init__(self, measure, classifier_name):
+        self.logger = logging.getLogger('classifier.Classifier')
+        self.logger.debug('Create new Classifier (%s) for with measure: %s', classifier_name, measure.__class__.__name__)
+        
         self.classes = {}
         self.measure = measure
         self.name = classifier_name
     
     def addClass(self, class_name, n_grams):
+        self.logger.debug('Add %s n-grams for class %s.', len(n_grams), class_name)
+        
         self.classes[class_name] = n_grams
         
     def classify(self, document_n_grams):
@@ -129,4 +135,34 @@ def getSymmetricKullbackLeiblerClassifier():
     
 def getJensenClassifier():
     return Classifier(JensenMeasure(), "jensen")
+
+def getClassifier(classifier_name):
+    created_classifier = "";
+    
+    if classifier_name == ClassifierName.COSINE:
+        created_classifier = getCosineClassifier()
+    elif classifier_name == ClassifierName.KULLBACK_LEIBLER:
+        created_classifier = getKullbackLeiblerClassifier()
+    elif classifier_name == ClassifierName.MEAN_KULLBACK_LEIBLER:
+        created_classifier = getMeanKullbackLeiblerClassifier()
+    elif classifier_name == ClassifierName.SYMMETRIC_KULLBACK_LEIBLER:
+        created_classifier = getSymmetricKullbackLeiblerClassifier()
+    elif classifier_name == ClassifierName.JENSEN:
+        created_classifier = getJensenClassifier()
+    else:
+        """
+        We return nothing, and the following code will crash, when trying to to do something
+        with a not existing classifier 
+        """
+        print 'Unknown classifier was requested. Empty string will be returned'
+        
+    return created_classifier
+     
+
+class ClassifierName:
+    COSINE                      = 1
+    KULLBACK_LEIBLER            = 2
+    MEAN_KULLBACK_LEIBLER       = 3
+    SYMMETRIC_KULLBACK_LEIBLER  = 4
+    JENSEN                      = 5
 

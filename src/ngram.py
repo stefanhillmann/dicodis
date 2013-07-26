@@ -4,6 +4,9 @@ Created on Fri Jun  7 11:56:52 2013
 
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
+import logging
+
+module_logger = logging.getLogger('ngram')
 
 def create_ngrams(documents, n):
     ngrams = []    
@@ -23,7 +26,9 @@ def create_ngrams(documents, n):
                 
             ngram = '#'.join(ngram_parts)
             ngrams.append(ngram)
+            
     
+    module_logger.debug('Calculated %s %s-grams from %s documents.', len(ngrams), n, len(documents))
     return ngrams
     
 def createPads(n):
@@ -57,3 +62,13 @@ def computeProbabilities(model):
     sum_of_frequencies = sum(model.values())
     for key in model:
         model[key] = model[key] / sum_of_frequencies
+        
+class NGramSize:
+    ONE     = 1
+    TWO     = 2
+    THREE   = 3
+    FOUR    = 4
+    FIVE    = 5
+    SIX     = 6
+    SEVEN   = 7
+    EIGHT   = 8

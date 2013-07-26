@@ -11,6 +11,9 @@ import classifier
 import dialogs
 import analyse.cross_validation as cv
 from pprint import pprint
+from classifier import ClassifierName
+from ngram import NGramSize
+import logging
 
 #example_ngrams = ['_#_#a', '_#a#b', 'a#b#c', 'b#c#d', 'c#d#_', 'd#_#_', '_#_#a', '_#a#b', 'a#b#x', 'b#x#y', 'x#y#z', 'y#z#_', 'z#_#_']
 
@@ -30,25 +33,22 @@ from pprint import pprint
 
 #distancies = cosineClassifier.computeDistancies(n_grams_3)
 
+logging.basicConfig(level=logging.DEBUG)
 
+id_column_name = 'iteration'
 
+failed_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsFailed.csv')
+failed_dialogs = dialogs.createDialogsDocuments(failed_reader, id_column_name, 'failed')
 
-dr = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/annotatedData_corrected.csv')
+succeeded_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv')
+succeeded_dialogs = dialogs.createDialogsDocuments(succeeded_reader, id_column_name, 'succeeded')
 
-id_column = 'iteration'
-dialog_rows = dr.getRows(id_column, '1')
-dialog_document = dialogs.createDialogDocument(id_column,
-    ['sysSA', 'sysRep.field'], ['userSA', 'userFields'], dialog_rows, 'testClass')
+cross_validator = cv.CrossValidator(ClassifierName.COSINE, NGramSize.THREE)
+cross_validator.addDocuments(failed_dialogs)
+cross_validator.addDocuments(succeeded_dialogs)
 
+cross_validator.runCrossValidation()
 
+# for validation_results in cross_validator.runCrossValidation():
+#    print validation_results[0]
 
-n = 3
-classifier = classifier.getCosineClassifier();
-validator = cv.FoldValidator([dialog_document], [dialog_document], classifier, n)
-test_results = validator.testClassifier()
-
-pprint(test_results[0])
-
-
-
-#print dialog_document

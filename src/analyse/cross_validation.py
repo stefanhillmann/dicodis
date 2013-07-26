@@ -7,10 +7,65 @@ Created on Tue Jun 18 14:34:56 2013
 
 import util.list as lu
 import ngram
+import classifier
+import logging
 
+class CrossValidator:
+    """Constructs a new CrossValidator.
+    
+    Keyword arguments:
+    classifier_name -- Name of the classifier to be used. The related classifier is the one that will be tested.
+    Please see and use classifier.ClassifierNames for valid names.
+    n_gram_size -- Size of the n-grams to be used by the classifier. See and use ngram.NGramSize for valid values. 
+        
+    """
+    def __init__(self, classifier_name, n_gram_size):
+        self.logger = logging.getLogger('cross_validation.CrossValidator')
+        
+        self.classifier_name = classifier_name
+        self.n_gram_size = n_gram_size
+        
+        """
+        Dictionary which holds for each class (by class name) a list of related documents.
+        """
+        self.documents = []
+        
+    def addDocuments(self, documents):
+        self.documents.extend(documents)
+        
+    def runCrossValidation(self):
+        self.logger.info('Run cross validation for classifier %s', self.classifier_name)
+        """
+        Iterate over the documents and select the i-th one for classifying.
+        The remaining are used for training. 
+        """
+        test_results = []
+        for i in range( len(self.documents) ):
+            """
+            Select documents for training and the document for testing the classifier_name
+            """
+            documents_before_i = self.documents[:i] # all documents before that one on position i
+            documents_behind_i = self.documents[i+1:] # all documents behind that one on position i
+            training_documents = []
+            training_documents.extend(documents_before_i)
+            training_documents.extend(documents_behind_i)
+            test_document = self.documents[i]
+            
+            """
+            Create (train) the classifier_name and test it with the document
+            """
+            test_classifier = classifier.getClassifier(self.classifier_name)
+            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size)
+            test_results.append(fold_validator.testClassifier())
+            
+        return test_results
+            
+             
 class FoldValidator:
     
     def __init__(self, training_set, test_set, classifier, n):
+        self.logger = logging.getLogger('cross_validation.FoldValidator')
+        
         self.classifier = classifier
         self.test_set = test_set
         self.n = n
@@ -33,6 +88,8 @@ class FoldValidator:
         for class_name in classes:
             class_documents = lu.filterByFieldValue(training_set, 'label', class_name)
             
+            self.logger.debug('Train class %s in classifier %s with %s documents', class_name, self.classifier.name, len(class_documents))
+            
             # collect content of all documents (of the current class, and ...)
             document_contents = []            
             for document in class_documents:
@@ -49,6 +106,7 @@ class FoldValidator:
         """
         Classify each document in test_set and returns the single results.
         """
+        self.logger.debug('Test classifier %s by classifying %s dialogs.', self.classifier.name, len(self.test_set))
         for document in self.test_set:
             n_grams = ngram.create_ngrams([document.content], self.n)
             
@@ -59,7 +117,7 @@ class FoldValidator:
         return self.test_results
 
 """
-Data transfer object for a single trial when testing a classifier in frame of
+Data transfer object for a single trial when testing a classifier_name in frame of
 a fold based cross validation.
 """        
 class SingleTestResult:
@@ -70,4 +128,8 @@ class SingleTestResult:
         self.calculated_class       = document.label
         self.calculated_distance    = classification_result.distance
         self.n_gram_size            = n_gram_size
+        
+    def __repr__(self):
+        return 'Classifier: {}, Calculated class: {}, Actual class: {}, Distance: {}, n-Gram size: {}'.format(self.classifier_name, 
+                  self.calculated_class, self.actual_class, self.calculated_distance, self.n_gram_size)
         
