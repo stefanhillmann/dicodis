@@ -5,50 +5,56 @@ Created on Fri Jun  7 13:41:29 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-import ngram
-import util.list as lu
-import classifier
-import dialogs
-import analyse.cross_validation as cv
-from pprint import pprint
-from classifier import ClassifierName
-from ngram import NGramSize
 import logging
+from run_cross_validation import validate
+import analyse.cross_validation as cv
+from multiprocessing import Manager
 
-#example_ngrams = ['_#_#a', '_#a#b', 'a#b#c', 'b#c#d', 'c#d#_', 'd#_#_', '_#_#a', '_#a#b', 'a#b#x', 'b#x#y', 'x#y#z', 'y#z#_', 'z#_#_']
 
-#n = 1
-#doc_1 = ['a' 'a']
-#n_grams_1 = ngram.create_ngrams(doc_1, n)
-
-#doc_2 = ['b' 'b']
-#n_grams_2 = ngram.create_ngrams(doc_2, n)
-
-#cosineClassifier = classifier.getCosineClassifier()
-#cosineClassifier.addClass('a_class', n_grams_1)
-#cosineClassifier.addClass('b_class', n_grams_2)
-
-#doc_3 = {'a'}
-#n_grams_3 = ngram.create_ngrams(doc_3, n)
-
-#distancies = cosineClassifier.computeDistancies(n_grams_3)
-
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 id_column_name = 'iteration'
+positive_class = 'succeeded'
+negative_class = 'failed'
 
-failed_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsFailed.csv')
-failed_dialogs = dialogs.createDialogsDocuments(failed_reader, id_column_name, 'failed')
+file_turns_succeeded        = '/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv'
+file_turns_failed           = '/home/stefan/workspace/DialogueClassifying/data/turnsFailed.csv'
 
-succeeded_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv')
-succeeded_dialogs = dialogs.createDialogsDocuments(succeeded_reader, id_column_name, 'succeeded')
+file_best_simulation        = '/home/stefan/workspace/DialogueClassifying/data/bestSimulation.csv'
+file_worst_simulation       = '/home/stefan/workspace/DialogueClassifying/data/worstSimulation.csv'
 
-cross_validator = cv.CrossValidator(ClassifierName.COSINE, NGramSize.THREE)
-cross_validator.addDocuments(failed_dialogs)
-cross_validator.addDocuments(succeeded_dialogs)
+file_shortest_interaction   = '/home/stefan/workspace/DialogueClassifying/data/shortest49Interactions.csv'
+file_longest_interaction    = '/home/stefan/workspace/DialogueClassifying/data/longest49Interactions.csv'
 
-cross_validator.runCrossValidation()
+file_wa_100                 = '/home/stefan/workspace/DialogueClassifying/data/WA_60.csv'
+file_wa_60                  = '/home/stefan/workspace/DialogueClassifying/data/WA_100.csv'
 
-# for validation_results in cross_validator.runCrossValidation():
-#    print validation_results[0]
+#succees_result      = []
+#length_result       = []
+#simulation_result   = []
+#wa_result           = []
 
+if __name__ == '__main__':
+
+    manager = Manager()
+    results = manager.list()
+    
+    print 'Criteria: Turn Success'
+    succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, results)
+    
+    #print 'Criteria: Quality of Simulation'
+    #validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name)
+    
+    #print 'Criteria: Length of Interaction'
+    #length_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name)
+    
+    #print 'Criteria: Word Accuracy'
+    #wa_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name)
+    
+    #results = []
+    #results.extend(succees_result)
+    #results.extend(length_result)
+    #results.extend(simulation_result)
+    #results.extend(wa_result)
+    
+    cv.writeResultTableToFile(results, ',', '/home/stefan/test_output_2.csv')

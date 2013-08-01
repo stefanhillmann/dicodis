@@ -50,9 +50,23 @@ def addPads(document, pads):
 def createNgramModel(unique_n_grams, n_grams):
     n_gram_model = {}    
     for n_gram in unique_n_grams:
-        n_gram_model[n_gram] = n_grams.count(n_gram)
+        n_gram_model[n_gram] = float( n_grams.count(n_gram) )
         
     return n_gram_model
+
+def remove_rare_n_grams(model, n_grams, treshold):
+    new_model = {}
+    new_n_grams = []
+    
+    for key in model.keys():
+        if model[key] >= treshold:
+            new_model[key] = model[key]
+    
+    for key in new_model.keys():
+        if key in n_grams:
+            new_n_grams.append(key)
+    
+    return new_model, new_n_grams
     
 def smoothModel(model):
     for key in model:

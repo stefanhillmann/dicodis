@@ -17,13 +17,24 @@ class Classifier:
         self.logger.debug('Create new Classifier (%s) for with measure: %s', classifier_name, measure.__class__.__name__)
         
         self.classes = {}
+        self.class_models = {}
         self.measure = measure
         self.name = classifier_name
     
-    def addClass(self, class_name, n_grams):
+    def addClass(self, class_name, n_grams, frequency_treshold):
         self.logger.debug('Add %s n-grams for class %s.', len(n_grams), class_name)
         
         self.classes[class_name] = n_grams
+        
+        # create class_model
+        class_model = ngram.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+        class_model, _n_grams = ngram.remove_rare_n_grams(class_model, n_grams, frequency_treshold)
+        
+        # compute probabilities and do NOT smooth the model
+        self.prepareModel(class_model, False)
+        
+        self.class_models[class_name] = class_model
+        
         
     def classify(self, document_n_grams):
         # compute distances for all classes in classifier
@@ -43,31 +54,27 @@ class Classifier:
             
             
     
-    def computeDistancies(self, n_grams):
+    def computeDistancies(self, doc_n_grams):
         class_distances = {}
         
         for key in self.classes:
-            class_n_grams = self.classes[key]
-            all_n_grams = []
-            all_n_grams.extend(n_grams)
-            all_n_grams.extend(class_n_grams)
-            all_unique = lu.uniqueValues(all_n_grams)
-            
-            n_grams_model = ngram.createNgramModel(all_unique, n_grams)
-            self.prepareModel(n_grams_model)
-            
-            class_model = ngram.createNgramModel(all_unique, class_n_grams)
-            self.prepareModel(class_model)
+            class_model = self.class_models[key]
+            unique_class_n_grams = class_model.keys()
+                       
+            doc_model = ngram.createNgramModel(unique_class_n_grams, doc_n_grams)
+            self.prepareModel(doc_model, True)
                         
-            distance = self.measure.distance(
-            class_model.values(), n_grams_model.values())
+            distance = self.measure.distance( class_model.values(), doc_model.values() )
+            self.logger.debug("computeDistancies(): Class = %s \t\t Distance: %s.", key, distance)
             
             class_distances[key] = distance
         # end for key
         return class_distances
         
-    def prepareModel(self, model):
-        ngram.smoothModel(model)
+    def prepareModel(self, model, smooth_model):
+        if smooth_model:
+            ngram.smoothModel(model)
+        
         ngram.computeProbabilities(model)
 
 """
@@ -160,9 +167,9 @@ def getClassifier(classifier_name):
      
 
 class ClassifierName:
-    COSINE                      = 1
-    KULLBACK_LEIBLER            = 2
-    MEAN_KULLBACK_LEIBLER       = 3
-    SYMMETRIC_KULLBACK_LEIBLER  = 4
-    JENSEN                      = 5
+    COSINE                      = 'cosine'
+    KULLBACK_LEIBLER            = 'kullback leibler'
+    MEAN_KULLBACK_LEIBLER       = 'mean kullback leibler'
+    SYMMETRIC_KULLBACK_LEIBLER  = 'symmetric kullback leibler'
+    JENSEN                      = 'jensen'
 

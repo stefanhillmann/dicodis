@@ -4,6 +4,7 @@ encoding//src/classifier.py=utf-8
 encoding//src/dialogs.py=utf-8
 encoding//src/measures.py=utf-8
 encoding//src/ngram.py=utf-8
+encoding//src/ngram_utils.py=utf-8
 encoding//src/spielwiese.py=utf-8
 encoding//src/spielwiese_2.py=utf-8
 encoding//src/test.py=utf-8

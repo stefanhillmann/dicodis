@@ -19,11 +19,12 @@ class CrossValidator:
     n_gram_size -- Size of the n-grams to be used by the classifier. See and use ngram.NGramSize for valid values. 
         
     """
-    def __init__(self, classifier_name, n_gram_size):
+    def __init__(self, classifier_name, n_gram_size, frequency_treshold):
         self.logger = logging.getLogger('cross_validation.CrossValidator')
         
-        self.classifier_name = classifier_name
-        self.n_gram_size = n_gram_size
+        self.classifier_name    = classifier_name
+        self.n_gram_size        = n_gram_size
+        self.frequency_treshold = frequency_treshold
         
         """
         Dictionary which holds for each class (by class name) a list of related documents.
@@ -34,7 +35,7 @@ class CrossValidator:
         self.documents.extend(documents)
         
     def runCrossValidation(self):
-        self.logger.info('Run cross validation for classifier %s', self.classifier_name)
+        self.logger.info('Run cross validation for classifier = %s and n = %s.', self.classifier_name, self.n_gram_size)
         """
         Iterate over the documents and select the i-th one for classifying.
         The remaining are used for training. 
@@ -55,15 +56,15 @@ class CrossValidator:
             Create (train) the classifier_name and test it with the document
             """
             test_classifier = classifier.getClassifier(self.classifier_name)
-            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size)
-            test_results.append(fold_validator.testClassifier())
+            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size, self.frequency_treshold)
+            test_results.extend(fold_validator.testClassifier())
             
         return test_results
             
              
 class FoldValidator:
     
-    def __init__(self, training_set, test_set, classifier, n):
+    def __init__(self, training_set, test_set, classifier, n, frequency_treshold):
         self.logger = logging.getLogger('cross_validation.FoldValidator')
         
         self.classifier = classifier
@@ -71,16 +72,16 @@ class FoldValidator:
         self.n = n
         self.test_results = []
         
-        self.trainClassifier(training_set, n)
+        self.trainClassifier(training_set, n, frequency_treshold)
         
     
     """
-    Trains the classivier with the training_set
+    Trains the classifier with the training_set
     
     Parameters:
     training_set: List of dialogs.Document    
     """    
-    def trainClassifier(self, training_set, n):
+    def trainClassifier(self, training_set, n, frequency_treshold):
         # get the unique class identifiers
         classes = lu.uniqueObjectValues(training_set, 'label')
 
@@ -96,8 +97,8 @@ class FoldValidator:
                 document_contents.append(document.content)
             
             # ... create the n-grams for training
-            n_grams = ngram.create_ngrams(document_contents, n)
-            self.classifier.addClass(class_name, n_grams)
+            class_n_grams = ngram.create_ngrams(document_contents, n)
+            self.classifier.addClass(class_name, class_n_grams, frequency_treshold)
             
     
     
@@ -108,9 +109,11 @@ class FoldValidator:
         """
         self.logger.debug('Test classifier %s by classifying %s dialogs.', self.classifier.name, len(self.test_set))
         for document in self.test_set:
-            n_grams = ngram.create_ngrams([document.content], self.n)
+            class_n_grams = ngram.create_ngrams([document.content], self.n)
             
-            classification_result = self.classifier.classify(n_grams)
+            classification_result = self.classifier.classify(class_n_grams)
+            self.logger.debug("testClassifier(): Calculated class = %s - Actual class: %s.", classification_result.class_name, document.label)
+            
             result = SingleTestResult(document, self.classifier.name, classification_result, self.n)
             self.test_results.append(result)
         
@@ -124,12 +127,114 @@ class SingleTestResult:
     def __init__(self, document, classifier_name, classification_result, n_gram_size):
         self.document               = document
         self.classifier_name        = classifier_name
-        self.actual_class           = classification_result.class_name
-        self.calculated_class       = document.label
+        self.actual_class           = document.label
+        self.calculated_class       = classification_result.class_name
         self.calculated_distance    = classification_result.distance
         self.n_gram_size            = n_gram_size
         
     def __repr__(self):
         return 'Classifier: {}, Calculated class: {}, Actual class: {}, Distance: {}, n-Gram size: {}'.format(self.classifier_name, 
                   self.calculated_class, self.actual_class, self.calculated_distance, self.n_gram_size)
+
+class SummarizedTestResults:
+    def __init__(self, true_positive, false_positive, true_negative, false_negative, classifier_name, n_gram_size):
+        self.true_positive = true_positive
+        self.false_positive = false_positive
+        self.true_negative = true_negative
+        self.false_negative = false_negative
+        self.classifier_name = classifier_name
+        self.n_gram_size = n_gram_size
         
+    def __repr__(self):
+        return 'Classifier = {}    n = {}\nTP = {}  FP = {}    TN = {}  FN = {}'\
+            .format(self.classifier_name, self.n_gram_size,
+                    self.true_positive, self.false_positive, self.true_negative, self.false_negative)
+"""
+TODO
+"""
+class ResultAssessor:
+    def __init__(self, cross_validation_results, positive_class, negative_class, classifier_name, n_gram_size):
+        self.logger = logging.getLogger("analyse.cross_validation.ResultAssessor")
+        self.logger.debug( ("Initialize ResultAssor with %s single results.", len(cross_validation_results)) )
+        
+        self.data = cross_validation_results
+        self.positive_class = positive_class
+        self.negative_class = negative_class
+        
+        self.classifier_name = classifier_name
+        self.n_gram_size = n_gram_size
+        
+        self.resetCounter()
+
+    def resetCounter(self):
+        self.counter_true_positive  = 0
+        self.counter_false_positive = 0
+        self.counter_true_negative  = 0
+        self.counter_false_negative = 0
+    
+    
+    def countResults(self):
+        """ reset the true/false positive/negative counter to zero """
+        for result in self.data:
+            
+            """
+            If actual class and calculated class are equal, it is a TRUE
+            result. We have just to decide if TRUE POSITVIE or TRUE NEGATIVE 
+            """
+            if result.calculated_class == result.actual_class:
+                if result.actual_class == self.positive_class:
+                    # TRUE POSITIVE 
+                    self.counter_true_positive += 1
+                else:
+                    # TRUE negative
+                    self.counter_true_negative += 1
+                    
+            """
+            If actual class and calculated class are NOT equal, it is a FALSE
+            result. We have just to decide if FALSE POSITVIE or FALSE NEGATIVE 
+            """
+            if result.calculated_class != result.actual_class:
+                if result.calculated_class == self.positive_class:
+                    # FALSE POSITIVE
+                    self.counter_false_positive += 1
+                else:
+                    # FALSE NEGATIVE
+                    self.counter_false_negative += 1
+
+    def getResultAnalysis(self):
+        self.countResults()
+        
+        return SummarizedTestResults(self.counter_true_positive, self.counter_false_positive, 
+                                     self.counter_true_negative, self.counter_false_negative,
+                                     self.classifier_name, self.n_gram_size)
+"""
+Creates from a list of assessor results (results of different classifier) a table like structure
+for further processing (e.g. plotting).
+
+Classifier n TP FP TN FN
+"""        
+def createResultTable(assessor_results, separator):
+    rows = []
+    # create header
+    header = separator.join( ['Classifier', 'n', 'TP', 'FP', 'TN', 'FN'] )
+    rows.append(header)
+    
+    # create one row per assessor result
+    for values in assessor_results:
+        row = separator.join( str(value) for value in [values.classifier_name, values.n_gram_size, values.true_positive,
+                               values.false_positive, values.true_negative, values.false_negative] )
+        rows.append(row)
+        
+    return rows
+        
+def writeResultTableToFile(assessor_results, separator, file_path):
+    data = createResultTable(assessor_results, separator)
+    
+    f = open(file_path, 'w')
+    for line in data:
+        f.write("".join( [line, "\n"] ))
+        
+    f.close()
+     
+    
+    

@@ -7,12 +7,17 @@ Created on Wed Jun  5 17:19:42 2013
 import numpy as np
 from math import log
 from math import sqrt
+import logging
+
+module_logger = logging.getLogger('measures')
 
 def cosineSimilarity(p, q):
     """
     Computes the cosine similarity between the vectors p and q
     p and q can contain either frequencies or relative probabilities.
     """
+    module_logger.debug('Computing cosine similarity for p = %s and q = %s', p, q)
+    
     cs = np.dot(p, q) / ( sqrt( np.dot(p, p) * np.dot(q, q) ) )
     return cs
 
@@ -58,14 +63,19 @@ def symmetricKullbackLeiblerDistance(p, q):
 
 def jensenDistance(p, q):
     """
-    Comuptes the Jensen Distance between vectors p and q.
+    Computes the Jensen Distance between vectors p and q.
     p and q must contain probabilities.
     """
-    s = p * log(p)
-    t = q + log(q)
-    u = (p + q) / 2
+    module_logger.debug('Computing jensen for p = %s and q = %s', p, q)
     
-    v = ((s + t) / 2) - (u * log(u))
+    _p = np.array(p)
+    _q = np.array(q)
+        
+    s = _p * np.log(_p)
+    t = _q * np.log(_q)
+    u = (_p + _q) / 2
+    
+    v = ((s + t) / 2) - (u * np.log(u))
     
     return sum(v)
     

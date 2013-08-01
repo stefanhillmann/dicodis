@@ -1,18 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jun 18 15:15:47 2013
+import ngram
+import util.list as lu
 
-@author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
-"""
+docs = [['a', 'a' , 'a', 'b']]
 
-class Foo:
-    
-    def __init__(self, name):
-        self.name = name
-        
-        
-foo = Foo('name_foo')
-bar = Foo('name_bar')
 
-val = getattr(foo, 'name')
-print val
+class_n_grams = ngram.create_ngrams(docs, 1)
+print class_n_grams
+
+
+class_model = ngram.createNgramModel( lu.uniqueValues(class_n_grams), class_n_grams )
+class_model, class_n_grams = ngram.remove_rare_n_grams(class_model, class_n_grams, 2)
+
+print class_model
+print class_n_grams
+
