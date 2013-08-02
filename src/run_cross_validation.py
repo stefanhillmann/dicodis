@@ -4,6 +4,7 @@ from analyse.cross_validation import ResultAssessor
 import cross_validation_configuration
 import logging
 from multiprocessing.pool import Pool
+from util import time_util
 
 logging.basicConfig(level=logging.INFO)
 
@@ -11,17 +12,17 @@ id_column_name = 'iteration'
 positive_class = 'succeeded'
 negative_class = 'failed'
 
-file_turns_succeeded        = '/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv'
-file_turns_failed           = '/home/stefan/workspace/DialogueClassifying/data/turnsFailed.csv'
+file_turns_succeeded        = '../data/turnsSucceeded.csv'
+file_turns_failed           = '../data/turnsFailed.csv'
 
-file_best_simulation        = '/home/stefan/workspace/DialogueClassifying/data/bestSimulation.csv'
-file_worst_simulation       = '/home/stefan/workspace/DialogueClassifying/data/worstSimulation.csv'
+file_best_simulation        = '../data/bestSimulation.csv'
+file_worst_simulation       = '../data/worstSimulation.csv'
 
-file_shortest_interaction   = '/home/stefan/workspace/DialogueClassifying/data/shortest49Interactions.csv'
-file_longest_interaction    = '/home/stefan/workspace/DialogueClassifying/data/longest49Interactions.csv'
+file_shortest_interaction   = '../data/shortest49Interactions.csv'
+file_longest_interaction    = '../data/longest49Interactions.csv'
 
-file_wa_100                 = '/home/stefan/workspace/DialogueClassifying/data/WA_60.csv'
-file_wa_60                  = '/home/stefan/workspace/DialogueClassifying/data/WA_100.csv'
+file_wa_100                 = '../data/WA_60.csv'
+file_wa_60                  = '../data/WA_100.csv'
 
 
 class Job:
@@ -79,6 +80,8 @@ def run_validation(job):
     
 if __name__ == '__main__':
 
+    print time_util.humanReadableTimestamp()
+
     print 'Criteria: Turn Success'
     succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name)
     
@@ -98,5 +101,6 @@ if __name__ == '__main__':
     #results.extend(simulation_result)
     #results.extend(wa_result)
     
-    cv.writeResultTableToFile(results, ',', '/home/stefan/test_output_2.csv')
+    result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
+    cv.writeResultTableToFile(results, ',', '../results/' + result_file_name)
     

@@ -3,8 +3,8 @@ from classifier import ClassifierName
 
 sizes = [
               NGramSize.ONE,
-              NGramSize.TWO,
-              NGramSize.THREE,
+              #NGramSize.TWO,
+              #NGramSize.THREE,
               #NGramSize.FOUR,
               #NGramSize.FIVE,
               #NGramSize.SIX,
@@ -14,7 +14,7 @@ sizes = [
 
 classifier_names = [
                     ClassifierName.COSINE,
-                    ClassifierName.JENSEN
+                    #ClassifierName.JENSEN
                     ]
 
 frequency_thresholds = [
