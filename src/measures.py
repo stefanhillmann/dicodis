@@ -27,8 +27,12 @@ def kullbackLeiblerDivergence(p, q):
     Computes the Kullback-Leibler divergence between vectors p and q.
     p and q must contain probabilities.
     """
-    t = -q * log(p)
-    s = -q * log(q)
+    
+    _p = np.array(p)
+    _q = np.array(q)
+    
+    t = -_q * np.log(_p)
+    s = -_q * np.log(_q)
     
     return np.sum(t - s)
 
@@ -56,7 +60,10 @@ def symmetricKullbackLeiblerDistance(p, q):
     as the Mean Kullback-Leibler Divergence.
     p and q must contain probabilities.
     """
-    v = (p - q) * log(p / q)
+    _p = np.array(p)
+    _q = np.array(q)
+    
+    v = (_p - _q) * np.log(_p / _q)
     
     return sum(v)
 
