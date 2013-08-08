@@ -1,30 +1,35 @@
 from ngram import NGramSize
 from classifier import ClassifierName
 
+validation_processes = 4
+
 sizes = [
               NGramSize.ONE,
-              #NGramSize.TWO,
-              #NGramSize.THREE,
-              #NGramSize.FOUR,
-              #NGramSize.FIVE,
-              #NGramSize.SIX,
-              #NGramSize.SEVEN,
-              #NGramSize.EIGHT
+              NGramSize.TWO,
+              NGramSize.THREE,
+              NGramSize.FOUR,
+              NGramSize.FIVE,
+              NGramSize.SIX,
+              NGramSize.SEVEN,
+              NGramSize.EIGHT
              ]
 
 classifier_names = [
                     ClassifierName.COSINE,
-                    #ClassifierName.JENSEN
+                    ClassifierName.JENSEN,
+                    ClassifierName.KULLBACK_LEIBLER,
+                    ClassifierName.MEAN_KULLBACK_LEIBLER,
+                    ClassifierName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
 frequency_thresholds = [
                         1,
-                        #2,
-                        #3,
-                        #4,
-                        #5,
-                        #6,
-                        #7
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7
                         ]
 
 class Configuration:
