@@ -5,6 +5,7 @@ Created on Fri Jun  7 11:56:52 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 import logging
+from collections import Counter
 
 module_logger = logging.getLogger('ngram')
 
@@ -15,13 +16,13 @@ def create_ngrams(documents, n):
     for document in documents:
         padded_doc = addPads(document, pads)
         
-        for idxTerm in range(len(padded_doc) - (n-1)):
+        for idxTerm in xrange(len(padded_doc) - (n-1)):
             i = idxTerm
             j = idxTerm + n
             
             ngram_parts = []
             
-            for k in range (i, j):
+            for k in xrange (i, j):
                 ngram_parts.append(padded_doc[k])
                 
             ngram = '#'.join(ngram_parts)
@@ -48,25 +49,22 @@ def addPads(document, pads):
     return padded_document
     
 def createNgramModel(unique_n_grams, n_grams):
-    n_gram_model = {}    
+    n_gram_model = {} 
+    n_grams_counter = Counter(n_grams)
+    
     for n_gram in unique_n_grams:
-        n_gram_model[n_gram] = float( n_grams.count(n_gram) )
+    #for n_gram in n_grams_counter.keys():
+        n_gram_model[n_gram] = float( n_grams_counter[n_gram] )
         
     return n_gram_model
 
-def remove_rare_n_grams(model, n_grams, treshold):
+def remove_rare_n_grams(model, treshold):
     new_model = {}
-    new_n_grams = []
-    
+        
     for key in model.keys():
         if model[key] >= treshold:
             new_model[key] = model[key]
-    
-    for key in new_model.keys():
-        if key in n_grams:
-            new_n_grams.append(key)
-    
-    return new_model, new_n_grams
+    return new_model
     
 def smoothModel(model):
     for key in model:

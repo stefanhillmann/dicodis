@@ -35,7 +35,7 @@ class CrossValidator:
         self.documents.extend(documents)
         
     def runCrossValidation(self):
-        self.logger.info('Run cross validation for classifier = %s and n = %s.', self.classifier_name, self.n_gram_size)
+        self.logger.info('Run cross validation for: classifier = %s, n = %s, threshold = %s.', self.classifier_name, self.n_gram_size, self.frequency_threshold)
         """
         Iterate over the documents and select the i-th one for classifying.
         The remaining are used for training. 

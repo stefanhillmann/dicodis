@@ -28,7 +28,7 @@ class Classifier:
         
         # create class_model
         class_model = ngram.createNgramModel( lu.uniqueValues(n_grams), n_grams )
-        class_model, _n_grams = ngram.remove_rare_n_grams(class_model, n_grams, frequency_treshold)
+        class_model = ngram.remove_rare_n_grams(class_model, frequency_treshold)
         
         # compute probabilities and do NOT smooth the model
         self.prepareModel(class_model, False)

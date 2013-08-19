@@ -14,12 +14,8 @@ Parameter:
     l: list of items to searched for unique items.
 """
 def uniqueValues(l):
-    unique_values = []
-    for value in l:
-        if unique_values.count(value) == 0:
-            unique_values.append(value)
-            
-    return unique_values
+    unique_values = set(l)
+    return list(unique_values)
     
 """
 Collects unique items from a list of items. The unique property of an item
@@ -28,14 +24,14 @@ is defined by a particular field of that item
 Parameter:
     l: list of items to searched for unique items.
     field_name: name the field in each item, that will be used for the search.
-    In other words, an item is compared to hte other items by the value of the
+    In other words, an item is compared to the other items by the value of the
     field with the name field_name.
 """
 def uniqueObjectValues(l, field_name):
     unique_values = []
     for obj in l:
         value = getattr(obj, field_name)
-        if unique_values.count(value) == 0:
+        if not value in unique_values:
             unique_values.append(value)
             
     return unique_values
