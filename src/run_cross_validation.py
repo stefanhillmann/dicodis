@@ -99,11 +99,17 @@ def run_validation(job):
     
 if __name__ == '__main__':
 
-    print 'Criteria: Turn Success'
-    #succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_success')
+    succees_result      = []
+    simulation_result   = []
+    length_result       = []
+    wa_result           = []
     
-    print 'Criteria: Quality of Simulation'
-    simulation_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality')
+    
+    print 'Criteria: Turn Success'
+    succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_success')
+    
+    #print 'Criteria: Quality of Simulation'
+    #simulation_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality')
     
     #print 'Criteria: Length of Interaction'
     #length_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'length_of_interaction')
@@ -113,10 +119,10 @@ if __name__ == '__main__':
     
         
     results = []
-    #results.extend(succees_result)
-    #results.extend(length_result)
+    results.extend(succees_result)
+    results.extend(length_result)
     results.extend(simulation_result)
-    #results.extend(wa_result)
+    results.extend(wa_result)
     
     result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
     cv.writeResultTableToFile(results, ',', '../results/' + result_file_name)
