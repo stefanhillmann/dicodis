@@ -14,8 +14,10 @@ Parameter:
     l: list of items to searched for unique items.
 """
 def uniqueValues(l):
-    unique_values = set(l)
-    return list(unique_values)
+    unique_values_set = set(l)
+    unique_values = list(unique_values_set)
+    
+    return unique_values
     
 """
 Collects unique items from a list of items. The unique property of an item
