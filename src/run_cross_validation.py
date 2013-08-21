@@ -106,16 +106,16 @@ if __name__ == '__main__':
     
     
     print 'Criteria: Turn Success'
-    succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_success')
+    #succees_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_success')
     
     #print 'Criteria: Quality of Simulation'
-    #simulation_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality')
+    simulation_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality')
     
     #print 'Criteria: Length of Interaction'
-    length_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'length_of_interaction')
+    #length_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'length_of_interaction')
     
     #print 'Criteria: Word Accuracy'
-    wa_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy')
+    #wa_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy')
     
         
     results = []
