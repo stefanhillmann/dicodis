@@ -13,6 +13,7 @@ def create_ngrams(documents, n):
     pads = createPads(n)
     
     for document in documents:
+        print document
         padded_doc = addPads(document, pads)
         
         for idxTerm in range(len(padded_doc) - (n-1)):
