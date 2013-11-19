@@ -1,0 +1,42 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{relsize}
+\usepackage{graphicx}
+\author{Stefan Hillmann}
+\title{Dialogue Classifying}
+\begin{document}
+\maketitle
+
+\section{Measures}
+\subsection{Cosine Distance}
+\begin{equation}
+  cs(P,Q)=\frac{ \sum\limits_{i=1}^n p_i q_i }{ \sqrt{ \sum\limits_{i=1}^n p_i^2 \sum\limits_{i=1}^n q_i^2 } }
+\end{equation}
+\begin{equation}
+  cd(P,Q) = 1-cs(P,Q)
+\end{equation}
+
+\subsection{Kullback-Leibler Divergence}
+\begin{equation}
+  kl(P, Q) = \sum\limits_{i=1}^n q_i \ln\left(\frac{q_i}{p_i}\right)
+\end{equation}
+
+\subsection{Mean Kullback-Leibler Distance}
+\begin{equation}
+  mkl(P, Q) = \frac{kl(P,Q)*kl(Q,P)}{2}
+\end{equation}
+
+\subsection{Symmetric Kullback-Leibler Distance}
+\begin{equation}
+  skl(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) * \ln \left(\frac{p_i}{q_i}\right)
+\end{equation}
+\subsection{Jensen Difference Divergence}
+\begin{equation}
+  j(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n \frac{p_i \ln(p_i) + q_i \ln(q_i)}{2} - \frac{p_i+q_i}{2} * \ln\left( \frac{p_i+q_i}{2} \right)
+\end{equation}
+
+\end{document}

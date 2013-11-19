@@ -14,7 +14,7 @@ def create_ngrams(documents, n):
     pads = createPads(n)
     
     for document in documents:
-        print document
+        print document #REMOVE
         padded_doc = addPads(document, pads)
         
         for idxTerm in xrange(len(padded_doc) - (n-1)):
@@ -31,6 +31,7 @@ def create_ngrams(documents, n):
             
     
     module_logger.debug('Calculated %s %s-grams from %s documents.', len(ngrams), n, len(documents))
+    print 'N-Grams: {}'.format(ngrams) #REMOVE
     return ngrams
     
 def createPads(n):
