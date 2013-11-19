@@ -7,6 +7,7 @@ Created on Fri Jun  7 15:05:29 2013
 
 import measures
 import util.list as lu
+from util import dict as du
 import ngram
 import logging
 
@@ -28,7 +29,7 @@ class Classifier:
         
         # create class_model
         class_model = ngram.createNgramModel( lu.uniqueValues(n_grams), n_grams )
-        class_model, _n_grams = ngram.remove_rare_n_grams(class_model, n_grams, frequency_treshold)
+        class_model = ngram.remove_rare_n_grams(class_model, frequency_treshold)
         
         # compute probabilities and do NOT smooth the model
         self.prepareModel(class_model, False)
@@ -63,8 +64,11 @@ class Classifier:
                        
             doc_model = ngram.createNgramModel(unique_class_n_grams, doc_n_grams)
             self.prepareModel(doc_model, True)
+            
+            ordered_class_model = du.sortByKey(class_model)
+            ordered_doc_model = du.sortByKey(doc_model)
                         
-            distance = self.measure.distance( class_model.values(), doc_model.values() )
+            distance = self.measure.distance( ordered_class_model.values(), ordered_doc_model.values() )
             self.logger.debug("computeDistancies(): Class = %s \t\t Distance: %s.", key, distance)
             
             class_distances[key] = distance

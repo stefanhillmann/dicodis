@@ -1,7 +1,7 @@
 from ngram import NGramSize
 from classifier import ClassifierName
 
-validation_processes = 4
+validation_processes = 7
 
 sizes = [
               NGramSize.ONE,
