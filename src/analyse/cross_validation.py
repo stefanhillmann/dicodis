@@ -19,12 +19,12 @@ class CrossValidator:
     n_gram_size -- Size of the n-grams to be used by the classifier. See and use ngram.NGramSize for valid values. 
         
     """
-    def __init__(self, classifier_name, n_gram_size, frequency_treshold):
+    def __init__(self, classifier_name, n_gram_size, frequency_threshold):
         self.logger = logging.getLogger('cross_validation.CrossValidator')
         
         self.classifier_name    = classifier_name
         self.n_gram_size        = n_gram_size
-        self.frequency_treshold = frequency_treshold
+        self.frequency_threshold = frequency_threshold
         
         """
         Dictionary which holds for each class (by class name) a list of related documents.
@@ -35,7 +35,7 @@ class CrossValidator:
         self.documents.extend(documents)
         
     def runCrossValidation(self):
-        self.logger.info('Run cross validation for classifier = %s and n = %s.', self.classifier_name, self.n_gram_size)
+        self.logger.info('Run cross validation for: classifier = %s, n = %s, threshold = %s.', self.classifier_name, self.n_gram_size, self.frequency_threshold)
         """
         Iterate over the documents and select the i-th one for classifying.
         The remaining are used for training. 
@@ -56,7 +56,7 @@ class CrossValidator:
             Create (train) the classifier_name and test it with the document
             """
             test_classifier = classifier.getClassifier(self.classifier_name)
-            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size, self.frequency_treshold)
+            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size, self.frequency_threshold)
             test_results.extend(fold_validator.testClassifier())
             
         return test_results
@@ -64,7 +64,7 @@ class CrossValidator:
              
 class FoldValidator:
     
-    def __init__(self, training_set, test_set, classifier, n, frequency_treshold):
+    def __init__(self, training_set, test_set, classifier, n, frequency_threshold):
         self.logger = logging.getLogger('cross_validation.FoldValidator')
         
         self.classifier = classifier
@@ -72,7 +72,7 @@ class FoldValidator:
         self.n = n
         self.test_results = []
         
-        self.trainClassifier(training_set, n, frequency_treshold)
+        self.trainClassifier(training_set, n, frequency_threshold)
         
     
     """
@@ -81,7 +81,7 @@ class FoldValidator:
     Parameters:
     training_set: List of dialogs.Document    
     """    
-    def trainClassifier(self, training_set, n, frequency_treshold):
+    def trainClassifier(self, training_set, n, frequency_threshold):
         # get the unique class identifiers
         classes = lu.uniqueObjectValues(training_set, 'label')
 
@@ -98,7 +98,7 @@ class FoldValidator:
             
             # ... create the n-grams for training
             class_n_grams = ngram.create_ngrams(document_contents, n)
-            self.classifier.addClass(class_name, class_n_grams, frequency_treshold)
+            self.classifier.addClass(class_name, class_n_grams, frequency_threshold)
             
     
     
@@ -137,13 +137,15 @@ class SingleTestResult:
                   self.calculated_class, self.actual_class, self.calculated_distance, self.n_gram_size)
 
 class SummarizedTestResults:
-    def __init__(self, true_positive, false_positive, true_negative, false_negative, classifier_name, n_gram_size):
-        self.true_positive = true_positive
-        self.false_positive = false_positive
-        self.true_negative = true_negative
-        self.false_negative = false_negative
-        self.classifier_name = classifier_name
-        self.n_gram_size = n_gram_size
+    def __init__(self, true_positive, false_positive, true_negative, false_negative, classifier_name, n_gram_size, criteria, frequency_threshold):
+        self.true_positive      = true_positive
+        self.false_positive     = false_positive
+        self.true_negative      = true_negative
+        self.false_negative     = false_negative
+        self.classifier_name    = classifier_name
+        self.n_gram_size        = n_gram_size
+        self.criteria           = criteria
+        self.frequency_threshold = frequency_threshold
         
     def __repr__(self):
         return 'Classifier = {}    n = {}\nTP = {}  FP = {}    TN = {}  FN = {}'\
@@ -153,24 +155,26 @@ class SummarizedTestResults:
 TODO
 """
 class ResultAssessor:
-    def __init__(self, cross_validation_results, positive_class, negative_class, classifier_name, n_gram_size):
+    def __init__(self, cross_validation_results, positive_class, negative_class, classifier_name, n_gram_size, frequency_threshold, criteria):
         self.logger = logging.getLogger("analyse.cross_validation.ResultAssessor")
         self.logger.debug( ("Initialize ResultAssor with %s single results.", len(cross_validation_results)) )
         
-        self.data = cross_validation_results
-        self.positive_class = positive_class
-        self.negative_class = negative_class
+        self.data               = cross_validation_results
+        self.positive_class     = positive_class
+        self.negative_class     = negative_class
         
-        self.classifier_name = classifier_name
-        self.n_gram_size = n_gram_size
+        self.criteria           = criteria
+        self.classifier_name    = classifier_name
+        self.n_gram_size        = n_gram_size
+        self.frequency_threshold = frequency_threshold
         
         self.resetCounter()
 
     def resetCounter(self):
-        self.counter_true_positive  = 0
-        self.counter_false_positive = 0
-        self.counter_true_negative  = 0
-        self.counter_false_negative = 0
+        self.counter_true_positive  = 0.0
+        self.counter_false_positive = 0.0
+        self.counter_true_negative  = 0.0
+        self.counter_false_negative = 0.0
     
     
     def countResults(self):
@@ -206,7 +210,8 @@ class ResultAssessor:
         
         return SummarizedTestResults(self.counter_true_positive, self.counter_false_positive, 
                                      self.counter_true_negative, self.counter_false_negative,
-                                     self.classifier_name, self.n_gram_size)
+                                     self.classifier_name, self.n_gram_size, self.criteria,
+                                     self.frequency_threshold)
 """
 Creates from a list of assessor results (results of different classifier) a table like structure
 for further processing (e.g. plotting).
@@ -216,13 +221,19 @@ Classifier n TP FP TN FN
 def createResultTable(assessor_results, separator):
     rows = []
     # create header
-    header = separator.join( ['Classifier', 'n', 'TP', 'FP', 'TN', 'FN'] )
+    header = separator.join( ['Criteria', 'Classifier', 'n', 'Freq. Threshold', 'TP', 'FP', 'TN', 'FN', 'Recall', 'Precision', 'F-Measure'] )
     rows.append(header)
     
     # create one row per assessor result
     for values in assessor_results:
-        row = separator.join( str(value) for value in [values.classifier_name, values.n_gram_size, values.true_positive,
-                               values.false_positive, values.true_negative, values.false_negative] )
+        recall = computeRecall(values.true_positive, values.false_negative)
+        precision = computePrecision(values.true_positive, values.false_positive)
+        f_measure = computeFMeasure(values.true_positive, values.false_positive, values.false_negative)
+        
+        row_values = [values.criteria, values.classifier_name, values.n_gram_size, values.frequency_threshold,
+                      values.true_positive, values.false_positive, values.true_negative, values.false_negative,
+                      recall, precision, f_measure]
+        row = separator.join( str(value) for value in  row_values)
         rows.append(row)
         
     return rows
@@ -230,11 +241,28 @@ def createResultTable(assessor_results, separator):
 def writeResultTableToFile(assessor_results, separator, file_path):
     data = createResultTable(assessor_results, separator)
     
+    
     f = open(file_path, 'w')
     for line in data:
         f.write("".join( [line, "\n"] ))
         
     f.close()
+    
+def computeFMeasure(true_positive, false_positive, false_negative):
+    f = (2 * true_positive) / ( (2 * true_positive) + false_positive + false_negative)
+    return f
+
+def computePrecision(true_positive, false_positive):
+    p = 0
+    if true_positive != 0.0:
+        p = true_positive / ( true_positive + false_positive )
+    return p
+
+def computeRecall(true_positive, false_negative):
+    r = 0
+    if true_positive != 0.0: 
+        r = true_positive / ( true_positive + false_negative )
+    return r
      
     
     

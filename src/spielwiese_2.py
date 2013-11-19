@@ -1,16 +1,26 @@
+from util import list as lu
+import dialogs
 import ngram
-import util.list as lu
+import classifier
 
-docs = [['a', 'a' , 'a', 'b']]
+id_column_name = 'iteration'
+positive_class = 'succeeded'
+negative_class = 'failed'
 
+file_turns_succeeded        = '/home/stefan/git/dialogue_classifier/data/turnsSucceeded.csv'
 
-class_n_grams = ngram.create_ngrams(docs, 1)
-print class_n_grams
+positive_reader = dialogs.DialogsReader(file_turns_succeeded)
+positive_dialogs = dialogs.createDialogsDocuments(positive_reader, id_column_name, positive_class)
 
+contents = [positive_dialogs[0].content]
 
-class_model = ngram.createNgramModel( lu.uniqueValues(class_n_grams), class_n_grams )
-class_model, class_n_grams = ngram.remove_rare_n_grams(class_model, class_n_grams, 2)
+contents_2 = [positive_dialogs[1].content]
 
-print class_model
-print class_n_grams
+n_grams = ngram.create_ngrams(contents, 1)
+n_grams_2 = ngram.create_ngrams(contents_2, 1)
 
+c = classifier.getCosineClassifier()
+
+c.addClass("foo", n_grams, 1);
+
+c.classify(n_grams_2)
