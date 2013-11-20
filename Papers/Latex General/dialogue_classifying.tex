@@ -22,7 +22,7 @@
 
 \subsection{Kullback-Leibler Divergence}
 \begin{equation}
-  kl(P, Q) = \sum\limits_{i=1}^n q_i \ln\left(\frac{q_i}{p_i}\right)
+  kl(P, Q) = \sum\limits_{i=1}^n p_i \ln\left(\frac{p_i}{q_i}\right)
 \end{equation}
 
 \subsection{Mean Kullback-Leibler Distance}
@@ -38,5 +38,16 @@
 \begin{equation}
   j(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n \frac{p_i \ln(p_i) + q_i \ln(q_i)}{2} - \frac{p_i+q_i}{2} * \ln\left( \frac{p_i+q_i}{2} \right)
 \end{equation}
+
+\section{N-gram model}
+\subsection{Additive Smoothing}
+\begin{equation}
+\label{eq:additive_smoothing}
+p_{\lambda}(x_i)=\frac{|x_i|+\lambda}{|X|*\lambda N}
+\end{equation}
+In Equitation \ref{eq:additive_smoothing} is $p_\lambda(x_i)$ the probabiloty of n-gram $x_i$ in model $m$.
+$|x_i|$ is the number of occurrences of $x_i$ in $m$ and $|N|$ the absolute number of all n-grams in $m$.
+Finally, $N$ represents the number of \emph{unique} n-grams in $m$.
+
 
 \end{document}
