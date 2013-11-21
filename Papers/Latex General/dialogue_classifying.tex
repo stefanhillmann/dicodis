@@ -43,10 +43,10 @@
 \subsection{Additive Smoothing}
 \begin{equation}
 \label{eq:additive_smoothing}
-p_{\lambda}(x_i)=\frac{|x_i|+\lambda}{|X|*\lambda N}
+p_{\lambda}(x_i)=\frac{|x_i|+\lambda}{|X|+\lambda N}
 \end{equation}
 In Equitation \ref{eq:additive_smoothing} is $p_\lambda(x_i)$ the probabiloty of n-gram $x_i$ in model $m$.
-$|x_i|$ is the number of occurrences of $x_i$ in $m$ and $|N|$ the absolute number of all n-grams in $m$.
+$|x_i|$ is the number of occurrences of $x_i$ in $m$ and $|X|$ the absolute number of all n-grams in $m$.
 Finally, $N$ represents the number of \emph{unique} n-grams in $m$.
 
 

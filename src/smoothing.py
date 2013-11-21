@@ -5,21 +5,26 @@ Created on Thu Jun  6 13:30:45 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-def naiveSmoothing(frequencies, v=0.5):
-    """
-    Adds a specific value v to each frequency.
+import numpy as np
     
     
-    Parameters:
-        frequencies -- a vector of n-gram frequencies
+    
+def computeProbability(num_unique_ngrams, num_ngrams, l, ngram_frequency):
+    p = (ngram_frequency + l) / (num_ngrams + l * num_unique_ngrams)
+    return p
+    
+def computeProbabilities(frequencies_array, l):
+    num_unique_ngrams   = len(frequencies_array)
+    num_ngrams          = np.sum(frequencies_array)
+    
+    probabilities_array = np.zeros(len(frequencies_array))
+    unique_frequencies = np.unique(frequencies_array)
+    
+    for uf in unique_frequencies:
+        uf_probability = computeProbability(num_unique_ngrams, num_ngrams, l, uf)
+        probabilities_array[ np.where(frequencies_array == uf) ] = uf_probability
         
-        v -- value to be added to each frequence (default 0.5)
-        
-    Example:
-        >>> freq = [1, 1, 2]
-        >>> res = naiveSmoothing(freq, 0.5)
-        >>> print res
-        [ 1.5  1.5  2.5]
-        
-    """
-    return frequencies + v
+    return probabilities_array
+    
+    
+
