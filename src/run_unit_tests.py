@@ -22,3 +22,6 @@ Test measures with equal data. Each measure has to detect equality.
 print "Test measures with equal data..."
 measures_unit_tests.testCosineSimilarityCase1()
 measures_unit_tests.testKullbackLeiblerCase1()
+measures_unit_tests.testMeanKullbackLeiblerDistanceCase1()
+measures_unit_tests.testSymmetricKullbackLeiblerDistanceCase1()
+measures_unit_tests.testJensenDistanceCase1()
