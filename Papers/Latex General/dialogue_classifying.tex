@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{relsize}
 \usepackage{graphicx}
 \author{Stefan Hillmann}
@@ -32,8 +33,23 @@
 
 \subsection{Symmetric Kullback-Leibler Distance}
 \begin{equation}
-  skl(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) * \ln \left(\frac{p_i}{q_i}\right)
+  skl(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right)
 \end{equation}
+\begin{proof}
+\begin{align*}
+  skl(P,Q)  &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i \ln \left(\frac{p_i}{q_i}\right) - q_i \ln \left(\frac{p_i}{q_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i( \ln(p_i) - \ln(q_i) ) - q_i( \ln(p_i) - \ln(q_i) ) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i\ln(p_i) - p_i\ln(q_i) - q_i\ln(p_i) +q_i\ln(q_i) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n -1(-p_i\ln(p_i) + p_i\ln(q_i)) + ( q_i\ln(q_i) - q_i\ln(p_i) ) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n ( q_i\ln(q_i) - q_i\ln(p_i) ) - (p_i\ln(q_i) - p_i\ln(p_i)) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n q_i( \ln(q_i) - \ln(p_i) ) - p_i( \ln(q_i) - \ln(p_i) ) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n q_i \ln \left(\frac{q_i}{p_i}\right) - p_i \ln \left(\frac{q_i}{p_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (q_i - p_i) \ln \left(\frac{q_i}{p_i}\right) &&\qedhere
+\end{align*}
+\end{proof}
+
+
 \subsection{Jensen Difference Divergence}
 \begin{equation}
   j(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n \frac{p_i \ln(p_i) + q_i \ln(q_i)}{2} - \frac{p_i+q_i}{2} * \ln\left( \frac{p_i+q_i}{2} \right)
