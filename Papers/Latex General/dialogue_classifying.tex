@@ -15,44 +15,53 @@
 \section{Measures}
 \subsection{Cosine Distance}
 \begin{equation}
-  cs(P,Q)=\frac{ \sum\limits_{i=1}^n p_i q_i }{ \sqrt{ \sum\limits_{i=1}^n p_i^2 \sum\limits_{i=1}^n q_i^2 } }
+  cs(P||Q)=\frac{ \sum\limits_{i=1}^n p_i q_i }{ \sqrt{ \sum\limits_{i=1}^n p_i^2 \sum\limits_{i=1}^n q_i^2 } }
 \end{equation}
 \begin{equation}
-  cd(P,Q) = 1-cs(P,Q)
+  cd(P||Q) = 1-cs(P,Q)
 \end{equation}
 
 \subsection{Kullback-Leibler Divergence}
+Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
-  kl(P, Q) = \sum\limits_{i=1}^n p_i \ln\left(\frac{p_i}{q_i}\right)
+  kl(P||Q) = \sum\limits_{i=1}^n p_i \ln\left(\frac{p_i}{q_i}\right)
 \end{equation}
 
 \subsection{Mean Kullback-Leibler Distance}
+Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
-  mkl(P, Q) = \frac{kl(P,Q)*kl(Q,P)}{2}
+  mkl(P||Q) = \frac{kl(P||Q)*kl(Q||P)}{2}
 \end{equation}
 
 \subsection{Symmetric Kullback-Leibler Distance}
+Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
-  skl(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right)
+  skl(P||Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right)
+\end{equation}
+\begin{equation}
+  skl(P||Q) = skl(Q||P)
 \end{equation}
 \begin{proof}
 \begin{align*}
-  skl(P,Q)  &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i \ln \left(\frac{p_i}{q_i}\right) - q_i \ln \left(\frac{p_i}{q_i}\right) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i( \ln(p_i) - \ln(q_i) ) - q_i( \ln(p_i) - \ln(q_i) ) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n p_i\ln(p_i) - p_i\ln(q_i) - q_i\ln(p_i) +q_i\ln(q_i) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n -1(-p_i\ln(p_i) + p_i\ln(q_i)) + ( q_i\ln(q_i) - q_i\ln(p_i) ) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n ( q_i\ln(q_i) - q_i\ln(p_i) ) - (p_i\ln(q_i) - p_i\ln(p_i)) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n q_i( \ln(q_i) - \ln(p_i) ) - p_i( \ln(q_i) - \ln(p_i) ) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n q_i \ln \left(\frac{q_i}{p_i}\right) - p_i \ln \left(\frac{q_i}{p_i}\right) \\
-            &= \mathlarger{\mathlarger{\sum}}\limits_{n=1}^n (q_i - p_i) \ln \left(\frac{q_i}{p_i}\right) &&\qedhere
+  skl(P||Q)  &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i \ln \left(\frac{p_i}{q_i}\right) - q_i \ln \left(\frac{p_i}{q_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i( \ln(p_i) - \ln(q_i) ) - q_i( \ln(p_i) - \ln(q_i) ) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n -p_i( -\ln(p_i) + \ln(q_i) ) + q_i( -\ln(p_i) + \ln(q_i) ) \\
+            % &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i\ln(p_i) - p_i\ln(q_i) - q_i\ln(p_i) +q_i\ln(q_i) \\
+            % &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n -1(-p_i\ln(p_i) + p_i\ln(q_i)) + ( q_i\ln(q_i) - q_i\ln(p_i) ) \\
+            % &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n ( q_i\ln(q_i) - q_i\ln(p_i) ) - (p_i\ln(q_i) - p_i\ln(p_i)) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n q_i( \ln(q_i) - \ln(p_i) ) - p_i( \ln(q_i) - \ln(p_i) ) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n q_i \ln \left(\frac{q_i}{p_i}\right) - p_i \ln \left(\frac{q_i}{p_i}\right) \\
+            &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (q_i - p_i) \ln \left(\frac{q_i}{p_i}\right) \\
+            &= skl(Q||P) && \qedhere
 \end{align*}
 \end{proof}
 
 
 \subsection{Jensen Difference Divergence}
+Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
-  j(P,Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n \frac{p_i \ln(p_i) + q_i \ln(q_i)}{2} - \frac{p_i+q_i}{2} * \ln\left( \frac{p_i+q_i}{2} \right)
+  j(P||Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n \frac{p_i \ln(p_i) + q_i \ln(q_i)}{2} - \frac{p_i+q_i}{2} \ln\left( \frac{p_i+q_i}{2} \right)
 \end{equation}
 
 \section{N-gram model}
