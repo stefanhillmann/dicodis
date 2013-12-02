@@ -35,11 +35,19 @@ def create_ngrams(documents, n):
     return ngrams
     
 def createPads(n):
-    pads = []
-    for i in range(1, n):
-        pads.append('_')
-        
-    return pads
+    
+    pads = {
+            NGramSize.ONE   : '_',
+            NGramSize.TWO   : '__',
+            NGramSize.THREE : '___',
+            NGramSize.FOUR  : '____',
+            NGramSize.FIVE  : '_____',
+            NGramSize.SIX   : '______',
+            NGramSize.SEVEN : '_______',
+            NGramSize.EIGHT : '________',
+    }
+      
+    return pads[n]
         
         
 def addPads(document, pads):

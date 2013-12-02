@@ -5,7 +5,6 @@ Created on Wed Jun  5 17:19:42 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 import numpy as np
-from math import log
 from math import sqrt
 import logging
 

@@ -6,8 +6,8 @@ Created on Tue Jun 18 14:34:56 2013
 """
 
 import util.list as lu
-import ngram
-import classifier
+import ngram.model_generator as mg
+import classify.classifier as classifier
 import logging
 
 class CrossValidator:
@@ -97,7 +97,7 @@ class FoldValidator:
                 document_contents.append(document.content)
             
             # ... create the n-grams for training
-            class_n_grams = ngram.create_ngrams(document_contents, n)
+            class_n_grams = mg.create_ngrams(document_contents, n)
             self.classifier.addClass(class_name, class_n_grams, frequency_threshold)
             
     
@@ -109,7 +109,7 @@ class FoldValidator:
         """
         self.logger.debug('Test classifier %s by classifying %s dialogs.', self.classifier.name, len(self.test_set))
         for document in self.test_set:
-            class_n_grams = ngram.create_ngrams([document.content], self.n)
+            class_n_grams = mg.create_ngrams([document.content], self.n)
             
             classification_result = self.classifier.classify(class_n_grams)
             self.logger.debug("testClassifier(): Calculated class = %s - Actual class: %s.", classification_result.class_name, document.label)

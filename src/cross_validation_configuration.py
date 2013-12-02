@@ -1,5 +1,5 @@
-from ngram import NGramSize
-from classifier import ClassifierName
+from ngram.model_generator import NGramSize
+from classify.classifier import ClassifierName
 
 validation_processes = 7
 

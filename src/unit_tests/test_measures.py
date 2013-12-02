@@ -1,5 +1,5 @@
 import unittest
-import measures as m
+import classify.measures as m
 
 
 class testMeasures(unittest.TestCase):

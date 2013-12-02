@@ -1,5 +1,5 @@
 import dialogs
-import ngram
+import ngram.model_generator as mg
 import operator
 import matplotlib.pyplot as plt
 import util.list as lu
@@ -22,9 +22,9 @@ documents = []
 for dialog in failed_dialogs:
     documents.append( dialog.content )
 
-class_n_grams = ngram.create_ngrams(documents, n);
+class_n_grams = mg.create_ngrams(documents, n);
 
-class_model = ngram.createNgramModel(lu.uniqueValues(class_n_grams), class_n_grams)
+class_model = mg.createNgramModel(lu.uniqueValues(class_n_grams), class_n_grams)
 
 class_model = remove_rare_n_grams(class_model, 2)
 

@@ -25,3 +25,14 @@ measures_unit_tests.testKullbackLeiblerCase1()
 measures_unit_tests.testMeanKullbackLeiblerDistanceCase1()
 measures_unit_tests.testSymmetricKullbackLeiblerDistanceCase1()
 measures_unit_tests.testJensenDistanceCase1()
+
+"""
+Test measures with different models. Each measure has to detect the correct distance.
+"""
+print "Test measures with different data..."
+measures_unit_tests.testCosineSimilarityCase2()
+measures_unit_tests.testKullbackLeiblerCase2()
+measures_unit_tests.testMeanKullbackLeiblerDistanceCase2()
+measures_unit_tests.testSymmetricKullbackLeiblerDistanceCase2()
+measures_unit_tests.testJensenDistanceCase2()
+

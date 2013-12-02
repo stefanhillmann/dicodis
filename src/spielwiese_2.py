@@ -1,7 +1,6 @@
-from util import list as lu
 import dialogs
-import ngram
-import classifier
+import ngram.model_generator as mg
+import classify.classifier as classifier
 
 id_column_name = 'iteration'
 positive_class = 'succeeded'
@@ -16,8 +15,8 @@ contents = [positive_dialogs[0].content]
 
 contents_2 = [positive_dialogs[1].content]
 
-n_grams = ngram.create_ngrams(contents, 1)
-n_grams_2 = ngram.create_ngrams(contents_2, 1)
+n_grams = mg.create_ngrams(contents, 1)
+n_grams_2 = mg.create_ngrams(contents_2, 1)
 
 c = classifier.getCosineClassifier()
 

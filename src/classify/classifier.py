@@ -8,7 +8,7 @@ Created on Fri Jun  7 15:05:29 2013
 import measures
 import util.list as lu
 from util import dict as du
-import ngram
+import ngram.model_generator as mg
 import logging
 
 class Classifier:
@@ -28,8 +28,8 @@ class Classifier:
         self.classes[class_name] = n_grams
         
         # create class_model
-        class_model = ngram.createNgramModel( lu.uniqueValues(n_grams), n_grams )
-        class_model = ngram.remove_rare_n_grams(class_model, frequency_treshold)
+        class_model = mg.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+        class_model = mg.remove_rare_n_grams(class_model, frequency_treshold)
         
         # compute probabilities and do NOT smooth the model
         self.prepareModel(class_model, False)
@@ -62,7 +62,7 @@ class Classifier:
             class_model = self.class_models[key]
             unique_class_n_grams = class_model.keys()
                        
-            doc_model = ngram.createNgramModel(unique_class_n_grams, doc_n_grams)
+            doc_model = mg.createNgramModel(unique_class_n_grams, doc_n_grams)
             self.prepareModel(doc_model, True)
             
             ordered_class_model = du.sortByKey(class_model)
@@ -77,9 +77,9 @@ class Classifier:
         
     def prepareModel(self, model, smooth_model):
         if smooth_model:
-            ngram.smoothModel(model)
+            mg.smoothModel(model)
         
-        ngram.computeProbabilities(model)
+        mg.computeProbabilities(model)
 
 """
 Data object used to return the result (class name and distance to class) of
