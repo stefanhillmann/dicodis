@@ -37,14 +37,14 @@ def create_ngrams(documents, n):
 def createPads(n):
     
     pads = {
-            NGramSize.ONE   : '_',
-            NGramSize.TWO   : '__',
-            NGramSize.THREE : '___',
-            NGramSize.FOUR  : '____',
-            NGramSize.FIVE  : '_____',
-            NGramSize.SIX   : '______',
-            NGramSize.SEVEN : '_______',
-            NGramSize.EIGHT : '________',
+            NGramSize.ONE   : '',
+            NGramSize.TWO   : '_',
+            NGramSize.THREE : '__',
+            NGramSize.FOUR  : '___',
+            NGramSize.FIVE  : '____',
+            NGramSize.SIX   : '_____',
+            NGramSize.SEVEN : '______',
+            NGramSize.EIGHT : '_______',
     }
       
     return pads[n]
