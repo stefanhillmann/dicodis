@@ -25,6 +25,3 @@ def computeProbabilities(frequencies_array, l):
         probabilities_array[ np.where(frequencies_array == uf) ] = uf_probability
         
     return probabilities_array
-    
-    
-

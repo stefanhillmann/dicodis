@@ -4,9 +4,9 @@ from classify.classifier import ClassifierName
 validation_processes = 7
 
 sizes = [
-              #NGramSize.ONE,
+              NGramSize.ONE,
               NGramSize.TWO,
-              #NGramSize.THREE,
+              NGramSize.THREE,
               #NGramSize.FOUR,
               #NGramSize.FIVE,
               #NGramSize.SIX,
@@ -15,9 +15,9 @@ sizes = [
              ]
 
 classifier_names = [
-                    ClassifierName.COSINE,
+                    #ClassifierName.COSINE,
                     #ClassifierName.JENSEN,
-                    #ClassifierName.KULLBACK_LEIBLER,
+                    ClassifierName.KULLBACK_LEIBLER,
                     #ClassifierName.MEAN_KULLBACK_LEIBLER,
                     #ClassifierName.SYMMETRIC_KULLBACK_LEIBLER
                     ]

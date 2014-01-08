@@ -6,6 +6,8 @@ Created on Fri Jun  7 11:56:52 2013
 """
 import logging
 from collections import Counter
+from ngram import smoothing
+from collections import OrderedDict
 
 module_logger = logging.getLogger('ngram')
 
@@ -14,7 +16,6 @@ def create_ngrams(documents, n):
     pads = createPads(n)
     
     for document in documents:
-        print document #REMOVE
         padded_doc = addPads(document, pads)
         
         for idxTerm in xrange(len(padded_doc) - (n-1)):
@@ -31,7 +32,6 @@ def create_ngrams(documents, n):
             
     
     module_logger.debug('Calculated %s %s-grams from %s documents.', len(ngrams), n, len(documents))
-    print 'N-Grams: {}'.format(ngrams) #REMOVE
     return ngrams
     
 def createPads(n):
@@ -76,9 +76,37 @@ def remove_rare_n_grams(model, treshold):
             new_model[key] = model[key]
     return new_model
     
-def smoothModel(model):
-    for key in model:
-        model[key] = model[key] + 0.5
+def smoothModel(model, l):
+    module_logger.debug("Smooth model with l = %s.", l)
+    """
+    Smoothes a n-gram model using the value l as 'add'.
+    
+    Parameters
+    ----------
+    model : dictionary
+        an n-gram model with absolute frequencies
+    l : float
+        the value to be added
+    
+    Returns
+    -------
+    dictionary : a model with smoothed values for n-gram probabilities.  
+    """
+    # get the frequencies as array
+    absolute_values = model.values()
+    
+    # compute relative probabilities and smooth them with value l
+    smoothed_values = smoothing.computeProbabilities(absolute_values, l)
+    
+    # create new dictionary with with n-grams and the smoothed values
+    n_grams = model.keys()
+    smoothed_model = OrderedDict()
+    for i in xrange( len(smoothed_values) ):
+        n_gram = n_grams[i]
+        probability = smoothed_values[i]
+        smoothed_model[n_gram] = probability
+    
+    return smoothed_model
         
 def computeProbabilities(model):
     sum_of_frequencies = sum(model.values())

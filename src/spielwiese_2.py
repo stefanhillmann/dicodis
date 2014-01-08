@@ -6,7 +6,7 @@ id_column_name = 'iteration'
 positive_class = 'succeeded'
 negative_class = 'failed'
 
-file_turns_succeeded        = '/home/stefan/git/dialogue_classifier/data/turnsSucceeded.csv'
+file_turns_succeeded        = '/home/stefan/git/DialogueClassifying/data/turnsSucceeded.csv'
 
 positive_reader = dialogs.DialogsReader(file_turns_succeeded)
 positive_dialogs = dialogs.createDialogsDocuments(positive_reader, id_column_name, positive_class)

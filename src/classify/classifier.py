@@ -9,9 +9,14 @@ import measures
 import util.list as lu
 from util import dict as du
 import ngram.model_generator as mg
+import ngram.export as export
 import logging
 
+
+
 class Classifier:
+    SMOOTHING_VALUE = 0.05
+    doc_model_file_name_counter = 1
     
     def __init__(self, measure, classifier_name):
         self.logger = logging.getLogger('classifier.Classifier')
@@ -32,7 +37,13 @@ class Classifier:
         class_model = mg.remove_rare_n_grams(class_model, frequency_treshold)
         
         # compute probabilities and do NOT smooth the model
-        self.prepareModel(class_model, False)
+        class_model = self.prepareModel(class_model, False)
+        # order model by keys
+        class_model = du.sortByKey(class_model)
+        
+        # for debug and evaluation of the whole process one can 
+        # export the  document model here:
+        # export.toCSV(class_model, "/home/stefan/temp/csv/" + class_name + ".csv");
         
         self.class_models[class_name] = class_model
         
@@ -63,12 +74,17 @@ class Classifier:
             unique_class_n_grams = class_model.keys()
                        
             doc_model = mg.createNgramModel(unique_class_n_grams, doc_n_grams)
-            self.prepareModel(doc_model, True)
+            doc_model = self.prepareModel(doc_model, True)
             
-            ordered_class_model = du.sortByKey(class_model)
+            #ordered_class_model = du.sortByKey(class_model)
             ordered_doc_model = du.sortByKey(doc_model)
+            
+            # for debug and evaluation of the whole process one can 
+            # export the  document model here:
+            # export.toCSV(ordered_doc_model, "/home/stefan/temp/csv/" + key + "_" + str(Classifier.doc_model_file_name_counter) + ".csv");
+            # Classifier.doc_model_file_name_counter = Classifier.doc_model_file_name_counter + 1
                         
-            distance = self.measure.distance( ordered_class_model.values(), ordered_doc_model.values() )
+            distance = self.measure.distance( class_model.values(), ordered_doc_model.values() )
             self.logger.debug("computeDistancies(): Class = %s \t\t Distance: %s.", key, distance)
             
             class_distances[key] = distance
@@ -77,9 +93,10 @@ class Classifier:
         
     def prepareModel(self, model, smooth_model):
         if smooth_model:
-            mg.smoothModel(model)
-        
-        mg.computeProbabilities(model)
+            return mg.smoothModel(model, self.SMOOTHING_VALUE)
+        else:
+            mg.computeProbabilities(model)
+            return model
 
 """
 Data object used to return the result (class name and distance to class) of

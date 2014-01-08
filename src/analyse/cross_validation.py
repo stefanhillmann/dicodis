@@ -41,6 +41,7 @@ class CrossValidator:
         The remaining are used for training. 
         """
         test_results = []
+        self.logger.info("Run cross validation for %s documents (dialogs).", len(self.documents))
         for i in range( len(self.documents) ):
             """
             Select documents for training and the document for testing the classifier_name
@@ -82,6 +83,8 @@ class FoldValidator:
     training_set: List of dialogs.Document    
     """    
     def trainClassifier(self, training_set, n, frequency_threshold):
+        self.logger.info("trainClassifier starts")
+        
         # get the unique class identifiers
         classes = lu.uniqueObjectValues(training_set, 'label')
 
@@ -89,7 +92,7 @@ class FoldValidator:
         for class_name in classes:
             class_documents = lu.filterByFieldValue(training_set, 'label', class_name)
             
-            self.logger.debug('Train class %s in classifier %s with %s documents', class_name, self.classifier.name, len(class_documents))
+            self.logger.info('Train class %s in classifier %s with %s documents', class_name, self.classifier.name, len(class_documents))
             
             # collect content of all documents (of the current class, and ...)
             document_contents = []            
@@ -249,7 +252,9 @@ def writeResultTableToFile(assessor_results, separator, file_path):
     f.close()
     
 def computeFMeasure(true_positive, false_positive, false_negative):
-    f = (2 * true_positive) / ( (2 * true_positive) + false_positive + false_negative)
+    f = 0
+    if true_positive != 0.0:
+        f = (2 * true_positive) / ( (2 * true_positive) + false_positive + false_negative)
     return f
 
 def computePrecision(true_positive, false_positive):

@@ -6,7 +6,7 @@ import logging
 from multiprocessing.pool import Pool
 from util import time_util
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 
 id_column_name = 'iteration'
 positive_class = 'succeeded'
@@ -97,6 +97,8 @@ def run_validation(job):
     
     
 if __name__ == '__main__':
+    
+    logging.info("Cross validation starts.")
 
     succees_result      = []
     simulation_result   = []
@@ -124,5 +126,5 @@ if __name__ == '__main__':
     results.extend(wa_result)
     
     result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
-    cv.writeResultTableToFile(results, ',', '../results/' + result_file_name)
+    cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)
     

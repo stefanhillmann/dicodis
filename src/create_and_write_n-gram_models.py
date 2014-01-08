@@ -23,8 +23,11 @@ for document in dialog_documents:
     
 n_grams = model_generator.create_ngrams(documents_contents, 3)
 class_model = model_generator.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+
+export.toCSV(class_model, '/home/stefan/temp/csv_export_absolute.csv')
+
 model_generator.computeProbabilities(class_model)
 
-export.toCSV(class_model, '/home/stefan/temp/csv_export.csv')
+export.toCSV(class_model, '/home/stefan/temp/csv_export_relative.csv')
 
 print class_model
