@@ -58,7 +58,7 @@ class CrossValidator:
             """
             test_classifier = classifier.getClassifier(self.classifier_name)
             fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size, self.frequency_threshold)
-            test_results.extend(fold_validator.testClassifier())
+            test_results.extend( fold_validator.testClassifier() )
             
         return test_results
             
