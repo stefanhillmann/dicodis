@@ -1,0 +1,7 @@
+Criteria;Classifier;n;Freq. Threshold;TP;FP;TN;FN;Recall;Precision;F-Measure
+word_accuracy_100;cosine;1;1;0.0;0.0;95.0;21.0;0;0;0
+word_accuracy_100;cosine;2;1;0.0;0.0;98.0;18.0;0;0;0
+word_accuracy_100;cosine;3;1;0.0;0.0;92.0;24.0;0;0;0
+word_accuracy_60;cosine;1;1;0.0;0.0;95.0;21.0;0;0;0
+word_accuracy_60;cosine;2;1;0.0;0.0;98.0;18.0;0;0;0
+word_accuracy_60;cosine;3;1;0.0;0.0;92.0;24.0;0;0;0

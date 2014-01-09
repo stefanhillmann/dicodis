@@ -9,8 +9,8 @@ from util import time_util
 logging.basicConfig(level=logging.WARNING)
 
 id_column_name = 'iteration'
-positive_class = 'succeeded'
-negative_class = 'failed'
+positive_class = 'positive'
+negative_class = 'negative'
 
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
@@ -100,30 +100,46 @@ if __name__ == '__main__':
     
     logging.info("Cross validation starts.")
 
-    succees_result      = []
-    simulation_result   = []
-    length_result       = []
-    wa_result           = []
+    succees_successful_result   = []
+    succees_failed_result       = []
+    simulation_result           = []
+    length_short_result         = []
+    length_long_result          = []
+    wa_100_result               = []
+    wa_60_result                = []
     
     
-    print 'Criteria: Turn Success'
-    succees_result = validate(file_turns_succeeded, 'succeeded', file_turns_failed, 'failed', id_column_name, 'task_success')
+    #print 'Criteria: Turn Success'
+    print 'Successful?'
+    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    print 'Failed?' 
+    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
     
     #print 'Criteria: Quality of Simulation'
     #simulation_result = validate(file_best_simulation, 'best_simulation', file_worst_simulation, 'worst_simulation', id_column_name, 'simulation_quality')
     
     print 'Criteria: Length of Interaction'
-    length_result = validate(file_shortest_interaction, 'shortest_49', file_longest_interaction, 'longest_49', id_column_name, 'length_of_interaction')
+    print 'Short interaction?'
+    length_short_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'short_interactions')
+    print 'Long interaction'
+    length_long_result = validate(file_longest_interaction, positive_class, file_shortest_interaction, negative_class, id_column_name, 'long_interactions')
     
     print 'Criteria: Word Accuracy'
-    wa_result = validate(file_wa_100, 'word_accuracy_100', file_wa_60, 'word_accuracy_60', id_column_name, 'word_accuracy')
+    print 'Word accuracy is 100?'
+    wa_100_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy_100')
+    
+    print 'Word accuracy is 60?'
+    wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
     
         
     results = []
-    results.extend(succees_result)
-    results.extend(length_result)
+    results.extend(succees_successful_result)
+    results.extend(succees_failed_result)
+    results.extend(length_short_result)
+    results.extend(length_long_result)
     results.extend(simulation_result)
-    results.extend(wa_result)
+    results.extend(wa_100_result)
+    results.extend(wa_60_result)
     
     result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
     cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)

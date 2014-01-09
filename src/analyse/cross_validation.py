@@ -184,9 +184,29 @@ class ResultAssessor:
         """ reset the true/false positive/negative counter to zero """
         for result in self.data:
             
+            
+            # POSITIVE
+            if result.calculated_class == self.positive_class:
+                # TRUE
+                if result.actual_class == self.positive_class:
+                    self.counter_true_positive += 1
+                # FALSE
+                else:
+                    self.counter_false_positive += 1
+                    
+            # NEGATIVE
+            if result.calculated_class == self.negative_class:
+                # TRUE
+                if result.actual_class == self.negative_class:
+                    self.counter_true_negative += 1
+                # FALSE
+                else:
+                    self.counter_false_negative += 1
+            
             """
             If actual class and calculated class are equal, it is a TRUE
             result. We have just to decide if TRUE POSITVIE or TRUE NEGATIVE 
+            """
             """
             if result.calculated_class == result.actual_class:
                 if result.actual_class == self.positive_class:
@@ -195,10 +215,11 @@ class ResultAssessor:
                 else:
                     # TRUE negative
                     self.counter_true_negative += 1
-                    
+            """        
             """
             If actual class and calculated class are NOT equal, it is a FALSE
             result. We have just to decide if FALSE POSITVIE or FALSE NEGATIVE 
+            """
             """
             if result.calculated_class != result.actual_class:
                 if result.calculated_class == self.positive_class:
@@ -207,7 +228,7 @@ class ResultAssessor:
                 else:
                     # FALSE NEGATIVE
                     self.counter_false_negative += 1
-
+            """
     def getResultAnalysis(self):
         self.countResults()
         
