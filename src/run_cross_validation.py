@@ -110,11 +110,11 @@ if __name__ == '__main__':
     wa_60_result                = []
     
     
-    print 'Criteria: Turn Success'
-    print 'Successful?'
-    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    print 'Failed?' 
-    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    #print 'Criteria: Turn Success'
+    #print 'Successful?'
+    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    #print 'Failed?' 
+    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
     
     print 'Criteria: Quality of Simulation'
     print 'Best simulation?'
@@ -122,17 +122,17 @@ if __name__ == '__main__':
     print 'Worst simulation?'
     simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
     
-    print 'Criteria: Length of Interaction'
-    print 'Short interaction?'
-    length_short_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'short_interactions')
-    print 'Long interaction'
-    length_long_result = validate(file_longest_interaction, positive_class, file_shortest_interaction, negative_class, id_column_name, 'long_interactions')
+    #print 'Criteria: Length of Interaction'
+    #print 'Short interaction?'
+    #length_short_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'short_interactions')
+    #print 'Long interaction'
+    #length_long_result = validate(file_longest_interaction, positive_class, file_shortest_interaction, negative_class, id_column_name, 'long_interactions')
     
-    print 'Criteria: Word Accuracy'
-    print 'Word accuracy is 100?'
-    wa_100_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy_100')
-    print 'Word accuracy is 60?'
-    wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
+    #print 'Criteria: Word Accuracy'
+    #print 'Word accuracy is 100?'
+    #wa_100_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy_100')
+    #print 'Word accuracy is 60?'
+    #wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
     
         
     results = []
