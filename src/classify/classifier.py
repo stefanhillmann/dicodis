@@ -17,8 +17,8 @@ from measures.measures import MeasureName
 
 
 class Classifier:
-    SMOOTHING_VALUE = 0.05
     doc_model_file_name_counter = 1
+    smoothing_value = 0 # use 0 as default value, which will not change a model
     
     def __init__(self, measure, classifier_name):
         self.logger = logging.getLogger('classifier.Classifier')
@@ -28,6 +28,9 @@ class Classifier:
         self.class_models = {}
         self.measure = measure
         self.name = classifier_name
+        
+    def setSmoothingValue(self, smoothing_value):
+        self.smoothing_value = smoothing_value
     
     def addClass(self, class_name, n_grams, frequency_treshold):
         self.logger.debug('Add %s n-grams for class %s.', len(n_grams), class_name)
@@ -95,7 +98,7 @@ class Classifier:
         
     def prepareModel(self, model, smooth_model):
         if smooth_model:
-            return mg.smoothModel(model, self.SMOOTHING_VALUE)
+            return mg.smoothModel(model, self.smoothing_value)
         else:
             mg.computeProbabilities(model)
             return model

@@ -19,12 +19,13 @@ class CrossValidator:
     n_gram_size -- Size of the n-grams to be used by the classifier. See and use ngram.NGramSize for valid values. 
         
     """
-    def __init__(self, classifier_name, n_gram_size, frequency_threshold):
+    def __init__(self, classifier_name, n_gram_size, frequency_threshold, smoothing_value):
         self.logger = logging.getLogger('cross_validation.CrossValidator')
         
-        self.classifier_name    = classifier_name
-        self.n_gram_size        = n_gram_size
-        self.frequency_threshold = frequency_threshold
+        self.classifier_name        = classifier_name
+        self.n_gram_size            = n_gram_size
+        self.frequency_threshold    = frequency_threshold
+        self.smoothing_value        = smoothing_value
         
         """
         Dictionary which holds for each class (by class name) a list of related documents.
@@ -57,7 +58,9 @@ class CrossValidator:
             Create (train) the classifier_name and test it with the document
             """
             test_classifier = classifier.getClassifier(self.classifier_name)
-            fold_validator = FoldValidator(training_documents, [test_document], test_classifier, self.n_gram_size, self.frequency_threshold)
+            test_classifier.setSmoothingValue(self.smoothing_value)
+            fold_validator = FoldValidator(training_documents, [test_document], test_classifier,
+                                           self.n_gram_size, self.frequency_threshold, self.smoothing_value)
             test_results.extend( fold_validator.testClassifier() )
             
         return test_results
@@ -65,13 +68,14 @@ class CrossValidator:
              
 class FoldValidator:
     
-    def __init__(self, training_set, test_set, classifier, n, frequency_threshold):
+    def __init__(self, training_set, test_set, classifier, n, frequency_threshold, smoothing_value):
         self.logger = logging.getLogger('cross_validation.FoldValidator')
         
-        self.classifier = classifier
-        self.test_set = test_set
-        self.n = n
-        self.test_results = []
+        self.classifier         = classifier
+        self.test_set           = test_set
+        self.n                  = n
+        self.smoothing_value    = smoothing_value
+        self.test_results       = []
         
         self.trainClassifier(training_set, n, frequency_threshold)
         
@@ -140,7 +144,8 @@ class SingleTestResult:
                   self.calculated_class, self.actual_class, self.calculated_distance, self.n_gram_size)
 
 class SummarizedTestResults:
-    def __init__(self, true_positive, false_positive, true_negative, false_negative, classifier_name, n_gram_size, criteria, frequency_threshold):
+    def __init__(self, true_positive, false_positive, true_negative, false_negative,
+                 classifier_name, n_gram_size, criteria, frequency_threshold, smoothing_value):
         self.true_positive      = true_positive
         self.false_positive     = false_positive
         self.true_negative      = true_negative
@@ -149,6 +154,7 @@ class SummarizedTestResults:
         self.n_gram_size        = n_gram_size
         self.criteria           = criteria
         self.frequency_threshold = frequency_threshold
+        self.smoothing_value    = smoothing_value
         
     def __repr__(self):
         return 'Classifier = {}    n = {}\nTP = {}  FP = {}    TN = {}  FN = {}'\
@@ -158,7 +164,8 @@ class SummarizedTestResults:
 TODO
 """
 class ResultAssessor:
-    def __init__(self, cross_validation_results, positive_class, negative_class, classifier_name, n_gram_size, frequency_threshold, criteria):
+    def __init__(self, cross_validation_results, positive_class, negative_class,
+                 classifier_name, n_gram_size, frequency_threshold, criteria, smoothing_value):
         self.logger = logging.getLogger("analyse.cross_validation.ResultAssessor")
         self.logger.debug( ("Initialize ResultAssor with %s single results.", len(cross_validation_results)) )
         
@@ -166,10 +173,11 @@ class ResultAssessor:
         self.positive_class     = positive_class
         self.negative_class     = negative_class
         
-        self.criteria           = criteria
-        self.classifier_name    = classifier_name
-        self.n_gram_size        = n_gram_size
-        self.frequency_threshold = frequency_threshold
+        self.criteria               = criteria
+        self.classifier_name        = classifier_name
+        self.n_gram_size            = n_gram_size
+        self.frequency_threshold    = frequency_threshold
+        self.smoothing_value        = smoothing_value
         
         self.resetCounter()
 
@@ -235,7 +243,7 @@ class ResultAssessor:
         return SummarizedTestResults(self.counter_true_positive, self.counter_false_positive, 
                                      self.counter_true_negative, self.counter_false_negative,
                                      self.classifier_name, self.n_gram_size, self.criteria,
-                                     self.frequency_threshold)
+                                     self.frequency_threshold, self.smoothing_value)
 """
 Creates from a list of assessor results (results of different classifier) a table like structure
 for further processing (e.g. plotting).
@@ -245,7 +253,7 @@ Classifier n TP FP TN FN
 def createResultTable(assessor_results, separator):
     rows = []
     # create header
-    header = separator.join( ['Criteria', 'Classifier', 'n', 'Freq. Threshold', 'TP', 'FP', 'TN', 'FN', 'Recall', 'Precision', 'F-Measure'] )
+    header = separator.join( ['Criteria', 'Classifier', 'n', 'l', 'Freq. Threshold', 'TP', 'FP', 'TN', 'FN', 'Recall', 'Precision', 'F-Measure'] )
     rows.append(header)
     
     # create one row per assessor result
@@ -254,9 +262,9 @@ def createResultTable(assessor_results, separator):
         precision = computePrecision(values.true_positive, values.false_positive)
         f_measure = computeFMeasure(values.true_positive, values.false_positive, values.false_negative)
         
-        row_values = [values.criteria, values.classifier_name, values.n_gram_size, values.frequency_threshold,
-                      values.true_positive, values.false_positive, values.true_negative, values.false_negative,
-                      recall, precision, f_measure]
+        row_values = [values.criteria, values.classifier_name, values.n_gram_size, values.smoothing_value,
+                      values.frequency_threshold, values.true_positive, values.false_positive,
+                      values.true_negative, values.false_negative, recall, precision, f_measure]
         row = separator.join( str(value) for value in  row_values)
         rows.append(row)
         

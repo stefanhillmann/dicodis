@@ -4,15 +4,21 @@ from measures.measures import MeasureName
 validation_processes = 12
 
 sizes = [
-              NGramSize.ONE,
-              NGramSize.TWO,
+              #NGramSize.ONE,
+              #NGramSize.TWO,
               NGramSize.THREE,
-              NGramSize.FOUR,
-              NGramSize.FIVE,
-              NGramSize.SIX,
-              NGramSize.SEVEN,
-              NGramSize.EIGHT
+              #NGramSize.FOUR,
+              #NGramSize.FIVE,
+              #NGramSize.SIX,
+              #NGramSize.SEVEN,
+              #NGramSize.EIGHT
              ]
+
+smoothing_values = [
+                    0.05,
+                    0.25,
+                    0.5
+                    ]
 
 classifier_names = [
                     MeasureName.COSINE,
@@ -24,26 +30,28 @@ classifier_names = [
 
 frequency_thresholds = [
                         1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7
+                        #2,
+                        #3,
+                        #4,
+                        #5,
+                        #6,
+                        #7
                         ]
 
 class Configuration:
-    def __init__(self, size, classifier, frequency_threshold):
-        self.size = size
-        self.classifier = classifier
-        self.frequency_threshold = frequency_threshold
+    def __init__(self, size, classifier, frequency_threshold, smoothing_value):
+        self.size                   = size
+        self.classifier             = classifier
+        self.frequency_threshold    = frequency_threshold
+        self.smoothing_value        = smoothing_value
         
 def getConfigurations():
     configurations = []
     for size in sizes:
         for classifier in classifier_names:
             for frequency_threshold in frequency_thresholds:
-                configuration = Configuration(size, classifier, frequency_threshold)
-                configurations.append(configuration)
+                for smoothing_value in smoothing_values:
+                    configuration = Configuration(size, classifier, frequency_threshold, smoothing_value)
+                    configurations.append(configuration)
     
     return configurations
