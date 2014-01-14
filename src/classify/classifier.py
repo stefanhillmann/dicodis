@@ -10,7 +10,6 @@ from util import dict as du
 import ngram.model_generator as mg
 import logging
 from measures import measures
-from measures.measures import MeasureName
 
 
 
@@ -135,15 +134,15 @@ def getJensenClassifier():
 def getClassifier(classifier_name):
     created_classifier = "";
     
-    if classifier_name == MeasureName.COSINE:
+    if classifier_name == measures.MeasureName.COSINE:
         created_classifier = getCosineClassifier()
-    elif classifier_name == MeasureName.KULLBACK_LEIBLER:
+    elif classifier_name == measures.MeasureName.KULLBACK_LEIBLER:
         created_classifier = getKullbackLeiblerClassifier()
-    elif classifier_name == MeasureName.MEAN_KULLBACK_LEIBLER:
+    elif classifier_name == measures.MeasureName.MEAN_KULLBACK_LEIBLER:
         created_classifier = getMeanKullbackLeiblerClassifier()
-    elif classifier_name == MeasureName.SYMMETRIC_KULLBACK_LEIBLER:
+    elif classifier_name == measures.MeasureName.SYMMETRIC_KULLBACK_LEIBLER:
         created_classifier = getSymmetricKullbackLeiblerClassifier()
-    elif classifier_name == MeasureName.JENSEN:
+    elif classifier_name == measures.MeasureName.JENSEN:
         created_classifier = getJensenClassifier()
     else:
         """
