@@ -1,0 +1,13 @@
+measure;reference;other;l;n;distance
+cosine;reference;reference;0.5;1;0.0
+cosine;reference;worst_sim;0.5;1;0.570176842957
+cosine;reference;best_sim;0.5;1;0.53642527414
+cosine;successful;failed;0.5;1;0.0539461952229
+cosine;longest;shortest;0.5;1;0.550267386963
+cosine;wa_100;wa_60;0.5;1;0.141071702933
+jensen;reference;reference;0.5;1;0.0
+jensen;reference;worst_sim;0.5;1;0.334313584772
+jensen;reference;best_sim;0.5;1;0.325190760871
+jensen;successful;failed;0.5;1;0.0253472584653
+jensen;longest;shortest;0.5;1;0.232625247646
+jensen;wa_100;wa_60;0.5;1;0.0522394872447

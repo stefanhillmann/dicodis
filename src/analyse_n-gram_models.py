@@ -9,7 +9,7 @@ def printResult():
         print SEPARATOR.join(line)
         
 def writeCsvFile():
-    file_name = time_util.humanReadableTimestamp() + '__n-ngram_counts.csv'
+    file_name = time_util.humanReadableTimestamp() + '__corpora_distancies.csv'
     path = '../results/' + file_name
     f = open(path, 'w')
     for line in data:
@@ -22,6 +22,16 @@ def countTotalNGrams(model):
         count += model[key]
         
     return count
+
+def getOriginalModel(f):
+    print 'Creating n-gram-model of original experiment.'
+    reader = dialogs.DialogsReader( f )
+    dialog_documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+    documents_contents = []
+    for document in dialog_documents:
+        documents_contents.append(document.content)
+        
+    
     
 
 SEPARATOR = " "
@@ -42,10 +52,14 @@ file_longest_interaction    = '../data/longest49Interactions.csv'
 file_wa_100                 = '../data/WA_60.csv'
 file_wa_60                  = '../data/WA_100.csv'
 
+file_original               = '../data/annotatedData_corrected.csv'
+
 files = {'successful' : file_turns_succeeded, 'failed' : file_turns_failed, 'best_sim' : file_best_simulation,
          'worst_sim' : file_worst_simulation, 'shortest' : file_shortest_interaction,
          'longest': file_longest_interaction, 'wa_100' : file_wa_100, 'wa_60' : file_wa_60}
 data = [['name', 'n', 'threshold','unique_n-grams', 'total_n-grams']]
+
+original_model = getOriginalModel()
 
 for n in xrange(N_MIN, N_MAX + 1):
     print 'Run for n = {}'.format(n)

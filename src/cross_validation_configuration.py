@@ -1,5 +1,5 @@
 from ngram.model_generator import NGramSize
-from classify.classifier import ClassifierName
+from measures.measures import MeasureName
 
 validation_processes = 12
 
@@ -15,11 +15,11 @@ sizes = [
              ]
 
 classifier_names = [
-                    ClassifierName.COSINE,
-                    ClassifierName.JENSEN,
-                    ClassifierName.KULLBACK_LEIBLER,
-                    ClassifierName.MEAN_KULLBACK_LEIBLER,
-                    ClassifierName.SYMMETRIC_KULLBACK_LEIBLER
+                    MeasureName.COSINE,
+                    MeasureName.JENSEN,
+                    MeasureName.KULLBACK_LEIBLER,
+                    MeasureName.MEAN_KULLBACK_LEIBLER,
+                    MeasureName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
 frequency_thresholds = [

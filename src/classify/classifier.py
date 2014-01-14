@@ -11,6 +11,8 @@ from util import dict as du
 import ngram.model_generator as mg
 import ngram.export as export
 import logging
+from measures import measures
+from measures.measures import MeasureName
 
 
 
@@ -108,41 +110,6 @@ class ClassificationResult:
         self.distance = distance
 
 
-"""
-Measure implementations
-"""
-    
-class CosineMeasure:
-    def distance(self, p, q):
-        similarity = measures.cosineSimilarity(p, q)
-        
-        """
-        In order to get the distance we subtract the similartiy from 1.
-        That works because the similarity is always between 1 and 0.
-        We do that to follow the behavoiur of the other distance measure:
-        The hihger the distance, the hihger the difference between p and q.
-        """
-        return 1 - similarity
-        
-class KullbackLeiblerMeasure:
-    def distance(self, p, q):
-        divergence = measures.kullbackLeiblerDivergence(p, q)
-        return divergence
-        
-class MeanKullbackLeiblerMeasure:
-    def distance(self, p, q):
-        distance = measures.meanKullbackLeiblerDistance(p, q)
-        return distance
-        
-class SymmetricKullbackLeiblerDistance:
-    def distance(self, p, q):
-        distance = measures.symmetricKullbackLeiblerDistance(p, q)
-        return distance
-        
-class JensenMeasure:
-    def distance(self, p, q):
-        distance = measures.jensenDistance(p, q)
-        return distance
 
 
 """
@@ -150,32 +117,32 @@ Factory methods for Classifiers using different measurements
 """
 
 def getCosineClassifier():
-    return Classifier(CosineMeasure(), "cosine")
+    return Classifier(measures.CosineMeasure(), "cosine")
     
 def getKullbackLeiblerClassifier():
-    return Classifier(KullbackLeiblerMeasure(), "kullback_leibler")
+    return Classifier(measures.KullbackLeiblerMeasure(), "kullback_leibler")
     
 def getMeanKullbackLeiblerClassifier():
-    return Classifier(MeanKullbackLeiblerMeasure(), "mean_kullback_leibler")
+    return Classifier(measures.MeanKullbackLeiblerMeasure(), "mean_kullback_leibler")
     
 def getSymmetricKullbackLeiblerClassifier():
-    return Classifier(SymmetricKullbackLeiblerDistance(), "symmetric_kullback_leibler")
+    return Classifier(measures.SymmetricKullbackLeiblerDistance(), "symmetric_kullback_leibler")
     
 def getJensenClassifier():
-    return Classifier(JensenMeasure(), "jensen")
+    return Classifier(measures.JensenMeasure(), "jensen")
 
 def getClassifier(classifier_name):
     created_classifier = "";
     
-    if classifier_name == ClassifierName.COSINE:
+    if classifier_name == MeasureName.COSINE:
         created_classifier = getCosineClassifier()
-    elif classifier_name == ClassifierName.KULLBACK_LEIBLER:
+    elif classifier_name == MeasureName.KULLBACK_LEIBLER:
         created_classifier = getKullbackLeiblerClassifier()
-    elif classifier_name == ClassifierName.MEAN_KULLBACK_LEIBLER:
+    elif classifier_name == MeasureName.MEAN_KULLBACK_LEIBLER:
         created_classifier = getMeanKullbackLeiblerClassifier()
-    elif classifier_name == ClassifierName.SYMMETRIC_KULLBACK_LEIBLER:
+    elif classifier_name == MeasureName.SYMMETRIC_KULLBACK_LEIBLER:
         created_classifier = getSymmetricKullbackLeiblerClassifier()
-    elif classifier_name == ClassifierName.JENSEN:
+    elif classifier_name == MeasureName.JENSEN:
         created_classifier = getJensenClassifier()
     else:
         """
@@ -186,11 +153,4 @@ def getClassifier(classifier_name):
         
     return created_classifier
      
-
-class ClassifierName:
-    COSINE                      = 'cosine'
-    KULLBACK_LEIBLER            = 'kullback leibler'
-    MEAN_KULLBACK_LEIBLER       = 'mean kullback leibler'
-    SYMMETRIC_KULLBACK_LEIBLER  = 'symmetric kullback leibler'
-    JENSEN                      = 'jensen'
 

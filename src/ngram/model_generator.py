@@ -8,6 +8,7 @@ import logging
 from collections import Counter
 from ngram import smoothing
 from collections import OrderedDict
+from util import dict as du
 
 module_logger = logging.getLogger('ngram')
 
@@ -57,23 +58,28 @@ def addPads(document, pads):
     padded_document.extend(pads)
     
     return padded_document
+
+def sortModelByNGrams(model):
+    return du.sortByKey(model)
     
 def createNgramModel(unique_n_grams, n_grams):
     n_gram_model = {} 
     n_grams_counter = Counter(n_grams)
     
     for n_gram in unique_n_grams:
-    #for n_gram in n_grams_counter.keys():
         n_gram_model[n_gram] = float( n_grams_counter[n_gram] )
+        
+    n_gram_model = sortModelByNGrams(n_gram_model)
         
     return n_gram_model
 
 def remove_rare_n_grams(model, treshold):
-    new_model = {}
+    new_model = OrderedDict()
         
     for key in model.keys():
         if model[key] >= treshold:
             new_model[key] = model[key]
+            
     return new_model
     
 def smoothModel(model, l):
