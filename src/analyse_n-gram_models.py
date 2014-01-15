@@ -9,7 +9,7 @@ def printResult():
         print SEPARATOR.join(line)
         
 def writeCsvFile():
-    file_name = time_util.humanReadableTimestamp() + '__corpora_distancies.csv'
+    file_name = time_util.humanReadableTimestamp() + '__ngram_models.csv'
     path = '../results/' + file_name
     f = open(path, 'w')
     for line in data:
@@ -38,7 +38,7 @@ SEPARATOR = " "
 N_MIN = 1
 N_MAX = 8
 T_MIN = 1
-T_MAX = 7
+T_MAX = 1
 
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
@@ -56,10 +56,11 @@ file_original               = '../data/annotatedData_corrected.csv'
 
 files = {'successful' : file_turns_succeeded, 'failed' : file_turns_failed, 'best_sim' : file_best_simulation,
          'worst_sim' : file_worst_simulation, 'shortest' : file_shortest_interaction,
-         'longest': file_longest_interaction, 'wa_100' : file_wa_100, 'wa_60' : file_wa_60}
+         'longest': file_longest_interaction, 'wa_100' : file_wa_100, 'wa_60' : file_wa_60,
+         'experiment': file_original}
 data = [['name', 'n', 'threshold','unique_n-grams', 'total_n-grams']]
 
-original_model = getOriginalModel()
+#original_model = getOriginalModel()
 
 for n in xrange(N_MIN, N_MAX + 1):
     print 'Run for n = {}'.format(n)
