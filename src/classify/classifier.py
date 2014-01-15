@@ -9,7 +9,7 @@ import util.list as lu
 from util import dict as du
 import ngram.model_generator as mg
 import logging
-from measures import measures
+from measuring import measures
 
 
 

@@ -1,9 +1,6 @@
 import logging
-from measures import measures
-from measures.measures import MeasureName
-from ngram import model_generator as mg
-from util import dict as du
-
+from measuring import measures
+from measuring.measures import MeasureName
 
 class DistanceCalculator:
     

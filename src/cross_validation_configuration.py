@@ -1,12 +1,12 @@
 from ngram.model_generator import NGramSize
-from measures.measures import MeasureName
+from measuring.measures import MeasureName
 
 validation_processes = 12
 
 sizes = [
-              #NGramSize.ONE,
+              NGramSize.ONE,
               #NGramSize.TWO,
-              NGramSize.THREE,
+              #NGramSize.THREE,
               #NGramSize.FOUR,
               #NGramSize.FIVE,
               #NGramSize.SIX,
@@ -16,16 +16,16 @@ sizes = [
 
 smoothing_values = [
                     0.05,
-                    0.25,
-                    0.5
+                    #0.25,
+                    #0.5
                     ]
 
 classifier_names = [
                     MeasureName.COSINE,
-                    MeasureName.JENSEN,
-                    MeasureName.KULLBACK_LEIBLER,
-                    MeasureName.MEAN_KULLBACK_LEIBLER,
-                    MeasureName.SYMMETRIC_KULLBACK_LEIBLER
+                    #MeasureName.JENSEN,
+                    #MeasureName.KULLBACK_LEIBLER,
+                    #MeasureName.MEAN_KULLBACK_LEIBLER,
+                    #MeasureName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
 frequency_thresholds = [
@@ -44,6 +44,10 @@ class Configuration:
         self.classifier             = classifier
         self.frequency_threshold    = frequency_threshold
         self.smoothing_value        = smoothing_value
+        
+    def __repr__(self):
+        return '[Size: {}, Classifier: {}, Threshold: {}, Smoothing Value: {}]'.format(self.size, self.classifier,
+                                                                                      self.frequency_threshold, self.smoothing_value)
         
 def getConfigurations():
     configurations = []
