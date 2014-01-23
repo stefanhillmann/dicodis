@@ -25,18 +25,21 @@
 Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
   kl(P||Q) = \sum\limits_{i=1}^n p_i \ln\left(\frac{p_i}{q_i}\right)
+  \label{eq:kbl}
 \end{equation}
 
 \subsection{Mean Kullback-Leibler Distance}
 Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
-  mkl(P||Q) = \frac{kl(P||Q)*kl(Q||P)}{2}
+  mkl(P||Q) = \frac{kl(P||Q)+kl(Q||P)}{2}
+  \label{eq:m_kbl}
 \end{equation}
 
 \subsection{Symmetric Kullback-Leibler Distance}
 Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
 \begin{equation}
   skl(P||Q) = \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right)
+  \label{eq:s_kbl}
 \end{equation}
 \begin{equation}
   skl(P||Q) = skl(Q||P)
@@ -49,6 +52,25 @@ Pre-condition: $\sum\limits_{i=1}^n p_i = 1$ and $\sum\limits_{i=1}^n q_i = 1$
             &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (q_i-p_i) ( \ln(q_i) - \ln(p_i) ) \\
             &= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (q_i - p_i) \ln \left(\frac{q_i}{p_i}\right) \\
             &= skl(Q||P) && \qedhere
+\end{align*}
+\end{proof}
+
+\subsection{Proportionality of Mean and Symmetric Kullback-Leibler Distance}
+\begin{equation}
+	2*mkl(P||Q) = skl(P||Q)
+	\label{eq:2_times_mkl_equals_skl}
+\end{equation}
+
+\begin{proof}[Proof of Equation \ref{eq:2_times_mkl_equals_skl}]
+\begin{align*}
+	2 * mkl((P||Q) 	&= kl(P||Q) + kl(Q||P) && \mbox{see Equation \ref{eq:m_kbl} and \ref{eq:kbl}}\\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i \ln \left(\frac{p_i}{q_i}\right) + \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n q_i \ln \left(\frac{q_i}{p_i}\right) && \\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i \ln \left(\frac{p_i}{q_i}\right) + q_i \ln \left(\frac{q_i}{p_i}\right) && \\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i (\ln(p_i) - \ln(q_i)) + q_i (\ln(q_i) - \ln(p_i)) && \\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n p_i (\ln(p_i) - \ln(q_i)) - q_i (\ln(p_i) - \ln(q_i)) && \\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (p_i - q_i)(\ln(p_i) - ln(q_i)) && \\
+					&= \mathlarger{\mathlarger{\sum}}\limits_{i=1}^n (p_i-q_i) \ln \left(\frac{p_i}{q_i}\right) && \\
+					&= skl(P||Q) && \mbox{Equation \ref{eq:s_kbl}}
 \end{align*}
 \end{proof}
 

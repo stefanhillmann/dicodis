@@ -5,27 +5,27 @@ validation_processes = 12
 
 sizes = [
               NGramSize.ONE,
-              NGramSize.TWO,
-              NGramSize.THREE,
-              NGramSize.FOUR,
-              NGramSize.FIVE,
-              NGramSize.SIX,
-              NGramSize.SEVEN,
-              NGramSize.EIGHT
+              #NGramSize.TWO,
+              #NGramSize.THREE,
+              #NGramSize.FOUR,
+              #NGramSize.FIVE,
+              #NGramSize.SIX,
+              #NGramSize.SEVEN,
+              #NGramSize.EIGHT
              ]
 
 smoothing_values = [
                     0.05,
-                    0.25,
-                    0.5
+                    #0.25,
+                    #0.5
                     ]
 
 classifier_names = [
-                    MeasureName.COSINE,
-                    MeasureName.JENSEN,
-                    MeasureName.KULLBACK_LEIBLER,
+                    #MeasureName.COSINE,
+                    #MeasureName.JENSEN,
+                    #MeasureName.KULLBACK_LEIBLER,
                     MeasureName.MEAN_KULLBACK_LEIBLER,
-                    MeasureName.SYMMETRIC_KULLBACK_LEIBLER
+                    #MeasureName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
 frequency_thresholds = [
