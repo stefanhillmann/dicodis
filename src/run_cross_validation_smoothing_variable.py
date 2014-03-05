@@ -12,8 +12,8 @@ id_column_name = 'iteration'
 positive_class = 'positive'
 negative_class = 'negative'
 
-file_juged_good             = '../data/goodJuged.csv'
-file_juged_bad              = '../data/badJuged.csv'
+file_judged_good             = '../data/goodJudged.csv'
+file_judged_bad              = '../data/badJudged.csv'
 
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
@@ -125,9 +125,9 @@ if __name__ == '__main__':
 
     print 'Criteria: User Judgment'
     print 'Good'
-    juged_good_result = validate(file_juged_good, positive_class, file_juged_bad, negative_class, id_column_name, 'juged_good')
+    judged_good_result = validate(file_judged_good, positive_class, file_judged_bad, negative_class, id_column_name, 'juged_good')
     print 'Bad' 
-    juged_bad_result = validate(file_juged_bad, positive_class, file_juged_good, negative_class, id_column_name, 'juged_bad')
+    judged_bad_result = validate(file_judged_bad, positive_class, file_judged_good, negative_class, id_column_name, 'juged_bad')
         
     #print 'Criteria: Quality of Simulation'
     #print 'Best simulation?'
@@ -151,8 +151,8 @@ if __name__ == '__main__':
     results = []
     results.extend(succees_successful_result)
     results.extend(succees_failed_result)
-    results.extend(juged_good_result)
-    results.extend(juged_bad_result)
+    results.extend(judged_good_result)
+    results.extend(judged_bad_result)
     results.extend(length_short_result)
     results.extend(length_long_result)
     results.extend(simulation_best_result)
