@@ -12,6 +12,9 @@ id_column_name = 'iteration'
 positive_class = 'positive'
 negative_class = 'negative'
 
+file_juged_good             = '../data/goodJuged.csv'
+file_juged_bad              = '../data/badJuged.csv'
+
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
 
@@ -110,14 +113,22 @@ if __name__ == '__main__':
     length_long_result          = []
     wa_100_result               = []
     wa_60_result                = []
+    good_juged_result           = []
+    bad_juged_result            = []
     
     
-    print 'Criteria: Turn Success'
-    print 'Successful?'
-    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    print 'Failed?' 
-    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
-    
+    #print 'Criteria: Turn Success'
+    #print 'Successful?'
+    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    #print 'Failed?' 
+    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+
+    print 'Criteria: User Judgment'
+    print 'Good'
+    juged_good_result = validate(file_juged_good, positive_class, file_juged_bad, negative_class, id_column_name, 'juged_good')
+    print 'Bad' 
+    juged_bad_result = validate(file_juged_bad, positive_class, file_juged_good, negative_class, id_column_name, 'juged_bad')
+        
     #print 'Criteria: Quality of Simulation'
     #print 'Best simulation?'
     #simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
@@ -140,6 +151,8 @@ if __name__ == '__main__':
     results = []
     results.extend(succees_successful_result)
     results.extend(succees_failed_result)
+    results.extend(juged_good_result)
+    results.extend(juged_bad_result)
     results.extend(length_short_result)
     results.extend(length_long_result)
     results.extend(simulation_best_result)
