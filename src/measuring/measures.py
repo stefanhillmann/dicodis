@@ -38,7 +38,6 @@ def kullbackLeiblerDivergence(p, q):
 
 
 def meanKullbackLeiblerDistance(p, q):
-    print "M kbl"
     """
     Comuptes the Mean Kullback-Leibler Divergence between vectors p and q.
     p and q must contain probabilities.
@@ -55,7 +54,6 @@ def meanKullbackLeiblerDistance(p, q):
     return mean_kbl
     
 def symmetricKullbackLeiblerDistance(p, q):
-    print "S kbl"
     """
     Comuptes the Symmetric Kullback-Leibler Divergence between vectors p and q.
     Symmetric means that D(p||q) == D(q||p), but it is not just a mean value
