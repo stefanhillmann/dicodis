@@ -27,6 +27,8 @@ file_longest_interaction    = '../data/longest49Interactions.csv'
 file_wa_100                 = '../data/WA_60.csv'
 file_wa_60                  = '../data/WA_100.csv'
 
+file_experiment              = '../data/annotatedData_corrected.csv'
+
 
 class Job:
     def __init__(self, configuration, positive_dialogs, negative_dialogs, positive_class,
@@ -113,8 +115,10 @@ if __name__ == '__main__':
     length_long_result          = []
     wa_100_result               = []
     wa_60_result                = []
-    good_juged_result           = []
-    bad_juged_result            = []
+    judged_good_result          = []
+    judged_bad_result           = []
+    sim_result                  = []
+    real_result                 = []
     
     
     #print 'Criteria: Turn Success'
@@ -123,11 +127,11 @@ if __name__ == '__main__':
     #print 'Failed?' 
     #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
 
-    print 'Criteria: User Judgment'
-    print 'Good'
-    judged_good_result = validate(file_judged_good, positive_class, file_judged_bad, negative_class, id_column_name, 'juged_good')
-    print 'Bad' 
-    judged_bad_result = validate(file_judged_bad, positive_class, file_judged_good, negative_class, id_column_name, 'juged_bad')
+    #print 'Criteria: User Judgment'
+    #print 'Good'
+    #judged_good_result = validate(file_judged_good, positive_class, file_judged_bad, negative_class, id_column_name, 'juged_good')
+    #print 'Bad' 
+    #judged_bad_result = validate(file_judged_bad, positive_class, file_judged_good, negative_class, id_column_name, 'juged_bad')
         
     #print 'Criteria: Quality of Simulation'
     #print 'Best simulation?'
@@ -147,6 +151,12 @@ if __name__ == '__main__':
     #print 'Word accuracy is 60?'
     #wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
     
+    print 'Criteria: Dialogue Source'
+    print 'simulated dialogues?'
+    sim_result = validate(file_best_simulation, positive_class, file_experiment, negative_class, id_column_name, 'simulated')
+    print 'real dialogues? '
+    real_result = validate(file_experiment, positive_class, file_best_simulation, negative_class, id_column_name, 'real')
+    
         
     results = []
     results.extend(succees_successful_result)
@@ -159,6 +169,10 @@ if __name__ == '__main__':
     results.extend(simulation_worst_result)
     results.extend(wa_100_result)
     results.extend(wa_60_result)
+    results.extend(sim_result)
+    results.extend(real_result)
+    
+    
     
     result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
     cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)

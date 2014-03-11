@@ -23,9 +23,9 @@ smoothing_values = [
 classifier_names = [
                     MeasureName.COSINE,
                     MeasureName.JENSEN,
-                    MeasureName.KULLBACK_LEIBLER,
+                    #MeasureName.KULLBACK_LEIBLER,
                     MeasureName.MEAN_KULLBACK_LEIBLER,
-                    MeasureName.SYMMETRIC_KULLBACK_LEIBLER
+                    #MeasureName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
 frequency_thresholds = [

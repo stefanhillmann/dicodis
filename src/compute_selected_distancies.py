@@ -32,19 +32,29 @@ measures = [
                     MeasureName.SYMMETRIC_KULLBACK_LEIBLER
                     ]
 
+file_judged_good            = '../data/goodJudged.csv'
+file_judged_bad             = '../data/badJudged.csv'
+processJudgement            = True
+
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
+processSuccess              = False
 
 file_best_simulation        = '../data/bestSimulation.csv'
 file_worst_simulation       = '../data/worstSimulation.csv'
+processSimulation           = False
 
 file_shortest_interaction   = '../data/shortest49Interactions.csv'
 file_longest_interaction    = '../data/longest49Interactions.csv'
+processLength               = False
 
 file_wa_100                 = '../data/WA_60.csv'
 file_wa_60                  = '../data/WA_100.csv'
+processWA                   = False
 
 file_reference              = '../data/annotatedData_corrected.csv'
+processReference            = False
+processSimulation           = False
 
 
 def printResult():
@@ -121,34 +131,45 @@ for measure_name in measures:
             print 'Run for {} with n = {} and l = {}'.format(calculator.name, n, l)
             
             # reference vs reference
-            print 'reference vs reference'
-            d = getDistance(file_reference, file_reference, n, l, calculator)
-            data.append( [calculator.name, 'reference', 'reference', str(l), str(n), str(d)] )
+            if processReference:
+                print 'reference vs reference'
+                d = getDistance(file_reference, file_reference, n, l, calculator)
+                data.append( [calculator.name, 'reference', 'reference', str(l), str(n), str(d)] )
             
             # reference vs worst_simulation
-            print 'reference vs worst_simulation'
-            d = getDistance(file_reference, file_worst_simulation, n, l, calculator)
-            data.append( [calculator.name, 'reference', 'worst_sim', str(l), str(n), str(d)] )
-            
-            # reference vs best simulation
-            print 'reference vs best simulation'
-            d = getDistance(file_reference, file_best_simulation, n, l, calculator)
-            data.append( [calculator.name, 'reference', 'best_sim', str(l), str(n), str(d)] )
+            if processSimulation:
+                print 'reference vs worst_simulation'
+                d = getDistance(file_reference, file_worst_simulation, n, l, calculator)
+                data.append( [calculator.name, 'reference', 'worst_sim', str(l), str(n), str(d)] )
+                
+                # reference vs best simulation
+                print 'reference vs best simulation'
+                d = getDistance(file_reference, file_best_simulation, n, l, calculator)
+                data.append( [calculator.name, 'reference', 'best_sim', str(l), str(n), str(d)] )
             
             # succeeded vs failed
-            print 'succeeded vs failed'
-            d = getDistance(file_turns_succeeded, file_turns_failed, n, l, calculator)
-            data.append( [calculator.name, 'successful', 'failed', str(l), str(n), str(d)] )
+            if processSuccess:
+                print 'succeeded vs failed'
+                d = getDistance(file_turns_succeeded, file_turns_failed, n, l, calculator)
+                data.append( [calculator.name, 'successful', 'failed', str(l), str(n), str(d)] )
             
             # longest vs shortest
-            print 'longest vs shortest'
-            d = getDistance(file_longest_interaction, file_shortest_interaction, n, l, calculator)
-            data.append( [calculator.name, 'longest', 'shortest', str(l), str(n), str(d)] )
+            if processLength:
+                print 'longest vs shortest'
+                d = getDistance(file_longest_interaction, file_shortest_interaction, n, l, calculator)
+                data.append( [calculator.name, 'longest', 'shortest', str(l), str(n), str(d)] )
             
             # wa_100 vs wa_60
-            print 'wa_100 vs wa_60'
-            d = getDistance(file_wa_100, file_wa_60, n, l, calculator)
-            data.append( [calculator.name, 'wa_100', 'wa_60', str(l), str(n), str(d)] )
+            if processWA:
+                print 'wa_100 vs wa_60'
+                d = getDistance(file_wa_100, file_wa_60, n, l, calculator)
+                data.append( [calculator.name, 'wa_100', 'wa_60', str(l), str(n), str(d)] )
+            
+            # good_judged vs bad_juged
+            if processJudgement:
+                print 'good_judged vs bad_juged'
+                d = getDistance(file_judged_good, file_judged_bad, n, l, calculator)
+                data.append( [calculator.name, 'juged_good', 'juged_bad', str(l), str(n), str(d)] )
         
 printResult()
 writeCsvFile()     
