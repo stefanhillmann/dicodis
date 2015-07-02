@@ -1,0 +1,14 @@
+iteration;sysSA;sysRep.field;userFields;userSA
+1;request;ALL;field ;provide 
+1;indicateValues;foodtype;foodtype ;provide 
+1;request;time;time ;provide 
+1;request;date;date ;provide 
+1;request;price;price ;provide 
+1;offerModification;logical;logical ;accept 
+1;request;field;field ;provide 
+1;indicateValues;foodtype;foodtype ;provide 
+1;offerModification;logical;logical ;accept 
+1;request;field;field ;provide 
+1;indicateValues;foodtype;foodtype ;provide 
+1;offerModification;logical;logical ;neglect 
+1;bye;bye;;
