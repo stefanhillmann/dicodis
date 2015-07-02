@@ -6,7 +6,9 @@ Created on Thu Nov 21 14:24:24 2013
 """
 
 import numpy as np
-import ngram.smoothing as smoothing
+
+import common.ngram.smoothing as smoothing
+
 
 def testComputeProbabilityCase1():
     num_unique_ngrams   = 17

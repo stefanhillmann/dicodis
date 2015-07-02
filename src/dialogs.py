@@ -6,8 +6,9 @@ Created on Thu Jun  6 15:59:01 2013
 """
 
 import csv
-import util.list as lu
 import logging
+
+import common.util.list as lu
 
 
 def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):

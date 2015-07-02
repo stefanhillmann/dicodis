@@ -1,16 +1,20 @@
-import dialogs
-import analyse.cross_validation as cv
-from analyse.cross_validation import ResultAssessor
-import cross_validation_configuration
 import logging
 from multiprocessing.pool import Pool
-from util import time_util
+
+import dialogs
+from common import analyse as cv
+from common.analyse import ResultAssessor
+from boris_analysis import cross_validation_configuration
+from common.util import time_util
 
 logging.basicConfig(level=logging.WARNING)
 
 id_column_name = 'iteration'
 positive_class = 'positive'
 negative_class = 'negative'
+
+file_judged_good             = '../data/goodJudged.csv'
+file_judged_bad              = '../data/badJudged.csv'
 
 file_turns_succeeded        = '../data/turnsSucceeded.csv'
 file_turns_failed           = '../data/turnsFailed.csv'
@@ -23,6 +27,8 @@ file_longest_interaction    = '../data/longest49Interactions.csv'
 
 file_wa_100                 = '../data/WA_60.csv'
 file_wa_60                  = '../data/WA_100.csv'
+
+file_experiment              = '../data/annotatedData_corrected.csv'
 
 
 class Job:
@@ -48,7 +54,7 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     negative_dialogs = dialogs.createDialogsDocuments(negative_reader, id_column_name, negative_class)
     print 'Dialogs in negative: {}'.format( len(negative_dialogs) )
     
-    configurations = cross_validation_configuration.getConfigurations()
+    configurations = cross_validation_configuration.getConfigurations();
     jobs = []
     job_number = 0
     for configuration in configurations:
@@ -67,24 +73,26 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     
 
 def run_validation(job):
-    print 'Executing job: {}'.format(job.job_number)
     #profiler = cProfile.Profile()
     #profiler.enable()
-    
-    
-    
+        
     size                = job.configuration.size
     classifier_name     = job.configuration.classifier
     frequency_treshold  = job.configuration.frequency_threshold
+    smoothing_value     = job.configuration.smoothing_value
     criteria            = job.criteria
+    
+    print 'Executing job: {} with configuration: {}'.format(job.job_number, job.configuration)
         
-    cross_validator = cv.CrossValidator(classifier_name, size, frequency_treshold)
+    cross_validator = cv.CrossValidator(classifier_name, size, frequency_treshold, smoothing_value)
     cross_validator.addDocuments(job.negative_dialogs)
     cross_validator.addDocuments(job.positive_dialogs)
     
     single_results = cross_validator.runCrossValidation()
     
-    assessor = ResultAssessor(single_results, positive_class, negative_class, classifier_name, size,  frequency_treshold, criteria)
+    assessor = ResultAssessor(single_results, positive_class, negative_class,
+                              classifier_name, size, frequency_treshold, criteria,
+                              smoothing_value)
     
     #profiler.disable()
     #s = io.StringIO()
@@ -108,6 +116,10 @@ if __name__ == '__main__':
     length_long_result          = []
     wa_100_result               = []
     wa_60_result                = []
+    judged_good_result          = []
+    judged_bad_result           = []
+    sim_result                  = []
+    real_result                 = []
     
     
     #print 'Criteria: Turn Success'
@@ -115,12 +127,18 @@ if __name__ == '__main__':
     #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
     #print 'Failed?' 
     #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
-    
-    print 'Criteria: Quality of Simulation'
-    print 'Best simulation?'
-    simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
-    print 'Worst simulation?'
-    simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
+
+    #print 'Criteria: User Judgment'
+    #print 'Good'
+    #judged_good_result = validate(file_judged_good, positive_class, file_judged_bad, negative_class, id_column_name, 'juged_good')
+    #print 'Bad' 
+    #judged_bad_result = validate(file_judged_bad, positive_class, file_judged_good, negative_class, id_column_name, 'juged_bad')
+        
+    #print 'Criteria: Quality of Simulation'
+    #print 'Best simulation?'
+    #simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
+    #print 'Worst simulation?'
+    #simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
     
     #print 'Criteria: Length of Interaction'
     #print 'Short interaction?'
@@ -134,16 +152,28 @@ if __name__ == '__main__':
     #print 'Word accuracy is 60?'
     #wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
     
+    print 'Criteria: Dialogue Source'
+    print 'simulated dialogues?'
+    sim_result = validate(file_best_simulation, positive_class, file_experiment, negative_class, id_column_name, 'simulated')
+    print 'real dialogues? '
+    real_result = validate(file_experiment, positive_class, file_best_simulation, negative_class, id_column_name, 'real')
+    
         
     results = []
     results.extend(succees_successful_result)
     results.extend(succees_failed_result)
+    results.extend(judged_good_result)
+    results.extend(judged_bad_result)
     results.extend(length_short_result)
     results.extend(length_long_result)
     results.extend(simulation_best_result)
     results.extend(simulation_worst_result)
     results.extend(wa_100_result)
     results.extend(wa_60_result)
+    results.extend(sim_result)
+    results.extend(real_result)
+    
+    
     
     result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
     cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)

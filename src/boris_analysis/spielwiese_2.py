@@ -1,6 +1,6 @@
 import dialogs
-import ngram.model_generator as mg
-import classify.classifier as classifier
+import common.ngram.model_generator as mg
+import common.classify.classifier as classifier
 
 id_column_name = 'iteration'
 positive_class = 'succeeded'

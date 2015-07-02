@@ -5,9 +5,10 @@ Created on Thu Nov 21 15:17:13 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-from measuring import measures
 import numpy as np
-from ngram import smoothing
+
+from common.measuring import measures
+from common.ngram import smoothing
 
 """
 Comparing equal models.

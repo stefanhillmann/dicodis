@@ -1,10 +1,10 @@
-from ngram import model_generator
-import util.list as lu
+from common.ngram import model_generator
+import common.util.list as lu
 import dialogs
-from util import time_util
+from common.util import time_util
 from corpora_distance import distance
-from ngram.model_generator import NGramSize
-from measuring.measures import MeasureName
+from common.ngram.model_generator import NGramSize
+from common.measuring import MeasureName
 
 
 l_values = [

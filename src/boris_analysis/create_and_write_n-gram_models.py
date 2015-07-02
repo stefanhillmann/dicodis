@@ -1,5 +1,6 @@
-from ngram import model_generator, export
-import util.list as lu
+from common.ngram import export
+from common.ngram import model_generator
+import common.util.list as lu
 import dialogs
 
 file_turns_succeeded        = '../data/turnsSucceeded.csv'

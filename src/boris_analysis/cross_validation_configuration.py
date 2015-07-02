@@ -1,5 +1,5 @@
-from ngram.model_generator import NGramSize
-from measuring.measures import MeasureName
+from common.ngram.model_generator import NGramSize
+from common.measuring import MeasureName
 
 validation_processes = 12
 

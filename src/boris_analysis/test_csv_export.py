@@ -1,4 +1,4 @@
-from ngram import export
+from common.ngram import export
 
 model = {'a': 4, 'b': 5, 'c': 3}
 

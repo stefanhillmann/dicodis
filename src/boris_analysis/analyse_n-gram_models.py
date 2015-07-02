@@ -1,7 +1,7 @@
-from ngram import model_generator, export
-import util.list as lu
+from common.ngram import model_generator
+import common.util.list as lu
 import dialogs
-from util import time_util
+from common.util import time_util
 
 
 def printResult():

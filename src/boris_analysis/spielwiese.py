@@ -6,10 +6,10 @@ Created on Fri Jun  7 13:41:29 2013
 """
 
 import logging
-from run_cross_validation import validate
-import analyse.cross_validation as cv
 from multiprocessing import Manager
 
+from boris_analysis.run_cross_validation import validate
+from common import analyse as cv
 
 logging.basicConfig(level=logging.INFO)
 

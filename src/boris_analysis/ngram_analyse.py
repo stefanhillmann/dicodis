@@ -1,9 +1,11 @@
-import dialogs
-import ngram.model_generator as mg
 import operator
-import matplotlib.pyplot as plt
-import util.list as lu
 import numpy as np
+
+import dialogs
+import common.ngram.model_generator as mg
+import matplotlib.pyplot as plt
+import common.util.list as lu
+
 
 def remove_rare_n_grams(model, treshold):
     new_model = {}

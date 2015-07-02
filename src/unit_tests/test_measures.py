@@ -1,5 +1,6 @@
 import unittest
-import measuring.measures as m
+
+from common import measuring as m
 
 
 class testMeasures(unittest.TestCase):
