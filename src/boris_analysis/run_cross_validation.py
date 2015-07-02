@@ -80,10 +80,10 @@ def run_validation(job):
     criteria            = job.criteria
         
     cross_validator = cv.CrossValidator(classifier_name, size, frequency_treshold)
-    cross_validator.addDocuments(job.negative_dialogs)
-    cross_validator.addDocuments(job.positive_dialogs)
+    cross_validator.add_documents(job.negative_dialogs)
+    cross_validator.add_documents(job.positive_dialogs)
     
-    single_results = cross_validator.runCrossValidation()
+    single_results = cross_validator.run_cross_validation()
     
     assessor = ResultAssessor(single_results, positive_class, negative_class, classifier_name, size,  frequency_treshold, criteria)
     

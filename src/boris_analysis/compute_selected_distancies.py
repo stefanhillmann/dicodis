@@ -117,7 +117,7 @@ def getDistance(f_1, f_2, n, l, calculator):
         
         
     # compute distance
-    distance = calculator.computeDistance(smoothed_1, smoothed_2)
+    distance = calculator.compute_distance(smoothed_1, smoothed_2)
         
     return distance
         

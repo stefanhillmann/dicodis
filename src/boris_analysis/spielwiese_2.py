@@ -18,8 +18,8 @@ contents_2 = [positive_dialogs[1].content]
 n_grams = mg.create_ngrams(contents, 1)
 n_grams_2 = mg.create_ngrams(contents_2, 1)
 
-c = classifier.getCosineClassifier()
+c = classifier.get_cosine_classifier()
 
-c.addClass("foo", n_grams, 1);
+c.add_class("foo", n_grams, 1);
 
 c.classify(n_grams_2)

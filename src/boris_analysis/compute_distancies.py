@@ -108,7 +108,7 @@ for n in xrange(N_MIN, N_MAX + 1):
             export.toCSV(smooth_reference_model, '/home/stefan/temp/smooth_reference_model.csv')
             export.toCSV(smooth_other_model, '/home/stefan/temp/smooth_other_model.csv')
                         
-            distance = calculator.computeDistance(smooth_reference_model, smooth_other_model)
+            distance = calculator.compute_distance(smooth_reference_model, smooth_other_model)
         
             line = [calculator.name, 'empirical', name, str(t), str(n), str( round(distance, 6) )]
             data.append(line)

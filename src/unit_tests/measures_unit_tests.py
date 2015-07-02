@@ -20,7 +20,7 @@ Testing Cosine distance with equal models.
 def testCosineSimilarityCase1():
     p = getTestProbabilitiesVectorR(0.0)
     q = p
-    cosine_distance = 1 - measures.cosineSimilarity(p, q)
+    cosine_distance = 1 - measures.cosine_similarity(p, q)
     print "testCosineSimilarityCase1: {}".format(cosine_distance)
     assert cosine_distance == 0.0
     print "Passed."
@@ -31,7 +31,7 @@ Testing Kullback-Leibler distance with equal models.
 def testKullbackLeiblerCase1():
     p = getTestProbabilitiesVectorR(0.0)
     q = p
-    kl_distance = measures.kullbackLeiblerDivergence(p, q)
+    kl_distance = measures.kullback_leibler_divergence(p, q)
     print "testKullbackLeiblerDivergenceCase1: {}".format(kl_distance)
     assert kl_distance == 0.0
     print "Passed."
@@ -42,7 +42,7 @@ Testing mean Kullback-Leibler distance with equal models.
 def testMeanKullbackLeiblerDistanceCase1():
     p = getTestProbabilitiesVectorR(0.0)
     q = p
-    mkl_distance = measures.meanKullbackLeiblerDistance(p, q)
+    mkl_distance = measures.mean_kullback_leibler_distance(p, q)
     print "testMeanKullbackLeiblerDistanceCase1: {}".format(mkl_distance)
     assert mkl_distance == 0.0
     print "Passed."
@@ -53,7 +53,7 @@ Testing symmetric Kullback-Leibler distance with equal models.
 def testSymmetricKullbackLeiblerDistanceCase1():
     p = getTestProbabilitiesVectorR(0.0)
     q = p
-    skl_distance = measures.symmetricKullbackLeiblerDistance(p, q)
+    skl_distance = measures.symmetric_kullback_leibler_distance(p, q)
     print "testSymmetricKullbackLeiblerDistanceCase1: {}".format(skl_distance)
     assert skl_distance == 0.0
     print "Passed."
@@ -64,7 +64,7 @@ Testing Jensen difference divergence with equal models.
 def testJensenDistanceCase1():
     p = getTestProbabilitiesVectorR(0.0)
     q = p
-    jensen_distance = measures.jensenDistance(p, q)
+    jensen_distance = measures.jensen_distance(p, q)
     print "testJensenDistanceCase1: {}".format(jensen_distance)
     assert jensen_distance == 0.0
     print "Passed."
@@ -80,7 +80,7 @@ Testing Cosine distance with different models.
 def testCosineSimilarityCase2():
     m = getTestProbabilitiesVectorM(0.0)
     p = getTestProbabilitiesVectorQ(0.5)
-    cosine_distance = 1 - measures.cosineSimilarity(m, p)
+    cosine_distance = 1 - measures.cosine_similarity(m, p)
     print "testCosineSimilarityCase2: {}".format(cosine_distance)
     assert round(cosine_distance, 3) == 0.096
     print "Passed."
@@ -91,7 +91,7 @@ Testing Kullback-Leibler distance with different models.
 def testKullbackLeiblerCase2():
     m = getTestProbabilitiesVectorM(0.0)
     p = getTestProbabilitiesVectorQ(0.5)
-    kl_distance = measures.kullbackLeiblerDivergence(p, m)
+    kl_distance = measures.kullback_leibler_divergence(p, m)
     print "testKullbackLeiblerDivergenceCase1: {}".format(kl_distance)
     assert round(kl_distance, 4) == 0.1198
     print "Passed."
@@ -102,7 +102,7 @@ Testing mean Kullback-Leibler distance with different models.
 def testMeanKullbackLeiblerDistanceCase2():
     m = getTestProbabilitiesVectorM(0.0)
     p = getTestProbabilitiesVectorQ(0.5)
-    mkl_distance = measures.meanKullbackLeiblerDistance(p, m)
+    mkl_distance = measures.mean_kullback_leibler_distance(p, m)
     print "testMeanKullbackLeiblerDistanceCase1: {}".format(mkl_distance)
     assert round(mkl_distance, 4) == 0.1203 
     print "Passed."
@@ -113,7 +113,7 @@ Testing symmetric Kullback-Leibler distance with different models.
 def testSymmetricKullbackLeiblerDistanceCase2():
     m = getTestProbabilitiesVectorM(0.0)
     p = getTestProbabilitiesVectorQ(0.5)
-    skl_distance = measures.symmetricKullbackLeiblerDistance(p, m)
+    skl_distance = measures.symmetric_kullback_leibler_distance(p, m)
     print "testSymmetricKullbackLeiblerDistanceCase1: {}".format(skl_distance)
     assert round(skl_distance, 4) == 0.2407
     print "Passed."
@@ -124,7 +124,7 @@ Testing Jensen difference divergence with different models.
 def testJensenDistanceCase2():
     m = getTestProbabilitiesVectorM(0.0)
     p = getTestProbabilitiesVectorQ(0.5)
-    jensen_distance = measures.jensenDistance(p, m)
+    jensen_distance = measures.jensen_distance(p, m)
     print "testJensenDistanceCase1: {}".format(jensen_distance)
     assert round(jensen_distance, 4) == 0.0297
     print "Passed."
