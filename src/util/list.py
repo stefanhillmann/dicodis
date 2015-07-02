@@ -45,7 +45,7 @@ value in a particular field.
 Parameter:
     l: list of items
     field_name: Name of field inside an item that will be used for the compartment.
-    fiel_value: Each item with value field_value in field field_name is added to
+    field_value: Each item with value field_value in field field_name is added to
     the result list.
 """    
 def filterByFieldValue(l, field_name, field_value):

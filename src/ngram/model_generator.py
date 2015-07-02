@@ -25,16 +25,15 @@ def create_ngrams(documents, n):
             
             ngram_parts = []
             
-            for k in xrange (i, j):
+            for k in xrange(i, j):
                 ngram_parts.append(padded_doc[k])
                 
             ngram = '#'.join(ngram_parts)
             ngrams.append(ngram)
-            
-    
+
     module_logger.debug('Calculated %s %s-grams from %s documents.', len(ngrams), n, len(documents))
     return ngrams
-    
+
 def createPads(n):
     
     pads = {
@@ -118,7 +117,7 @@ def computeProbabilities(model):
     sum_of_frequencies = sum(model.values())
     for key in model:
         model[key] = model[key] / sum_of_frequencies
-        
+
 class NGramSize:
     ONE     = 1
     TWO     = 2

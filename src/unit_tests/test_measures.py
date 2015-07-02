@@ -27,7 +27,6 @@ class testMeasures(unittest.TestCase):
     def testSymmetricKullbackLeiblerDivergence(self):
         d = m.symmetricKullbackLeiblerDistance(self.p, self.q)
         self.assertEqual(d, 0)
-    
-    
-    if __name__ == '__main__':
+
+if __name__ == '__main__':
         unittest.main()

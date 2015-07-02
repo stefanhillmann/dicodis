@@ -1,8 +1,6 @@
 import csv
 
 def toCSV(ngram_model, file_path):
-    
-    
     with open(file_path, 'w') as f:
         csv_writer = csv.writer(f, delimiter=';')
                

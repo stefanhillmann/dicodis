@@ -40,7 +40,7 @@ def testComputeProbabilityCase3():
     p = round(p, 4)
     print "testComputedProbabilityCase3: {}".format(p)
     assert p == 0.1053
-    
+
 def testComputeProbabilitiesCase1():
     a = 1./19.
     b = 2./19.    

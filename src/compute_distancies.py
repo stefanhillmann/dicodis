@@ -62,7 +62,7 @@ files = {#'successful' : file_turns_succeeded,
          #'wa_100' : file_wa_100,
          #'wa_60' : file_wa_60
          }
-data = [['measure', 'reference', 'other', 'threshold','n', 'distance']]
+data = [['measure', 'reference', 'other', 'threshold', 'n', 'distance']]
 
 
 calculator = distance.getCosineCalculator()
