@@ -48,7 +48,7 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     negative_dialogs = dialogs.createDialogsDocuments(negative_reader, id_column_name, negative_class)
     print 'Dialogs in negative: {}'.format( len(negative_dialogs) )
     
-    configurations = cross_validation_configuration.getConfigurations();
+    configurations = cross_validation_configuration.getConfigurations()
     jobs = []
     job_number = 0
     for configuration in configurations:

@@ -10,7 +10,7 @@ import util.list as lu
 import logging
 
 
-def createDialogDocument(id_column, system_parameter, user_parameter, dialog, dialogLabel):
+def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):
     content = []
         
     for exchange in dialog:
@@ -25,7 +25,7 @@ def createDialogDocument(id_column, system_parameter, user_parameter, dialog, di
             content.append( ",".join(user_values) )
     
     dialog_id = dialog[0][id_column]
-    document = Document(dialogLabel, content, dialog_id)
+    document = Document(dialog_label, content, dialog_id)
     
     return document
 
@@ -35,7 +35,7 @@ def createDialogsDocuments(dialog_reader, id_column_name, class_name):
     dialogs_documents = []
     for iteration_id in iterations_ids:
         dialog_rows = dialog_reader.getRows(id_column_name, iteration_id) 
-        dialog_document = createDialogDocument(id_column_name,
+        dialog_document = create_dialog_document(id_column_name,
         ['sysSA', 'sysRep.field'], ['userSA', 'userFields'], dialog_rows, class_name)
         
         dialogs_documents.append(dialog_document)
@@ -48,8 +48,8 @@ def createSubDocument(exchange, parameter):
     for p in parameter:
         value = exchange[p]
         if value:
-            value = value.strip() # strip leading/tailing spaces
-            value = value.lower() # lower case
+            value = value.strip()  # strip leading/tailing spaces
+            value = value.lower()  # lower case
             values.append(value)
        
     # add values if there one or several

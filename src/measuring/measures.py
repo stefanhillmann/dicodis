@@ -97,7 +97,7 @@ class Measure:
     def distance(self, p, q):
         print 'Has to be implemented by sub classes.'
         pass
-    
+
 class CosineMeasure(Measure):
     def distance(self, p, q):
         similarity = cosineSimilarity(p, q)
@@ -105,35 +105,34 @@ class CosineMeasure(Measure):
         """
         In order to get the distance we subtract the similarity from 1.
         That works because the similarity is always between 1 and 0.
-        We do that to follow the behavior of the other distance measure:
+        We do that to follow the behavior of the other distance measures:
         The higher the distance, the higher the difference between p and q.
         """
         return 1 - similarity
-        
+
 class KullbackLeiblerMeasure(Measure):
     def distance(self, p, q):
         divergence = kullbackLeiblerDivergence(p, q)
         return divergence
-        
+
 class MeanKullbackLeiblerMeasure(Measure):
     def distance(self, p, q):
         distance = meanKullbackLeiblerDistance(p, q)
         return distance
-        
+
 class SymmetricKullbackLeiblerDistance(Measure):
     def distance(self, p, q):
         distance = symmetricKullbackLeiblerDistance(p, q)
         return distance
-        
+
 class JensenMeasure(Measure):
     def distance(self, p, q):
         distance = jensenDistance(p, q)
         return distance
-    
+
 class MeasureName:
     COSINE                      = 'cosine'
     KULLBACK_LEIBLER            = 'kullback leibler'
     MEAN_KULLBACK_LEIBLER       = 'mean kullback leibler'
     SYMMETRIC_KULLBACK_LEIBLER  = 'symmetric kullback leibler'
     JENSEN                      = 'jensen'
-    
