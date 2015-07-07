@@ -11,7 +11,7 @@ def printResult():
         print ' '.join(line)
         
 def writeCsvFile():
-    file_name = time_util.humanReadableTimestamp() + '__n-ngram_counts.csv'
+    file_name = time_util.human_readable_timestamp() + '__n-ngram_counts.csv'
     path = '../results/' + file_name
     f = open(path, 'w')
     for line in data:
@@ -23,13 +23,13 @@ def createNGramModel(documents, n):
     for document in documents:
         documents_contents.append(document.content)
     n_grams = model_generator.create_ngrams(documents_contents, n)
-    class_model = model_generator.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+    class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
     
     return class_model
 
 def getDocuments(reader):
     documents_contents = []
-    documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+    documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
     for document in documents:
         documents_contents.append(document.content)
         
@@ -87,14 +87,14 @@ for n in xrange(N_MIN, N_MAX + 1):
         # compute the unique n-grams from both corpora.
         all_n_grams = list(reference_n_grams)
         all_n_grams.extend(other_n_grams)
-        unique_n_grams = lu.uniqueValues(all_n_grams)
+        unique_n_grams = lu.unique_values(all_n_grams)
         
         # create smoothed n-gram-models
-        reference_model = model_generator.createNgramModel(unique_n_grams, reference_n_grams)
-        other_model     = model_generator.createNgramModel(unique_n_grams, other_n_grams)
+        reference_model = model_generator.create_n_gram_model(unique_n_grams, reference_n_grams)
+        other_model     = model_generator.create_n_gram_model(unique_n_grams, other_n_grams)
         
-        export.toCSV(reference_model, '/home/stefan/temp/reference_model.csv')
-        export.toCSV(other_model, '/home/stefan/temp/other_model.csv')
+        export.to_csv(reference_model, '/home/stefan/temp/reference_model.csv')
+        export.to_csv(other_model, '/home/stefan/temp/other_model.csv')
         
         
         for t in xrange(T_MIN, T_MAX + 1):
@@ -102,11 +102,11 @@ for n in xrange(N_MIN, N_MAX + 1):
             #reference_model = model_generator.remove_rare_n_grams(reference_model, t)
             #other_model     = model_generator.remove_rare_n_grams(other_model, t)
             
-            smooth_reference_model = model_generator.smoothModel(reference_model, SMOOTHIG_VALUE)
-            smooth_other_model     = model_generator.smoothModel(other_model, SMOOTHIG_VALUE)
+            smooth_reference_model = model_generator.smooth_model(reference_model, SMOOTHIG_VALUE)
+            smooth_other_model     = model_generator.smooth_model(other_model, SMOOTHIG_VALUE)
             
-            export.toCSV(smooth_reference_model, '/home/stefan/temp/smooth_reference_model.csv')
-            export.toCSV(smooth_other_model, '/home/stefan/temp/smooth_other_model.csv')
+            export.to_csv(smooth_reference_model, '/home/stefan/temp/smooth_reference_model.csv')
+            export.to_csv(smooth_other_model, '/home/stefan/temp/smooth_other_model.csv')
                         
             distance = calculator.compute_distance(smooth_reference_model, smooth_other_model)
         

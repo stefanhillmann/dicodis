@@ -16,12 +16,12 @@ def create_dialog_document(id_column, system_parameter, user_parameter, dialog, 
         
     for exchange in dialog:
         """System Turn"""
-        system_values = createSubDocument(exchange, system_parameter)
+        system_values = create_sub_document(exchange, system_parameter)
         if system_values:
             content.append( ",".join(system_values) )
         
         """User Turn"""
-        user_values = createSubDocument(exchange, user_parameter)  
+        user_values = create_sub_document(exchange, user_parameter)
         if user_values:
             content.append( ",".join(user_values) )
     
@@ -30,12 +30,12 @@ def create_dialog_document(id_column, system_parameter, user_parameter, dialog, 
     
     return document
 
-def createDialogsDocuments(dialog_reader, id_column_name, class_name):
-    iterations_ids = dialog_reader.getUniqueValues(id_column_name)
+def create_dialogs_documents(dialog_reader, id_column_name, class_name):
+    iterations_ids = dialog_reader.get_unique_values(id_column_name)
     
     dialogs_documents = []
     for iteration_id in iterations_ids:
-        dialog_rows = dialog_reader.getRows(id_column_name, iteration_id) 
+        dialog_rows = dialog_reader.get_rows(id_column_name, iteration_id)
         dialog_document = create_dialog_document(id_column_name,
         ['sysSA', 'sysRep.field'], ['userSA', 'userFields'], dialog_rows, class_name)
         
@@ -44,7 +44,7 @@ def createDialogsDocuments(dialog_reader, id_column_name, class_name):
     return dialogs_documents
 
 
-def createSubDocument(exchange, parameter):
+def create_sub_document(exchange, parameter):
     values = [] 
     for p in parameter:
         value = exchange[p]
@@ -58,8 +58,8 @@ def createSubDocument(exchange, parameter):
         return values
     else:
         return ''
-        
-def sortDocumentsByDialogId(documents):
+
+def sort_documents_by_dialog_id(documents):
     return sorted(documents, key=lambda document: document.dialog_id)
 
 
@@ -80,9 +80,8 @@ class DialogsReader:
             self.data.append(row)
             
         dataFile.close()
-        
-            
-    def getRows(self, column, value):
+
+    def get_rows(self, column, value):
         
         filtered_rows = []
         for row in self.data:
@@ -90,16 +89,16 @@ class DialogsReader:
                 filtered_rows.append(row)
         return filtered_rows
         
-    def getValues(self, column_name):
+    def get_values(self, column_name):
         values = []
         for row in self.data:
             values.append(row[column_name])
             
         return values
         
-    def getUniqueValues(self, column_name):
-        values = self.getValues(column_name)
-        return lu.uniqueValues(values)
+    def get_unique_values(self, column_name):
+        values = self.get_values(column_name)
+        return lu.unique_values(values)
 
 class Document:
 
@@ -113,4 +112,3 @@ class Document:
         
     def __str__(self):
         return 'Id: ' + self.dialog_id + ', Label: ' + self.label + ', Content: '+ ', '.join(self.content)
-        

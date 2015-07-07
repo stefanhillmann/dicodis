@@ -16,19 +16,19 @@ file_wa_100                 = '../data/WA_60.csv'
 file_wa_60                  = '../data/WA_100.csv'
 
 reader = dialogs.DialogsReader(file_turns_failed)
-dialog_documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
 
 documents_contents = []
 for document in dialog_documents:
     documents_contents.append(document.content)
     
 n_grams = model_generator.create_ngrams(documents_contents, 3)
-class_model = model_generator.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
 
-export.toCSV(class_model, '/home/stefan/temp/csv_export_absolute.csv')
+export.to_csv(class_model, '/home/stefan/temp/csv_export_absolute.csv')
 
-model_generator.computeProbabilities(class_model)
+model_generator.compute_probabilities(class_model)
 
-export.toCSV(class_model, '/home/stefan/temp/csv_export_relative.csv')
+export.to_csv(class_model, '/home/stefan/temp/csv_export_relative.csv')
 
 print class_model

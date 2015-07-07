@@ -9,7 +9,7 @@ negative_class = 'failed'
 file_turns_succeeded        = '/home/stefan/git/DialogueClassifying/data/turnsSucceeded.csv'
 
 positive_reader = dialogs.DialogsReader(file_turns_succeeded)
-positive_dialogs = dialogs.createDialogsDocuments(positive_reader, id_column_name, positive_class)
+positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
 
 contents = [positive_dialogs[0].content]
 

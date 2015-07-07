@@ -17,7 +17,7 @@ def remove_rare_n_grams(model, treshold):
         
 
 failed_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv')
-failed_dialogs = dialogs.createDialogsDocuments(failed_reader, 'iteration', 'test_class')
+failed_dialogs = dialogs.create_dialogs_documents(failed_reader, 'iteration', 'test_class')
 n = 3
 
 documents = []
@@ -26,7 +26,7 @@ for dialog in failed_dialogs:
 
 class_n_grams = mg.create_ngrams(documents, n);
 
-class_model = mg.createNgramModel(lu.uniqueValues(class_n_grams), class_n_grams)
+class_model = mg.create_n_gram_model(lu.unique_values(class_n_grams), class_n_grams)
 
 class_model = remove_rare_n_grams(class_model, 2)
 
@@ -38,7 +38,7 @@ for n_gram in sorted_class_model:
 
 
 print class_model.values()
-value_count = len( lu.uniqueValues(class_model.values()) )
+value_count = len( lu.unique_values(class_model.values()) )
 print 'Anzahl verschiedene Haeufigkeiten: {}'.format(value_count)
 print 'Anzahl n-Gramme: {}'.format( len(class_model) )
 

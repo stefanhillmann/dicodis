@@ -11,28 +11,27 @@ import smoothing_unit_tests
 Test n-gram model smoothing
 """
 print "Test n-gram model smoothing..."
-smoothing_unit_tests.testComputeProbabilityCase1()
-smoothing_unit_tests.testComputeProbabilityCase2()
-smoothing_unit_tests.testComputeProbabilityCase3()
-smoothing_unit_tests.testComputeProbabilitiesCase1()
+smoothing_unit_tests.test_compute_probability_case_1()
+smoothing_unit_tests.test_compute_probability_case_2()
+smoothing_unit_tests.test_compute_probability_case_3()
+smoothing_unit_tests.test_compute_probabilities_case_1()
 
 """
 Test measures with equal data. Each measure has to detect equality.
 """
 print "Test measures with equal data..."
-measures_unit_tests.testCosineSimilarityCase1()
-measures_unit_tests.testKullbackLeiblerCase1()
-measures_unit_tests.testMeanKullbackLeiblerDistanceCase1()
-measures_unit_tests.testSymmetricKullbackLeiblerDistanceCase1()
-measures_unit_tests.testJensenDistanceCase1()
+measures_unit_tests.test_cosine_similarity_case_1()
+measures_unit_tests.test_kullback_leibler_case_1()
+measures_unit_tests.test_mean_kullback_leibler_distance_case_1()
+measures_unit_tests.test_symmetric_kullback_leibler_distance_case_1()
+measures_unit_tests.test_jensen_distance_case_1()
 
 """
 Test measures with different models. Each measure has to detect the correct distance.
 """
 print "Test measures with different data..."
-measures_unit_tests.testCosineSimilarityCase2()
-measures_unit_tests.testKullbackLeiblerCase2()
-measures_unit_tests.testMeanKullbackLeiblerDistanceCase2()
-measures_unit_tests.testSymmetricKullbackLeiblerDistanceCase2()
-measures_unit_tests.testJensenDistanceCase2()
-
+measures_unit_tests.test_cosine_similarity_case_2()
+measures_unit_tests.test_kullback_leibler_case_2()
+measures_unit_tests.test_mean_kullback_leibler_distance_case_2()
+measures_unit_tests.test_symmetric_kullback_leibler_distance_case_2()
+measures_unit_tests.test_jensen_distance_case_2()

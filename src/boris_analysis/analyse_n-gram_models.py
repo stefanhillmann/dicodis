@@ -9,7 +9,7 @@ def printResult():
         print SEPARATOR.join(line)
         
 def writeCsvFile():
-    file_name = time_util.humanReadableTimestamp() + '__ngram_models.csv'
+    file_name = time_util.human_readable_timestamp() + '__ngram_models.csv'
     path = '../results/' + file_name
     f = open(path, 'w')
     for line in data:
@@ -26,7 +26,7 @@ def countTotalNGrams(model):
 def getOriginalModel(f):
     print 'Creating n-gram-model of original experiment.'
     reader = dialogs.DialogsReader( f )
-    dialog_documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+    dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
     documents_contents = []
     for document in dialog_documents:
         documents_contents.append(document.content)
@@ -67,14 +67,14 @@ for n in xrange(N_MIN, N_MAX + 1):
     for name in files.keys():
         print '    Run for class {}'.format(name)
         reader = dialogs.DialogsReader( files[name] )
-        dialog_documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+        dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
         
         documents_contents = []
         for document in dialog_documents:
             documents_contents.append(document.content)
         
         n_grams = model_generator.create_ngrams(documents_contents, n)
-        class_model = model_generator.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+        class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
         
         for t in xrange(T_MIN, T_MAX + 1):
             print '        Run for t = {}'.format(t)

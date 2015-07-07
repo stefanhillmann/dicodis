@@ -42,11 +42,11 @@ class Job:
 def validate(positive_data_file, positive_class, negative_data_file, negative_class, id_column_name, criteria):
     
     positive_reader = dialogs.DialogsReader(positive_data_file)
-    positive_dialogs = dialogs.createDialogsDocuments(positive_reader, id_column_name, positive_class)
+    positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
     print 'Dialogs in positive class: {}'.format( len(positive_dialogs) )
     
     negative_reader = dialogs.DialogsReader(negative_data_file)
-    negative_dialogs = dialogs.createDialogsDocuments(negative_reader, id_column_name, negative_class)
+    negative_dialogs = dialogs.create_dialogs_documents(negative_reader, id_column_name, negative_class)
     print 'Dialogs in negative: {}'.format( len(negative_dialogs) )
     
     configurations = cross_validation_configuration.getConfigurations()
@@ -146,6 +146,6 @@ if __name__ == '__main__':
     results.extend(wa_100_result)
     results.extend(wa_60_result)
     
-    result_file_name = time_util.humanReadableTimestamp() + '__results.csv'
+    result_file_name = time_util.human_readable_timestamp() + '__results.csv'
     cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)
     

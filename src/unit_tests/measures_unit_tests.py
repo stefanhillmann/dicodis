@@ -17,8 +17,8 @@ Comparing equal models.
 """
 Testing Cosine distance with equal models.
 """
-def testCosineSimilarityCase1():
-    p = getTestProbabilitiesVectorR(0.0)
+def test_cosine_similarity_case_1():
+    p = get_test_probabilities_vector_r(0.0)
     q = p
     cosine_distance = 1 - measures.cosine_similarity(p, q)
     print "testCosineSimilarityCase1: {}".format(cosine_distance)
@@ -28,8 +28,8 @@ def testCosineSimilarityCase1():
 """
 Testing Kullback-Leibler distance with equal models.
 """
-def testKullbackLeiblerCase1():
-    p = getTestProbabilitiesVectorR(0.0)
+def test_kullback_leibler_case_1():
+    p = get_test_probabilities_vector_r(0.0)
     q = p
     kl_distance = measures.kullback_leibler_divergence(p, q)
     print "testKullbackLeiblerDivergenceCase1: {}".format(kl_distance)
@@ -39,8 +39,8 @@ def testKullbackLeiblerCase1():
 """
 Testing mean Kullback-Leibler distance with equal models.
 """
-def testMeanKullbackLeiblerDistanceCase1():
-    p = getTestProbabilitiesVectorR(0.0)
+def test_mean_kullback_leibler_distance_case_1():
+    p = get_test_probabilities_vector_r(0.0)
     q = p
     mkl_distance = measures.mean_kullback_leibler_distance(p, q)
     print "testMeanKullbackLeiblerDistanceCase1: {}".format(mkl_distance)
@@ -50,8 +50,8 @@ def testMeanKullbackLeiblerDistanceCase1():
 """
 Testing symmetric Kullback-Leibler distance with equal models.
 """   
-def testSymmetricKullbackLeiblerDistanceCase1():
-    p = getTestProbabilitiesVectorR(0.0)
+def test_symmetric_kullback_leibler_distance_case_1():
+    p = get_test_probabilities_vector_r(0.0)
     q = p
     skl_distance = measures.symmetric_kullback_leibler_distance(p, q)
     print "testSymmetricKullbackLeiblerDistanceCase1: {}".format(skl_distance)
@@ -61,8 +61,8 @@ def testSymmetricKullbackLeiblerDistanceCase1():
 """
 Testing Jensen difference divergence with equal models.
 """
-def testJensenDistanceCase1():
-    p = getTestProbabilitiesVectorR(0.0)
+def test_jensen_distance_case_1():
+    p = get_test_probabilities_vector_r(0.0)
     q = p
     jensen_distance = measures.jensen_distance(p, q)
     print "testJensenDistanceCase1: {}".format(jensen_distance)
@@ -77,9 +77,9 @@ Comparing different models.
 """
 Testing Cosine distance with different models.
 """
-def testCosineSimilarityCase2():
-    m = getTestProbabilitiesVectorM(0.0)
-    p = getTestProbabilitiesVectorQ(0.5)
+def test_cosine_similarity_case_2():
+    m = get_test_probabilities_vector_m(0.0)
+    p = get_test_probabilities_vector_q(0.5)
     cosine_distance = 1 - measures.cosine_similarity(m, p)
     print "testCosineSimilarityCase2: {}".format(cosine_distance)
     assert round(cosine_distance, 3) == 0.096
@@ -88,9 +88,9 @@ def testCosineSimilarityCase2():
 """
 Testing Kullback-Leibler distance with different models.
 """
-def testKullbackLeiblerCase2():
-    m = getTestProbabilitiesVectorM(0.0)
-    p = getTestProbabilitiesVectorQ(0.5)
+def test_kullback_leibler_case_2():
+    m = get_test_probabilities_vector_m(0.0)
+    p = get_test_probabilities_vector_q(0.5)
     kl_distance = measures.kullback_leibler_divergence(p, m)
     print "testKullbackLeiblerDivergenceCase1: {}".format(kl_distance)
     assert round(kl_distance, 4) == 0.1198
@@ -99,9 +99,9 @@ def testKullbackLeiblerCase2():
 """
 Testing mean Kullback-Leibler distance with different models.
 """
-def testMeanKullbackLeiblerDistanceCase2():
-    m = getTestProbabilitiesVectorM(0.0)
-    p = getTestProbabilitiesVectorQ(0.5)
+def test_mean_kullback_leibler_distance_case_2():
+    m = get_test_probabilities_vector_m(0.0)
+    p = get_test_probabilities_vector_q(0.5)
     mkl_distance = measures.mean_kullback_leibler_distance(p, m)
     print "testMeanKullbackLeiblerDistanceCase1: {}".format(mkl_distance)
     assert round(mkl_distance, 4) == 0.1203 
@@ -109,10 +109,10 @@ def testMeanKullbackLeiblerDistanceCase2():
      
 """
 Testing symmetric Kullback-Leibler distance with different models.
-"""   
-def testSymmetricKullbackLeiblerDistanceCase2():
-    m = getTestProbabilitiesVectorM(0.0)
-    p = getTestProbabilitiesVectorQ(0.5)
+"""
+def test_symmetric_kullback_leibler_distance_case_2():
+    m = get_test_probabilities_vector_m(0.0)
+    p = get_test_probabilities_vector_q(0.5)
     skl_distance = measures.symmetric_kullback_leibler_distance(p, m)
     print "testSymmetricKullbackLeiblerDistanceCase1: {}".format(skl_distance)
     assert round(skl_distance, 4) == 0.2407
@@ -121,9 +121,9 @@ def testSymmetricKullbackLeiblerDistanceCase2():
 """
 Testing Jensen difference divergence with different models.
 """
-def testJensenDistanceCase2():
-    m = getTestProbabilitiesVectorM(0.0)
-    p = getTestProbabilitiesVectorQ(0.5)
+def test_jensen_distance_case_2():
+    m = get_test_probabilities_vector_m(0.0)
+    p = get_test_probabilities_vector_q(0.5)
     jensen_distance = measures.jensen_distance(p, m)
     print "testJensenDistanceCase1: {}".format(jensen_distance)
     assert round(jensen_distance, 4) == 0.0297
@@ -135,53 +135,50 @@ def testJensenDistanceCase2():
 Creating test data.
 -------------------
 """
-def getTestProbabilitiesVectorR(l):
-    v = getTestFrequenciesVectorR()
-    p = smoothing.computeProbabilities(v, l)
+def get_test_probabilities_vector_r(l):
+    v = get_test_frequencies_vector_r()
+    p = smoothing.compute_probabilities(v, l)
     return p
 
-def getTestProbabilitiesVectorM(l):
-    v = getTestFrequenciesVectorM()
-    m = smoothing.computeProbabilities(v, l)
+def get_test_probabilities_vector_m(l):
+    v = get_test_frequencies_vector_m()
+    m = smoothing.compute_probabilities(v, l)
     return m
 
-def getTestProbabilitiesVectorP(l):
-    v = getTestFrequenciesVectorP()
-    p = smoothing.computeProbabilities(v, l)
+def get_test_probabilities_vector_p(l):
+    v = get_test_frequencies_vector_p()
+    p = smoothing.compute_probabilities(v, l)
     return p
-    
-def getTestProbabilitiesVectorQ(l):
-    v = getTestFrequenciesVectorQ()
-    q = smoothing.computeProbabilities(v, l)
+
+def get_test_probabilities_vector_q(l):
+    v = get_test_frequencies_vector_q()
+    q = smoothing.compute_probabilities(v, l)
     return q
     
 """
-Frequencies from participants 44 1-grammodel
+Frequencies from participants 44 1-gram-model
 """
-def getTestFrequenciesVectorR():
+def get_test_frequencies_vector_r():
     v = np.array([3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
     return v
 
 """
 Frequencies of an example of a 3-gram model.
-"""    
-def getTestFrequenciesVectorM():
+"""
+def get_test_frequencies_vector_m():
     v = np.array([1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
     return v
 
 """
 Frequencies of an example of a 3-gram model.
-"""    
-def getTestFrequenciesVectorP():
+"""
+def get_test_frequencies_vector_p():
     v = np.array([0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1])
     return v
 
 """
 Frequencies of another example of a 3-gram model.
-"""    
-def getTestFrequenciesVectorQ():
+"""
+def get_test_frequencies_vector_q():
     v = np.array([1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])
     return v
-
-
-    

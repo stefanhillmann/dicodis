@@ -62,7 +62,7 @@ def printResult():
         print ' '.join(line)
         
 def writeCsvFile():
-    file_name = time_util.humanReadableTimestamp() + '__distancies.csv'
+    file_name = time_util.human_readable_timestamp() + '__distancies.csv'
     path = '../results/' + file_name
     f = open(path, 'w')
     for line in data:
@@ -74,13 +74,13 @@ def createNGramModel(documents, n):
     for document in documents:
         documents_contents.append(document.content)
     n_grams = model_generator.create_ngrams(documents_contents, n)
-    class_model = model_generator.createNgramModel( lu.uniqueValues(n_grams), n_grams )
+    class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
     
     return class_model
 
 def getReaderDocuments(reader):
     documents_contents = []
-    documents = dialogs.createDialogsDocuments(reader, 'iteration', 'default_class')
+    documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
     for document in documents:
         documents_contents.append(document.content)
         
@@ -101,19 +101,19 @@ def getDistance(f_1, f_2, n, l, calculator):
     # compute the unique n-grams from both corpora.
     all_n_grams = list(n_grams_1)
     all_n_grams.extend(n_grams_2)
-    unique_n_grams = lu.uniqueValues(all_n_grams)
+    unique_n_grams = lu.unique_values(all_n_grams)
         
     # create smoothed n-gram-models
-    model_1 = model_generator.createNgramModel(unique_n_grams, n_grams_1)
-    model_2 = model_generator.createNgramModel(unique_n_grams, n_grams_2)
+    model_1 = model_generator.create_n_gram_model(unique_n_grams, n_grams_1)
+    model_2 = model_generator.create_n_gram_model(unique_n_grams, n_grams_2)
     
     # for debugging
     #export.toCSV(model_1, '/home/stefan/temp/reference_model.csv')
     #export.toCSV(model_2, '/home/stefan/temp/other_model.csv')
     
     # smooth both models
-    smoothed_1 = model_generator.smoothModel(model_1, l)
-    smoothed_2 = model_generator.smoothModel(model_2, l)
+    smoothed_1 = model_generator.smooth_model(model_1, l)
+    smoothed_2 = model_generator.smooth_model(model_2, l)
         
         
     # compute distance
