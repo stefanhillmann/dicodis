@@ -43,7 +43,6 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
         
     return dialogs_documents
 
-
 def create_sub_document(exchange, parameter):
     values = [] 
     for p in parameter:
@@ -72,14 +71,14 @@ class DialogsReader:
         self.logger = logging.getLogger('dialogs.DialogsReader')
         self.logger.info("Start reading file: %s", filename)
         
-        dataFile = open(filename, 'r')
-        dataReader = csv.DictReader(dataFile, delimiter=';')
+        data_file = open(filename, 'r')
+        data_reader = csv.DictReader(data_file, delimiter=';')
         
         self.data = []
-        for row in dataReader:
+        for row in data_reader:
             self.data.append(row)
             
-        dataFile.close()
+        data_file.close()
 
     def get_rows(self, column, value):
         
