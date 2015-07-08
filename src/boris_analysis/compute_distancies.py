@@ -1,7 +1,8 @@
+import common.dialog_document.dialog_reader
 from common.ngram import export
 from common.ngram import model_generator
 import common.util.list as lu
-import dialogs
+from boris_analysis import dialogs
 from common.util import time_util
 from corpora_distance import distance
 
@@ -9,7 +10,7 @@ from corpora_distance import distance
 def printResult():
     for line in data:
         print ' '.join(line)
-        
+
 def writeCsvFile():
     file_name = time_util.human_readable_timestamp() + '__n-ngram_counts.csv'
     path = '../results/' + file_name
@@ -17,7 +18,7 @@ def writeCsvFile():
     for line in data:
         f.write( ";".join(line) + '\n' )
     f.close()
-        
+
 def createNGramModel(documents, n):
     documents_contents = []
     for document in documents:
@@ -69,7 +70,7 @@ data = [['measure', 'reference', 'other', 'threshold', 'n', 'distance']]
 calculator = distance.getCosineCalculator()
 
 
-reference_reader = dialogs.DialogsReader( '../data/annotatedData_corrected.csv' )
+reference_reader = common.dialog_document.dialog_reader.DialogsReader( '../data/annotatedData_corrected.csv' )
 reference_documents = getDocuments(reference_reader)
 
 
@@ -77,7 +78,7 @@ for n in xrange(N_MIN, N_MAX + 1):
     print 'Run for n = {}'.format(n)
     for name in files.keys():
         print '    Run for corpus {}'.format(name)
-        reader = dialogs.DialogsReader( files[name] )
+        reader = common.dialog_document.dialog_reader.DialogsReader( files[name] )
         other_documents = getDocuments(reader)
         
         reference_n_grams = model_generator.create_ngrams(reference_documents, n)

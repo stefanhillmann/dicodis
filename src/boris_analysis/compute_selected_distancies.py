@@ -1,6 +1,7 @@
+import common.dialog_document.dialog_reader
 from common.ngram import model_generator
 import common.util.list as lu
-import dialogs
+from boris_analysis import dialogs
 from common.util import time_util
 from corpora_distance import distance
 from common.ngram.model_generator import NGramSize
@@ -87,7 +88,7 @@ def getReaderDocuments(reader):
     return documents_contents
 
 def getFileDocuments(f):
-    reader = dialogs.DialogsReader(f)
+    reader = common.dialog_document.dialog_reader.DialogsReader(f)
         
     return getReaderDocuments(reader)
 

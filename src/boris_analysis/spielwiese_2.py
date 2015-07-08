@@ -1,4 +1,5 @@
-import dialogs
+import common.dialog_document.dialog_reader
+from boris_analysis import dialogs
 import common.ngram.model_generator as mg
 import common.classify.classifier as classifier
 
@@ -8,7 +9,7 @@ negative_class = 'failed'
 
 file_turns_succeeded        = '/home/stefan/git/DialogueClassifying/data/turnsSucceeded.csv'
 
-positive_reader = dialogs.DialogsReader(file_turns_succeeded)
+positive_reader = common.dialog_document.dialog_reader.DialogsReader(file_turns_succeeded)
 positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
 
 contents = [positive_dialogs[0].content]

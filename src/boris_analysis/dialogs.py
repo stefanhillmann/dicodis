@@ -5,10 +5,7 @@ Created on Thu Jun  6 15:59:01 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-import csv
-import logging
-
-import common.util.list as lu
+from common.dialog_document.document import Document
 
 
 def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):
@@ -58,56 +55,3 @@ def create_sub_document(exchange, parameter):
     else:
         return ''
 
-def sort_documents_by_dialog_id(documents):
-    return sorted(documents, key=lambda document: document.dialog_id)
-
-
-class DialogsReader:
-    
-    """
-    Constructor method.
-    """    
-    def __init__(self, filename):
-        self.logger = logging.getLogger('dialogs.DialogsReader')
-        self.logger.info("Start reading file: %s", filename)
-        
-        data_file = open(filename, 'r')
-        data_reader = csv.DictReader(data_file, delimiter=';')
-        
-        self.data = []
-        for row in data_reader:
-            self.data.append(row)
-            
-        data_file.close()
-
-    def get_rows(self, column, value):
-        
-        filtered_rows = []
-        for row in self.data:
-            if row[column] == value:
-                filtered_rows.append(row)
-        return filtered_rows
-        
-    def get_values(self, column_name):
-        values = []
-        for row in self.data:
-            values.append(row[column_name])
-            
-        return values
-        
-    def get_unique_values(self, column_name):
-        values = self.get_values(column_name)
-        return lu.unique_values(values)
-
-class Document:
-
-    """
-    Constructor method
-    """
-    def __init__(self, label, content, dialog_id):
-        self.label = label
-        self.content = content
-        self.dialog_id = dialog_id
-        
-    def __str__(self):
-        return 'Id: ' + self.dialog_id + ', Label: ' + self.label + ', Content: '+ ', '.join(self.content)

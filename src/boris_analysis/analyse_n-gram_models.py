@@ -1,6 +1,7 @@
+import common.dialog_document.dialog_reader
 from common.ngram import model_generator
 import common.util.list as lu
-import dialogs
+from boris_analysis import dialogs
 from common.util import time_util
 
 
@@ -25,7 +26,7 @@ def countTotalNGrams(model):
 
 def getOriginalModel(f):
     print 'Creating n-gram-model of original experiment.'
-    reader = dialogs.DialogsReader( f )
+    reader = common.dialog_document.dialog_reader.DialogsReader( f )
     dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
     documents_contents = []
     for document in dialog_documents:
@@ -66,7 +67,7 @@ for n in xrange(N_MIN, N_MAX + 1):
     print 'Run for n = {}'.format(n)
     for name in files.keys():
         print '    Run for class {}'.format(name)
-        reader = dialogs.DialogsReader( files[name] )
+        reader = common.dialog_document.dialog_reader.DialogsReader( files[name] )
         dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
         
         documents_contents = []

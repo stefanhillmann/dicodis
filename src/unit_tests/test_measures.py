@@ -29,5 +29,9 @@ class TestMeasures(unittest.TestCase):
         d = m.symmetric_kullback_leibler_distance(self.p, self.q)
         self.assertEqual(d, 0)
 
+    def test_rank_order_distance(self):
+        d = m.rank_order_distance(self.p, self.q)
+        self.assertEqual(d, 0)
+
 if __name__ == '__main__':
         unittest.main()

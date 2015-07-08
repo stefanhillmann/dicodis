@@ -70,6 +70,17 @@ def test_jensen_distance_case_1():
     print "Passed."
 
 """
+Testing rank order distance with equal models.
+"""
+def test_jensen_distance_case_1():
+    p = get_test_probabilities_vector_r(0.0)
+    q = p
+    jensen_distance = measures.jensen_distance(p, q)
+    print "testJensenDistanceCase1: {}".format(jensen_distance)
+    assert jensen_distance == 0.0
+    print "Passed."
+
+"""
 Comparing different models.
 -----------------------
 """

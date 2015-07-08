@@ -1,10 +1,10 @@
 import logging
 from multiprocessing.pool import Pool
 
-import dialogs
+import common.dialog_document.dialog_reader
 from common import analyse as cv
 from common.analyse import ResultAssessor
-from boris_analysis import cross_validation_configuration
+from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
 
 logging.basicConfig(level=logging.WARNING)
@@ -46,11 +46,11 @@ class Job:
 
 def validate(positive_data_file, positive_class, negative_data_file, negative_class, id_column_name, criteria):
     
-    positive_reader = dialogs.DialogsReader(positive_data_file)
+    positive_reader = common.dialog_document.dialog_reader.DialogsReader(positive_data_file)
     positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
     print 'Dialogs in positive class: {}'.format( len(positive_dialogs) )
     
-    negative_reader = dialogs.DialogsReader(negative_data_file)
+    negative_reader = common.dialog_document.dialog_reader.DialogsReader(negative_data_file)
     negative_dialogs = dialogs.create_dialogs_documents(negative_reader, id_column_name, negative_class)
     print 'Dialogs in negative: {}'.format( len(negative_dialogs) )
     

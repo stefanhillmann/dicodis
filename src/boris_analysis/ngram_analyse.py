@@ -1,7 +1,8 @@
 import operator
 import numpy as np
 
-import dialogs
+import common.dialog_document.dialog_reader
+from boris_analysis import dialogs
 import common.ngram.model_generator as mg
 import matplotlib.pyplot as plt
 import common.util.list as lu
@@ -16,7 +17,7 @@ def remove_rare_n_grams(model, treshold):
 
         
 
-failed_reader = dialogs.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv')
+failed_reader = common.dialog_document.dialog_reader.DialogsReader('/home/stefan/workspace/DialogueClassifying/data/turnsSucceeded.csv')
 failed_dialogs = dialogs.create_dialogs_documents(failed_reader, 'iteration', 'test_class')
 n = 3
 

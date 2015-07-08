@@ -1,21 +1,25 @@
+import common.dialog_document.dialog_reader
 from common.ngram import export
 from common.ngram import model_generator
 import common.util.list as lu
-import dialogs
+from boris_analysis import dialogs
 
-file_turns_succeeded        = '../data/turnsSucceeded.csv'
-file_turns_failed           = '../data/turnsFailed.csv'
+data_directory = '/home/stefan/git/DialogueClassifying/data/'
 
-file_best_simulation        = '../data/bestSimulation.csv'
-file_worst_simulation       = '../data/worstSimulation.csv'
 
-file_shortest_interaction   = '../data/shortest49Interactions.csv'
-file_longest_interaction    = '../data/longest49Interactions.csv'
+file_turns_succeeded        = data_directory + 'turnsSucceeded.csv'
+file_turns_failed           = data_directory + 'turnsFailed.csv'
 
-file_wa_100                 = '../data/WA_60.csv'
-file_wa_60                  = '../data/WA_100.csv'
+file_best_simulation        = data_directory + 'bestSimulation.csv'
+file_worst_simulation       = data_directory + 'worstSimulation.csv'
 
-reader = dialogs.DialogsReader(file_turns_failed)
+file_shortest_interaction   = data_directory + 'shortest49Interactions.csv'
+file_longest_interaction    = data_directory + 'longest49Interactions.csv'
+
+file_wa_100                 = data_directory + 'WA_60.csv'
+file_wa_60                  = data_directory + 'WA_100.csv'
+
+reader = common.dialog_document.dialog_reader.DialogsReader(file_turns_failed)
 dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
 
 documents_contents = []
