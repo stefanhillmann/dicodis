@@ -68,7 +68,7 @@ first row in the example table is 'field,provide'.
 
 ### Resulting document
  
-The content of the resulting Document is a list of concatenated either system or user values. The list for the first three
+The content of the resulting Document is a list of concatenated, either system or user, values. The list for the first three
   lines of the example table is:
 * 'request,all'
 * 'field,provide'
