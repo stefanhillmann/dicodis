@@ -9,7 +9,7 @@ import logging
 from multiprocessing import Manager
 
 from boris_analysis.run_cross_validation import validate
-from common import analyse as cv
+from common.analyse import cross_validation as cv
 
 logging.basicConfig(level=logging.INFO)
 
@@ -57,4 +57,4 @@ if __name__ == '__main__':
     #results.extend(simulation_result)
     #results.extend(wa_result)
     
-    cv.writeResultTableToFile(results, ',', '/home/stefan/test_output_2.csv')
+    cv.write_result_table_to_file(results, ',', '/home/stefan/test_output_2.csv')

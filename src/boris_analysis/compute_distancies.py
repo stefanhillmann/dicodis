@@ -4,7 +4,7 @@ from common.ngram import model_generator
 import common.util.list as lu
 from boris_analysis import dialogs
 from common.util import time_util
-from corpora_distance import distance
+from common.corpora_distance import distance
 
 
 def printResult():
@@ -20,21 +20,14 @@ def writeCsvFile():
     f.close()
 
 def createNGramModel(documents, n):
-    documents_contents = []
-    for document in documents:
-        documents_contents.append(document.content)
-    n_grams = model_generator.create_ngrams(documents_contents, n)
+    n_grams = model_generator.create_n_grams_from_document_list(documents, n)
     class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
     
     return class_model
 
 def getDocuments(reader):
-    documents_contents = []
     documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
-    for document in documents:
-        documents_contents.append(document.content)
-        
-    return documents_contents
+    return documents
         
 
 SMOOTHIG_VALUE = 0.25
@@ -67,7 +60,7 @@ files = {#'successful' : file_turns_succeeded,
 data = [['measure', 'reference', 'other', 'threshold', 'n', 'distance']]
 
 
-calculator = distance.getCosineCalculator()
+calculator = distance.get_cosine_calculator()
 
 
 reference_reader = common.dialog_document.dialog_reader.DialogsReader( '../data/annotatedData_corrected.csv' )
@@ -81,8 +74,8 @@ for n in xrange(N_MIN, N_MAX + 1):
         reader = common.dialog_document.dialog_reader.DialogsReader( files[name] )
         other_documents = getDocuments(reader)
         
-        reference_n_grams = model_generator.create_ngrams(reference_documents, n)
-        other_n_grams = model_generator.create_ngrams(other_documents, n)
+        reference_n_grams = model_generator.create_n_grams_from_document_list(reference_documents, n)
+        other_n_grams = model_generator.create_n_grams_from_document_list(other_documents, n)
         
         # create all list of all n-grams (reference and other corpus), in order to
         # compute the unique n-grams from both corpora.

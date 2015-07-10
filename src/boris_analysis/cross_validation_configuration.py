@@ -1,31 +1,32 @@
 from common.ngram.model_generator import NGramSize
-from common.measuring import MeasureName
+from common.measuring.measures import MeasureName
 
 validation_processes = 12
 
 sizes = [
-              NGramSize.ONE,
-              NGramSize.TWO,
+              #NGramSize.ONE,
+              #NGramSize.TWO,
               NGramSize.THREE,
-              NGramSize.FOUR,
-              NGramSize.FIVE,
-              NGramSize.SIX,
-              NGramSize.SEVEN,
-              NGramSize.EIGHT
+              #NGramSize.FOUR,
+              #NGramSize.FIVE,
+              #NGramSize.SIX,
+              #NGramSize.SEVEN,
+              #NGramSize.EIGHT
              ]
 
 smoothing_values = [
                     0.05,
-                    0.25,
-                    0.5
+                    #0.25,
+                    #0.5
                     ]
 
 classifier_names = [
                     MeasureName.COSINE,
-                    MeasureName.JENSEN,
+                    #MeasureName.JENSEN,
                     #MeasureName.KULLBACK_LEIBLER,
-                    MeasureName.MEAN_KULLBACK_LEIBLER,
-                    #MeasureName.SYMMETRIC_KULLBACK_LEIBLER
+                    #MeasureName.MEAN_KULLBACK_LEIBLER,
+                    #MeasureName.SYMMETRIC_KULLBACK_LEIBLER,
+                    MeasureName.RANK_ORDER
                     ]
 
 frequency_thresholds = [

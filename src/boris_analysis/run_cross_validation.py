@@ -2,8 +2,8 @@ import logging
 from multiprocessing.pool import Pool
 
 import common.dialog_document.dialog_reader
-from common import analyse as cv
-from common.analyse import ResultAssessor
+from common.analyse import cross_validation as cv
+from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
 
@@ -13,17 +13,19 @@ id_column_name = 'iteration'
 positive_class = 'positive'
 negative_class = 'negative'
 
-file_turns_succeeded        = '../data/turnsSucceeded.csv'
-file_turns_failed           = '../data/turnsFailed.csv'
+data_directory = '/home/stefan/git/DialogueClassifying/data/'
 
-file_best_simulation        = '../data/bestSimulation.csv'
-file_worst_simulation       = '../data/worstSimulation.csv'
+file_turns_succeeded        = data_directory + 'turnsSucceeded.csv'
+file_turns_failed           = data_directory + 'turnsFailed.csv'
 
-file_shortest_interaction   = '../data/shortest49Interactions.csv'
-file_longest_interaction    = '../data/longest49Interactions.csv'
+file_best_simulation        = data_directory + 'bestSimulation.csv'
+file_worst_simulation       = data_directory + 'worstSimulation.csv'
 
-file_wa_100                 = '../data/WA_60.csv'
-file_wa_60                  = '../data/WA_100.csv'
+file_shortest_interaction   = data_directory + 'shortest49Interactions.csv'
+file_longest_interaction    = data_directory + 'longest49Interactions.csv'
+
+file_wa_100                 = data_directory + 'WA_60.csv'
+file_wa_60                  = data_directory + 'WA_100.csv'
 
 
 class Job:
@@ -111,17 +113,17 @@ if __name__ == '__main__':
     wa_60_result                = []
     
     
-    #print 'Criteria: Turn Success'
-    #print 'Successful?'
-    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    #print 'Failed?' 
-    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    print 'Criteria: Turn Success'
+    print 'Successful?'
+    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    print 'Failed?'
+    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
     
-    print 'Criteria: Quality of Simulation'
-    print 'Best simulation?'
-    simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
-    print 'Worst simulation?'
-    simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
+    #print 'Criteria: Quality of Simulation'
+    #print 'Best simulation?'
+    #simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
+    #print 'Worst simulation?'
+    #simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
     
     #print 'Criteria: Length of Interaction'
     #print 'Short interaction?'
@@ -147,5 +149,5 @@ if __name__ == '__main__':
     results.extend(wa_60_result)
     
     result_file_name = time_util.human_readable_timestamp() + '__results.csv'
-    cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)
+    cv.write_result_table_to_file(results, ';', '../results/' + result_file_name)
     

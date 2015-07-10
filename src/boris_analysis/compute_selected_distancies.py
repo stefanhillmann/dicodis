@@ -3,9 +3,9 @@ from common.ngram import model_generator
 import common.util.list as lu
 from boris_analysis import dialogs
 from common.util import time_util
-from corpora_distance import distance
+from common.corpora_distance import distance
 from common.ngram.model_generator import NGramSize
-from common.measuring import MeasureName
+from common.measuring.measures import MeasureName
 
 
 l_values = [
@@ -71,32 +71,21 @@ def writeCsvFile():
     f.close()
         
 def createNGramModel(documents, n):
-    documents_contents = []
-    for document in documents:
-        documents_contents.append(document.content)
-    n_grams = model_generator.create_ngrams(documents_contents, n)
+    n_grams = model_generator.create_n_grams_from_document_list(documents, n)
     class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
     
     return class_model
 
-def getReaderDocuments(reader):
-    documents_contents = []
-    documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
-    for document in documents:
-        documents_contents.append(document.content)
-        
-    return documents_contents
-
 def getFileDocuments(f):
     reader = common.dialog_document.dialog_reader.DialogsReader(f)
-        
-    return getReaderDocuments(reader)
+    documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
+    return documents
 
 def getDistance(f_1, f_2, n, l, calculator):
     documents_1 = getFileDocuments(f_1)
     documents_2 = getFileDocuments(f_2)
-    n_grams_1 = model_generator.create_ngrams(documents_1, n)
-    n_grams_2 = model_generator.create_ngrams(documents_2, n)
+    n_grams_1 = model_generator.create_n_grams_from_document_list(documents_1, n)
+    n_grams_2 = model_generator.create_n_grams_from_document_list(documents_2, n)
         
     # create all list of all n-grams (reference and other corpus), in order to
     # compute the unique n-grams from both corpora.
@@ -128,7 +117,7 @@ for measure_name in measures:
     for n in n_size:
         for l in l_values:
 
-            calculator = distance.getDistanceCalculator(measure_name)
+            calculator = distance.get_distance_calculator(measure_name)
             print 'Run for {} with n = {} and l = {}'.format(calculator.name, n, l)
             
             # reference vs reference

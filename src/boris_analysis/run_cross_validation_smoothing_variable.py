@@ -1,11 +1,11 @@
 import logging
 from multiprocessing.pool import Pool
 
-import common.dialog_document.dialog_reader
-from common import analyse as cv
-from common.analyse import ResultAssessor
+from common.analyse import cross_validation as cv
+from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
+from common.dialog_document.dialog_reader import DialogsReader
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -13,22 +13,21 @@ id_column_name = 'iteration'
 positive_class = 'positive'
 negative_class = 'negative'
 
-file_judged_good             = '../data/goodJudged.csv'
-file_judged_bad              = '../data/badJudged.csv'
+base_directory = '/home/stefan/git/DialogueClassifying/'
 
-file_turns_succeeded        = '../data/turnsSucceeded.csv'
-file_turns_failed           = '../data/turnsFailed.csv'
+file_turns_succeeded        = base_directory + 'data/turnsSucceeded.csv'
+file_turns_failed           = base_directory + 'data/turnsFailed.csv'
 
-file_best_simulation        = '../data/bestSimulation.csv'
-file_worst_simulation       = '../data/worstSimulation.csv'
+file_best_simulation        = base_directory + 'data/bestSimulation.csv'
+file_worst_simulation       = base_directory + 'data/worstSimulation.csv'
 
-file_shortest_interaction   = '../data/shortest49Interactions.csv'
-file_longest_interaction    = '../data/longest49Interactions.csv'
+file_shortest_interaction   = base_directory + 'data/shortest49Interactions.csv'
+file_longest_interaction    = base_directory + 'data/longest49Interactions.csv'
 
-file_wa_100                 = '../data/WA_60.csv'
-file_wa_60                  = '../data/WA_100.csv'
+file_wa_100                 = base_directory + 'data/WA_60.csv'
+file_wa_60                  = base_directory + 'data/WA_100.csv'
 
-file_experiment              = '../data/annotatedData_corrected.csv'
+file_experiment             = base_directory + 'data/annotatedData_corrected.csv'
 
 
 class Job:
@@ -46,15 +45,15 @@ class Job:
 
 def validate(positive_data_file, positive_class, negative_data_file, negative_class, id_column_name, criteria):
     
-    positive_reader = common.dialog_document.dialog_reader.DialogsReader(positive_data_file)
+    positive_reader = DialogsReader(positive_data_file)
     positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
     print 'Dialogs in positive class: {}'.format( len(positive_dialogs) )
     
-    negative_reader = common.dialog_document.dialog_reader.DialogsReader(negative_data_file)
+    negative_reader = DialogsReader(negative_data_file)
     negative_dialogs = dialogs.create_dialogs_documents(negative_reader, id_column_name, negative_class)
-    print 'Dialogs in negative: {}'.format( len(negative_dialogs) )
+    print 'Dialogs in negative class: {}'.format( len(negative_dialogs) )
     
-    configurations = cross_validation_configuration.getConfigurations();
+    configurations = cross_validation_configuration.getConfigurations()
     jobs = []
     job_number = 0
     for configuration in configurations:
@@ -63,9 +62,8 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
                   negative_class, criteria, job_number)
         jobs.append(job)
         
-        
     print '{} to be executed.'.format( len(jobs) )
-    pool = Pool(processes = cross_validation_configuration.validation_processes)
+    pool = Pool(processes=cross_validation_configuration.validation_processes)
     results = pool.map(run_validation, jobs)
     print 'All jobs finished.'
     
@@ -122,11 +120,11 @@ if __name__ == '__main__':
     real_result                 = []
     
     
-    #print 'Criteria: Turn Success'
-    #print 'Successful?'
-    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    #print 'Failed?' 
-    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    print 'Criteria: Turn Success'
+    print 'Successful?'
+    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    print 'Failed?'
+    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
 
     #print 'Criteria: User Judgment'
     #print 'Good'
@@ -152,11 +150,11 @@ if __name__ == '__main__':
     #print 'Word accuracy is 60?'
     #wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
     
-    print 'Criteria: Dialogue Source'
-    print 'simulated dialogues?'
-    sim_result = validate(file_best_simulation, positive_class, file_experiment, negative_class, id_column_name, 'simulated')
-    print 'real dialogues? '
-    real_result = validate(file_experiment, positive_class, file_best_simulation, negative_class, id_column_name, 'real')
+    # print 'Criteria: Dialogue Source'
+    # print 'simulated dialogues?'
+    # sim_result = validate(file_best_simulation, positive_class, file_experiment, negative_class, id_column_name, 'simulated')
+    # print 'real dialogues? '
+    # real_result = validate(file_experiment, positive_class, file_best_simulation, negative_class, id_column_name, 'real')
     
         
     results = []
@@ -176,5 +174,5 @@ if __name__ == '__main__':
     
     
     result_file_name = time_util.human_readable_timestamp() + '__results.csv'
-    cv.writeResultTableToFile(results, ';', '../results/' + result_file_name)
+    cv.write_result_table_to_file(results, ';', base_directory + 'results/' + result_file_name)
     

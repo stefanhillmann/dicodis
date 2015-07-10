@@ -12,15 +12,11 @@ file_turns_succeeded        = '/home/stefan/git/DialogueClassifying/data/turnsSu
 positive_reader = common.dialog_document.dialog_reader.DialogsReader(file_turns_succeeded)
 positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
 
-contents = [positive_dialogs[0].content]
-
-contents_2 = [positive_dialogs[1].content]
-
-n_grams = mg.create_ngrams(contents, 1)
-n_grams_2 = mg.create_ngrams(contents_2, 1)
+n_grams = mg.create_n_grams_from_document(positive_dialogs[0], 1)
+n_grams_2 = mg.create_n_grams_from_document(positive_dialogs[1], 1)
 
 c = classifier.get_cosine_classifier()
 
-c.add_class("foo", n_grams, 1);
+c.add_class("foo", n_grams, 1)
 
 c.classify(n_grams_2)

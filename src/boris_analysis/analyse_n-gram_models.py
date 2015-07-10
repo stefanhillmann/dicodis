@@ -70,11 +70,7 @@ for n in xrange(N_MIN, N_MAX + 1):
         reader = common.dialog_document.dialog_reader.DialogsReader( files[name] )
         dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
         
-        documents_contents = []
-        for document in dialog_documents:
-            documents_contents.append(document.content)
-        
-        n_grams = model_generator.create_ngrams(documents_contents, n)
+        n_grams = model_generator.create_n_grams_from_document_list(dialog_documents, n)
         class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
         
         for t in xrange(T_MIN, T_MAX + 1):

@@ -25,5 +25,56 @@ class TestNGram(unittest.TestCase):
 
         self.assertEqual(n_grams, self.bi_gram_list)
 
+    def test_model_synchronization(self):
+        # prepare to test models
+        model = {'a': 1, 'b': 2}
+        other_model = {'b': 3, 'c': 1}
+
+        mg.synchronize_n_grams(model, other_model)  # synchronize models
+
+        # check results
+        self.assertEqual(len(model), 3)
+        self.assertEqual(model['a'], 1)
+        self.assertEqual(model['b'], 2)
+        self.assertEqual(model['c'], 0)
+        self.assertEqual(len(model), 3)
+        self.assertEqual(other_model['a'], 0)
+        self.assertEqual(other_model['b'], 3)
+        self.assertEqual(other_model['c'], 1)
+
+    def test_probability_computation_case_1(self):
+        # model does not contain 0 and l == 0.0 -> no smoothing
+        model = {'a': 1, 'b': 2, 'c': 3}
+        mg.compute_probabilities(model, 0.0)
+        self.assertEqual(model['a'], 1 / 6.0)
+        self.assertEqual(model['b'], 2 / 6.0)
+        self.assertEqual(model['c'], 3 / 6.0)
+
+    def test_probability_computation_case_2(self):
+        # model does not contain 0 and l > 0.0 -> no smoothing
+        model = {'a': 1, 'b': 2, 'c': 3}
+        mg.compute_probabilities(model, 0.5)
+        self.assertEqual(model['a'], 1 / 6.0)
+        self.assertEqual(model['b'], 2 / 6.0)
+        self.assertEqual(model['c'], 3 / 6.0)
+
+    def test_probability_computation_case_3(self):
+        # model contains 0 and l == 0.0 -> no smoothing
+        model = {'a': 0, 'b': 2, 'c': 3}
+        mg.compute_probabilities(model, 0.0)
+        self.assertEqual(model['a'], 0 / 5.0)
+        self.assertEqual(model['b'], 2 / 5.0)
+        self.assertEqual(model['c'], 3 / 5.0)
+
+    def test_probability_computation_case_4(self):
+        # model contains 0 and l > 0.0 -> no smoothing
+        model = {'a': 0, 'b': 2, 'c': 3}
+        mg.compute_probabilities(model, 0.5)
+        self.assertEqual(model['a'], 0.5 / 6.5)
+        self.assertEqual(model['b'], 2.5 / 6.5)
+        self.assertEqual(model['c'], 3.5 / 6.5)
+
+
+
 if __name__ == "__main__":
     unittest.main()

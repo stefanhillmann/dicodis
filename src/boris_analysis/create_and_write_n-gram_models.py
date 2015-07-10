@@ -22,11 +22,8 @@ file_wa_60                  = data_directory + 'WA_100.csv'
 reader = common.dialog_document.dialog_reader.DialogsReader(file_turns_failed)
 dialog_documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
 
-documents_contents = []
-for document in dialog_documents:
-    documents_contents.append(document.content)
-    
-n_grams = model_generator.create_ngrams(documents_contents, 3)
+
+n_grams = model_generator.create_n_grams_from_document_list(dialog_documents, 3)
 class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
 
 export.to_csv(class_model, '/home/stefan/temp/csv_export_absolute.csv')

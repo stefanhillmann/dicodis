@@ -21,11 +21,7 @@ failed_reader = common.dialog_document.dialog_reader.DialogsReader('/home/stefan
 failed_dialogs = dialogs.create_dialogs_documents(failed_reader, 'iteration', 'test_class')
 n = 3
 
-documents = []
-for dialog in failed_dialogs:
-    documents.append( dialog.content )
-
-class_n_grams = mg.create_ngrams(documents, n);
+class_n_grams = mg.create_n_grams_from_document_list(failed_dialogs, n)
 
 class_model = mg.create_n_gram_model(lu.unique_values(class_n_grams), class_n_grams)
 
