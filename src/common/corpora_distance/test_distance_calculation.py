@@ -1,5 +1,5 @@
 
-"""TestDistanceCalculation.py: Runs unit test on calculation of distance between n-gram models."""
+"""test_distance_calculation.py: Runs unit test on calculation of distance between n-gram models."""
 
 __author__ = 'Stefan Hillmann (public@stefan-hillmann.net)'
 __date__ = "2015-07-09"
@@ -15,7 +15,7 @@ class TestDistanceCalculation(unittest.TestCase):
 
     def test_rank_order_distance(self):
         calc = d.get_rank_order_calculator()
-        distance = calc.compute_distance(self.model_a, self.model_b)
+        distance = calc.compute_distance(self.model_a, self.model_b, 0.0)
         self.assertEqual(distance, 6)
 
 if __name__ == "__main__":

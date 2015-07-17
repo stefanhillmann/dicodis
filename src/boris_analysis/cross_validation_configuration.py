@@ -21,7 +21,7 @@ smoothing_values = [
                     ]
 
 classifier_names = [
-                    MeasureName.COSINE,
+                    #MeasureName.COSINE,
                     #MeasureName.JENSEN,
                     #MeasureName.KULLBACK_LEIBLER,
                     #MeasureName.MEAN_KULLBACK_LEIBLER,
@@ -49,7 +49,8 @@ class Configuration:
     def __repr__(self):
         return '[Size: {}, Classifier: {}, Threshold: {}, Smoothing Value: {}]'.format(self.size, self.classifier,
                                                                                       self.frequency_threshold, self.smoothing_value)
-        
+
+
 def getConfigurations():
     configurations = []
     for size in sizes:

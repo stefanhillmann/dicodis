@@ -7,7 +7,7 @@ from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
 from common.dialog_document.dialog_reader import DialogsReader
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 id_column_name = 'iteration'
 positive_class = 'positive'
@@ -100,8 +100,7 @@ def run_validation(job):
     #return assessor
     return assessor.getResultAnalysis()
 
-    
-    
+
 if __name__ == '__main__':
     
     logging.info("Cross validation starts.")
@@ -123,8 +122,8 @@ if __name__ == '__main__':
     print 'Criteria: Turn Success'
     print 'Successful?'
     succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    print 'Failed?'
-    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    #print 'Failed?'
+    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
 
     #print 'Criteria: User Judgment'
     #print 'Good'
@@ -175,4 +174,3 @@ if __name__ == '__main__':
     
     result_file_name = time_util.human_readable_timestamp() + '__results.csv'
     cv.write_result_table_to_file(results, ';', base_directory + 'results/' + result_file_name)
-    
