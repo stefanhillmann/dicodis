@@ -120,10 +120,10 @@ if __name__ == '__main__':
     
     
     print 'Criteria: Turn Success'
-    print 'Successful?'
-    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    #print 'Failed?'
-    #succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    #print 'Successful?'
+    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    print 'Failed?'
+    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
 
     #print 'Criteria: User Judgment'
     #print 'Good'
