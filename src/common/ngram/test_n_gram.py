@@ -2,6 +2,7 @@ __author__ = 'Stefan Hillmann'
 
 import unittest
 import model_generator as mg
+import common.util.names as names
 from common.dialog_document.document import Document
 
 class TestNGram(unittest.TestCase):
@@ -20,7 +21,7 @@ class TestNGram(unittest.TestCase):
         self.assertEqual(model['c#_'], 1)
 
     def test_bi_gram_creation(self):
-        document = Document('label', self.token_list, 'dialog_id')
+        document = Document(names.Class.POSITIVE, self.token_list, 'dialog_id')
         n_grams = mg.create_n_grams_from_document(document, 2)
 
         self.assertEqual(n_grams, self.bi_gram_list)

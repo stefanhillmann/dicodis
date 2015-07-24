@@ -6,13 +6,13 @@ from common.analyse import cross_validation as cv
 from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
+from common.util.names import Class
+import pymongo
+from pymongo import MongoClient
 
 logging.basicConfig(level=logging.WARNING)
 
 id_column_name = 'iteration'
-positive_class = 'positive'
-negative_class = 'negative'
-
 data_directory = '/home/stefan/git/DialogueClassifying/data/'
 
 file_turns_succeeded        = data_directory + 'turnsSucceeded.csv'
@@ -86,8 +86,11 @@ def run_validation(job):
     cross_validator.add_documents(job.positive_dialogs)
     
     single_results = cross_validator.run_cross_validation()
-    
-    assessor = ResultAssessor(single_results, positive_class, negative_class, classifier_name, size, frequency_treshold, criteria)
+
+
+    assessor = ResultAssessor(single_results, Class.POSITIVE, Class.NEGATIVE, classifier_name, size,
+                              frequency_treshold, criteria)
+
     
     #profiler.disable()
     #s = io.StringIO()
@@ -115,9 +118,11 @@ if __name__ == '__main__':
     
     print 'Criteria: Turn Success'
     print 'Successful?'
-    succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
+    succees_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed,
+                                         Class.NEGATIVE, id_column_name, 'task_successful')
     print 'Failed?'
-    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    succees_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded,
+                                     Class.NEGATIVE, id_column_name, 'task_failed')
     
     #print 'Criteria: Quality of Simulation'
     #print 'Best simulation?'

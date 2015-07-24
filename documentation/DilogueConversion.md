@@ -86,7 +86,7 @@ of multiple values is always the same (in the BoRis database).
 ## Further data of a document
 
 The latterly used n-Gram analysis supports binary classifiers. A binary classifier can distinguish between two categories.
-Thus, each document get the information to which class it belongs. This information is stored in the field Dialogue.label.
+Thus, each document get the information to which class it belongs. This information is stored in the field Dialogue.true_class.
 In order to relieve the assignment of a document to a dialogue (e.g. for debugging), the id of the dialogue (iteration in 
 the example data) is stored in the field Document.dialog_id.
 

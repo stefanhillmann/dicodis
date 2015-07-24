@@ -9,6 +9,7 @@ import cross_validation as cv
 import common.measuring.measures as m
 from common.dialog_document.document import Document
 from common.classify.classifier import ClassificationResult
+from common.util.names import Class
 
 class TestResultCalculation(unittest.TestCase):
 
@@ -16,30 +17,29 @@ class TestResultCalculation(unittest.TestCase):
 
         self.classifier_a = m.MeasureName.COSINE
         self.classifier_b = m.MeasureName.RANK_ORDER
-        self.class_x = "class_x"
-        self.class_y = "class_y"
         self.distance = 20
         self.n_gram_size = 3
 
-        self.document_x = Document(self.class_x, ('a', 'b'), 1)
-        self.document_y = Document(self.class_y, ('a', 'b'), 2)
+        self.document_pos = Document(Class.POSITIVE, ('a', 'b'), 1)
+        self.document_neg = Document(Class.NEGATIVE, ('a', 'b'), 2)
 
-        self.result_x = ClassificationResult(self.class_x, self.distance)
-        self.result_y = ClassificationResult(self.class_y, self.distance)
+        self.result_pos = ClassificationResult(10, 20, Class.POSITIVE)  # positive_class_distance, negative_class_distance, estimated_class
+        self.result_neg = ClassificationResult(20, 10, Class.NEGATIVE)
 
     def getHit(self):
-        return SingleTestResult(self.document_x, self.classifier_a, self.result_x, self.n_gram_size)
+        return SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)
 
     def getMiss(self):
-        return SingleTestResult(self.document_y, self.classifier_a, self.result_x, self.n_gram_size)
+        return SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)
 
     def test_single_result_creation(self):
-        r = SingleTestResult(self.document_x, self.classifier_a, self.result_y, self.n_gram_size)
-        self.assertEqual(r.document, self.document_x)
+        r = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)
+        self.assertEqual(r.document, self.document_pos)
         self.assertEqual(r.classifier_name, self.classifier_a)
-        self.assertEqual(r.actual_class, self.class_x)
-        self.assertEqual(r.calculated_class, self.class_y)
-        self.assertEqual(r.calculated_distance, self.distance)
+        self.assertEqual(r.true_class, Class.POSITIVE)
+        self.assertEqual(r.classification_result.estimated_class, Class.NEGATIVE)
+        self.assertEqual(r.classification_result.get_distance(Class.NEGATIVE), 10)
+        self.assertEqual(r.classification_result.get_distance(Class.POSITIVE), 20)
         self.assertEqual(r.n_gram_size, self.n_gram_size)
 
     def test_perfect_result(self):
@@ -47,7 +47,8 @@ class TestResultCalculation(unittest.TestCase):
         for i in range(3):
             results.append(self.getHit())
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1,
+                            "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
@@ -67,7 +68,7 @@ class TestResultCalculation(unittest.TestCase):
         for i in range(3):
             results.append(self.getMiss())
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
         analysis = ra.getResultAnalysis()
 
         self.assertEqual(analysis.n_gram_size, 3)
@@ -82,14 +83,14 @@ class TestResultCalculation(unittest.TestCase):
         self.assertEqual(analysis.true_positive, 0)
 
     def test_result_mix(self):
-        sr_1 = SingleTestResult(self.document_x, self.classifier_a, self.result_x, self.n_gram_size)  # TP
-        sr_2 = SingleTestResult(self.document_x, self.classifier_a, self.result_y, self.n_gram_size)  # FN
-        sr_3 = SingleTestResult(self.document_y, self.classifier_a, self.result_x, self.n_gram_size)  # FP
-        sr_4 = SingleTestResult(self.document_y, self.classifier_a, self.result_y, self.n_gram_size)  # TN
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
+        sr_3 = SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)  # FP
+        sr_4 = SingleTestResult(self.document_neg, self.classifier_a, self.result_neg, self.n_gram_size)  # TN
 
         results = [sr_1, sr_2, sr_3, sr_4]
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
@@ -99,13 +100,13 @@ class TestResultCalculation(unittest.TestCase):
         self.assertEqual(analysis.false_negative, 1)
 
     def test_result_mix_table_creation(self):
-        sr_1 = SingleTestResult(self.document_x, self.classifier_a, self.result_x, self.n_gram_size)  # TP
-        sr_2 = SingleTestResult(self.document_x, self.classifier_a, self.result_y, self.n_gram_size)  # FN
-        sr_3 = SingleTestResult(self.document_y, self.classifier_a, self.result_x, self.n_gram_size)  # FP
-        sr_4 = SingleTestResult(self.document_y, self.classifier_a, self.result_y, self.n_gram_size)  # TN
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
+        sr_3 = SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)  # FP
+        sr_4 = SingleTestResult(self.document_neg, self.classifier_a, self.result_neg, self.n_gram_size)  # TN
 
         results = [sr_1, sr_2, sr_3, sr_4]
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
         analysis = ra.getResultAnalysis()
 
         rows = cv.create_result_table([analysis], ",")
@@ -116,44 +117,44 @@ class TestResultCalculation(unittest.TestCase):
                                             str(1.0), str(1.0), str(1.0), str(1.0), str(0.5), str(0.5), str(0.5)]))
 
     def test_result_true_positive(self):
-        sr_1 = SingleTestResult(self.document_x, self.classifier_a, self.result_x, self.n_gram_size)  # TP
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
 
         results = [sr_1]
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
         self.assertEqual(analysis.true_positive, 1)
 
     def test_result_false_negative(self):
-        sr_2 = SingleTestResult(self.document_x, self.classifier_a, self.result_y, self.n_gram_size)  # FN
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
 
         results = [sr_2]
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
         self.assertEqual(analysis.false_negative, 1)
 
     def test_result_false_positive(self):
-        sr_3 = SingleTestResult(self.document_y, self.classifier_a, self.result_x, self.n_gram_size)  # FP
+        sr_3 = SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)  # FP
 
         results = [sr_3]
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
         self.assertEqual(analysis.false_positive, 1)
 
     def test_result_true_negative(self):
-        sr_4 = SingleTestResult(self.document_y, self.classifier_a, self.result_y, self.n_gram_size)  # TN
+        sr_4 = SingleTestResult(self.document_neg, self.classifier_a, self.result_neg, self.n_gram_size)  # TN
 
         results = [sr_4]
 
-        ra = ResultAssessor(results, self.class_x, self.class_y, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
 
         analysis = ra.getResultAnalysis()
 
@@ -214,3 +215,44 @@ class TestResultCalculation(unittest.TestCase):
         f_measure = cv.compute_f_measure(tp, fp, fn)
         self.assertEqual(f_measure, 0)
 
+    def test_roc_points_for_result_mix(self):
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
+        sr_3 = SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)  # FP
+        sr_4 = SingleTestResult(self.document_neg, self.classifier_a, self.result_neg, self.n_gram_size)  # TN
+
+        results = [sr_1, sr_2, sr_3, sr_4]
+
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+
+        roc_points = ra.get_tpr_and_fpr_for_roc()
+
+
+    def test_roc_points_for_result_mi_2(self):
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
+        sr_3 = SingleTestResult(self.document_neg, self.classifier_a, self.result_pos, self.n_gram_size)  # FP
+        sr_4 = SingleTestResult(self.document_neg, self.classifier_a, self.result_neg, self.n_gram_size)  # TN
+
+        results = [sr_1, sr_2, sr_3, sr_4]
+
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+
+        roc_points = ra.get_roc_points()
+        print(roc_points)
+
+    def test_sort_results_by_positive_class_distance(self):
+        sr_2 = SingleTestResult(self.document_pos, self.classifier_a, self.result_neg, self.n_gram_size)  # FN
+        sr_1 = SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)  # TP
+
+        results = [sr_2, sr_1]
+
+        ra = ResultAssessor(results, Class.POSITIVE, Class.NEGATIVE, self.classifier_a, self.n_gram_size, 1, "criteria_name", 0.0)
+
+        self.assertIs(ra.data[0], sr_2)
+        self.assertIs(ra.data[1], sr_1)
+
+        sorted_results = ra.sort_results_by_positive_class_distance(ra.data)
+
+        self.assertIs(sorted_results[0], sr_1)
+        self.assertIs(sorted_results[1], sr_2)

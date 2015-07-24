@@ -27,6 +27,7 @@ def create_dialog_document(id_column, system_parameter, user_parameter, dialog, 
     
     return document
 
+
 def create_dialogs_documents(dialog_reader, id_column_name, class_name):
     iterations_ids = dialog_reader.get_unique_values(id_column_name)
     
@@ -39,6 +40,7 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
         dialogs_documents.append(dialog_document)
         
     return dialogs_documents
+
 
 def create_sub_document(exchange, parameter):
     values = [] 

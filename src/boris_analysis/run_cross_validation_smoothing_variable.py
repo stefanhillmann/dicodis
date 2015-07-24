@@ -6,12 +6,19 @@ from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
 from common.dialog_document.dialog_reader import DialogsReader
+from common.util.persistence import EvaluationResult
+import common.util.persistence as db
+from common.util.names import Class
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
+
+# evaluation_id = time_util.shorter_human_readable_timestamp()
+evaluation_id = '2015_07_24__15_55'
+host = 'localhost'
+port = 27017
+database = 'classification_cross_validation'
 
 id_column_name = 'iteration'
-positive_class = 'positive'
-negative_class = 'negative'
 
 base_directory = '/home/stefan/git/DialogueClassifying/'
 
@@ -76,29 +83,39 @@ def run_validation(job):
         
     size                = job.configuration.size
     classifier_name     = job.configuration.classifier
-    frequency_treshold  = job.configuration.frequency_threshold
+    frequency_threshold  = job.configuration.frequency_threshold
     smoothing_value     = job.configuration.smoothing_value
     criteria            = job.criteria
     
     print 'Executing job: {} with configuration: {}'.format(job.job_number, job.configuration)
         
-    cross_validator = cv.CrossValidator(classifier_name, size, frequency_treshold, smoothing_value)
+    cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
     cross_validator.add_documents(job.negative_dialogs)
     cross_validator.add_documents(job.positive_dialogs)
     
     single_results = cross_validator.run_cross_validation()
-    
-    assessor = ResultAssessor(single_results, positive_class, negative_class,
-                              classifier_name, size, frequency_treshold, criteria,
+    write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria)
+
+    assessor = ResultAssessor(single_results, Class.POSITIVE, Class.NEGATIVE,
+                              classifier_name, size, frequency_threshold, criteria,
                               smoothing_value)
     
-    #profiler.disable()
-    #s = io.StringIO()
-    #ps = pstats.Stats(profiler, stream = s)
-    #ps.dump_stats("classifier.profile")
-        
-    #return assessor
     return assessor.getResultAnalysis()
+
+
+def write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria):
+    evaluation_results = []
+    for sr in single_results:
+        er = EvaluationResult(evaluation_id, criteria, sr.document.dialog_id, classifier_name, size,
+                              frequency_threshold, smoothing_value, sr.classification_result.estimated_class,
+                              sr.true_class, sr.classification_result.positive_class_distance,
+                              sr.classification_result.negative_class_distance, Class.POSITIVE, Class.NEGATIVE)
+        evaluation_results.append(er)
+
+    con = db.DbManager(host, port, database)
+    con.write_results_to_database(evaluation_results, 'document_results')
+    con.close()
+
 
 
 if __name__ == '__main__':
@@ -119,11 +136,11 @@ if __name__ == '__main__':
     real_result                 = []
     
     
-    print 'Criteria: Turn Success'
+    #print 'Criteria: Turn Success'
     #print 'Successful?'
-    #succees_successful_result = validate(file_turns_succeeded, positive_class, file_turns_failed, negative_class, id_column_name, 'task_successful')
-    print 'Failed?'
-    succees_failed_result = validate(file_turns_failed, positive_class, file_turns_succeeded, negative_class, id_column_name, 'task_failed')
+    #succees_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
+    #print 'Failed?'
+    #succees_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
     #print 'Criteria: User Judgment'
     #print 'Good'
@@ -139,15 +156,15 @@ if __name__ == '__main__':
     
     #print 'Criteria: Length of Interaction'
     #print 'Short interaction?'
-    #length_short_result = validate(file_shortest_interaction, positive_class, file_longest_interaction, negative_class, id_column_name, 'short_interactions')
+    #length_short_result = validate(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'short_interactions')
     #print 'Long interaction'
     #length_long_result = validate(file_longest_interaction, positive_class, file_shortest_interaction, negative_class, id_column_name, 'long_interactions')
     
     #print 'Criteria: Word Accuracy'
     #print 'Word accuracy is 100?'
-    #wa_100_result = validate(file_wa_100, positive_class, file_wa_60, negative_class, id_column_name, 'word_accuracy_100')
-    #print 'Word accuracy is 60?'
-    #wa_60_result = validate(file_wa_60, positive_class, file_wa_100, negative_class, id_column_name, 'word_accuracy_60')
+    #wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
+    print 'Word accuracy is 60?'
+    wa_60_result = validate(file_wa_60, Class.POSITIVE, file_wa_100, Class.NEGATIVE, id_column_name, 'word_accuracy_60')
     
     # print 'Criteria: Dialogue Source'
     # print 'simulated dialogues?'
@@ -174,3 +191,4 @@ if __name__ == '__main__':
     
     result_file_name = time_util.human_readable_timestamp() + '__results.csv'
     cv.write_result_table_to_file(results, ';', base_directory + 'results/' + result_file_name)
+
