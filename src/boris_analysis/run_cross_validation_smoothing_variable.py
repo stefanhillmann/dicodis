@@ -94,7 +94,7 @@ def run_validation(job):
     cross_validator.add_documents(job.positive_dialogs)
     
     single_results = cross_validator.run_cross_validation()
-    write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria)
+    db.write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria)
 
     assessor = ResultAssessor(single_results, Class.POSITIVE, Class.NEGATIVE,
                               classifier_name, size, frequency_threshold, criteria,
@@ -103,18 +103,7 @@ def run_validation(job):
     return assessor.getResultAnalysis()
 
 
-def write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria):
-    evaluation_results = []
-    for sr in single_results:
-        er = EvaluationResult(evaluation_id, criteria, sr.document.dialog_id, classifier_name, size,
-                              frequency_threshold, smoothing_value, sr.classification_result.estimated_class,
-                              sr.true_class, sr.classification_result.positive_class_distance,
-                              sr.classification_result.negative_class_distance, Class.POSITIVE, Class.NEGATIVE)
-        evaluation_results.append(er)
 
-    con = db.DbManager(host, port, database)
-    con.write_results_to_database(evaluation_results, 'document_results')
-    con.close()
 
 
 

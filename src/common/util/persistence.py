@@ -5,6 +5,7 @@ Created on Tue Jul 22 15:05:10 2015
 """
 
 from pymongo import MongoClient
+from common.util.names import Class
 
 
 class DbManager:
@@ -64,3 +65,18 @@ class EvaluationResult:
              'positive_class_name': self.positive_class_name, 'negative_class_name': self.negative_class_name}
 
         return d
+
+
+def write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
+                                         smoothing_value, criteria, host, port, database_name, collection_name):
+    evaluation_results = []
+    for sr in single_results:
+        er = EvaluationResult(evaluation_id, criteria, sr.document.dialog_id, classifier_name, size,
+                              frequency_threshold, smoothing_value, sr.classification_result.estimated_class,
+                              sr.true_class, sr.classification_result.positive_class_distance,
+                              sr.classification_result.negative_class_distance, Class.POSITIVE, Class.NEGATIVE)
+        evaluation_results.append(er)
+
+    con = DbManager(host, port, database_name)
+    con.write_results_to_database(evaluation_results, collection_name)
+    con.close()
