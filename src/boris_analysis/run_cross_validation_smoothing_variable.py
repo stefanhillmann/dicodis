@@ -17,6 +17,7 @@ evaluation_id = 'complete_2015_07_27'
 host = 'localhost'
 port = 27017
 database = 'classification_cross_validation'
+doc_result_collection = 'documents_result'
 
 id_column_name = 'iteration'
 
@@ -98,7 +99,9 @@ def run_validation(job):
     cross_validator.add_documents(job.positive_dialogs)
     
     single_results = cross_validator.run_cross_validation()
-    db.write_results_to_database(single_results, size, classifier_name, frequency_threshold, smoothing_value, criteria)
+    db.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
+                                            smoothing_value, criteria, host, port, database,
+                                            doc_result_collection)
 
     assessor = ResultAssessor(single_results, Class.POSITIVE, Class.NEGATIVE,
                               classifier_name, size, frequency_threshold, criteria,
@@ -137,21 +140,21 @@ if __name__ == '__main__':
 
     print 'Criteria: User Judgment'
     print 'Good'
-    judged_good_result = validate(file_judged_good, Class.POSITIV, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
+    judged_good_result = validate(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
     print 'Bad'
-    judged_bad_result = validate(file_judged_bad, Class.POSITIV, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
+    judged_bad_result = validate(file_judged_bad, Class.POSITIVE, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
         
     print 'Criteria: Quality of Simulation'
     print 'Best simulation?'
-    simulation_best_result = validate(file_best_simulation, Class.POSITIV, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
+    simulation_best_result = validate(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
     print 'Worst simulation?'
-    simulation_worst_result = validate(file_worst_simulation, Class.POSITIV, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
+    simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
     
     print 'Criteria: Length of Interaction'
     print 'Short interaction?'
     length_short_result = validate(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'short_interactions')
     print 'Long interaction'
-    length_long_result = validate(file_longest_interaction, Class.POSITIV, file_shortest_interaction, Class.NEGATIVE, id_column_name, 'long_interactions')
+    length_long_result = validate(file_longest_interaction, Class.POSITIVE, file_shortest_interaction, Class.NEGATIVE, id_column_name, 'long_interactions')
     
     print 'Criteria: Word Accuracy'
     print 'Word accuracy is 100?'
@@ -161,9 +164,9 @@ if __name__ == '__main__':
     
     print 'Criteria: Dialogue Source'
     print 'simulated dialogues?'
-    sim_result = validate(file_best_simulation, Class.POSITIV, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
+    sim_result = validate(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
     print 'real dialogues? '
-    real_result = validate(file_experiment, Class.POSITIV, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
+    real_result = validate(file_experiment, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
     
         
     results = []

@@ -137,10 +137,6 @@ class SingleTestResult:
         self.classification_result   = classification_result
         self.n_gram_size             = n_gram_size
 
-    def __repr__(self):
-        return 'Classifier: {}, Calculated class: {}, Actual class: {}, Distance: {}, n-Gram size: {}'.format(self.classifier_name,
-                  self.estimated_class, self.true_class, self.calculated_distance, self.n_gram_size)
-
 class SummarizedTestResults:
     def __init__(self, true_positive, false_positive, true_negative, false_negative,
                  classifier_name, n_gram_size, criteria, frequency_threshold, smoothing_value):
