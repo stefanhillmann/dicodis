@@ -118,8 +118,8 @@ if __name__ == '__main__':
     
     logging.info("Cross validation starts.")
 
-    succees_successful_result   = []
-    succees_failed_result       = []
+    success_successful_result   = []
+    success_failed_result       = []
     simulation_best_result      = []
     simulation_worst_result     = []
     length_short_result         = []
@@ -134,9 +134,9 @@ if __name__ == '__main__':
     
     print 'Criteria: Turn Success'
     print 'Successful?'
-    succees_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
+    success_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
     print 'Failed?'
-    succees_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
+    success_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
     print 'Criteria: User Judgment'
     print 'Good'
@@ -170,8 +170,8 @@ if __name__ == '__main__':
     
         
     results = []
-    results.extend(succees_successful_result)
-    results.extend(succees_failed_result)
+    results.extend(success_successful_result)
+    results.extend(success_failed_result)
     results.extend(judged_good_result)
     results.extend(judged_bad_result)
     results.extend(length_short_result)
