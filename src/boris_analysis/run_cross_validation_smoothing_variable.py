@@ -13,7 +13,7 @@ from common.util.names import Class
 logging.basicConfig(level=logging.WARNING)
 
 # evaluation_id = time_util.shorter_human_readable_timestamp()
-evaluation_id = '2015_07_24__15_55'
+evaluation_id = 'complete_2015_07_27'
 host = 'localhost'
 port = 27017
 database = 'classification_cross_validation'
@@ -33,6 +33,10 @@ file_longest_interaction    = base_directory + 'data/longest49Interactions.csv'
 
 file_wa_100                 = base_directory + 'data/WA_60.csv'
 file_wa_60                  = base_directory + 'data/WA_100.csv'
+
+file_judged_bad             = base_directory + 'data/badJudged.csv'
+file_judged_good            = base_directory + 'data/goodJudged.csv'
+
 
 file_experiment             = base_directory + 'data/annotatedData_corrected.csv'
 
@@ -125,41 +129,41 @@ if __name__ == '__main__':
     real_result                 = []
     
     
-    #print 'Criteria: Turn Success'
-    #print 'Successful?'
-    #succees_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
-    #print 'Failed?'
-    #succees_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
+    print 'Criteria: Turn Success'
+    print 'Successful?'
+    succees_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
+    print 'Failed?'
+    succees_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
-    #print 'Criteria: User Judgment'
-    #print 'Good'
-    #judged_good_result = validate(file_judged_good, positive_class, file_judged_bad, negative_class, id_column_name, 'juged_good')
-    #print 'Bad' 
-    #judged_bad_result = validate(file_judged_bad, positive_class, file_judged_good, negative_class, id_column_name, 'juged_bad')
+    print 'Criteria: User Judgment'
+    print 'Good'
+    judged_good_result = validate(file_judged_good, Class.POSITIV, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
+    print 'Bad'
+    judged_bad_result = validate(file_judged_bad, Class.POSITIV, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
         
-    #print 'Criteria: Quality of Simulation'
-    #print 'Best simulation?'
-    #simulation_best_result = validate(file_best_simulation, positive_class, file_worst_simulation, negative_class, id_column_name, 'simulation_quality_best')
-    #print 'Worst simulation?'
-    #simulation_worst_result = validate(file_worst_simulation, positive_class, file_best_simulation, negative_class, id_column_name, 'simulation_quality_worst')
+    print 'Criteria: Quality of Simulation'
+    print 'Best simulation?'
+    simulation_best_result = validate(file_best_simulation, Class.POSITIV, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
+    print 'Worst simulation?'
+    simulation_worst_result = validate(file_worst_simulation, Class.POSITIV, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
     
-    #print 'Criteria: Length of Interaction'
-    #print 'Short interaction?'
-    #length_short_result = validate(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'short_interactions')
-    #print 'Long interaction'
-    #length_long_result = validate(file_longest_interaction, positive_class, file_shortest_interaction, negative_class, id_column_name, 'long_interactions')
+    print 'Criteria: Length of Interaction'
+    print 'Short interaction?'
+    length_short_result = validate(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'short_interactions')
+    print 'Long interaction'
+    length_long_result = validate(file_longest_interaction, Class.POSITIV, file_shortest_interaction, Class.NEGATIVE, id_column_name, 'long_interactions')
     
-    #print 'Criteria: Word Accuracy'
-    #print 'Word accuracy is 100?'
-    #wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
+    print 'Criteria: Word Accuracy'
+    print 'Word accuracy is 100?'
+    wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
     print 'Word accuracy is 60?'
     wa_60_result = validate(file_wa_60, Class.POSITIVE, file_wa_100, Class.NEGATIVE, id_column_name, 'word_accuracy_60')
     
-    # print 'Criteria: Dialogue Source'
-    # print 'simulated dialogues?'
-    # sim_result = validate(file_best_simulation, positive_class, file_experiment, negative_class, id_column_name, 'simulated')
-    # print 'real dialogues? '
-    # real_result = validate(file_experiment, positive_class, file_best_simulation, negative_class, id_column_name, 'real')
+    print 'Criteria: Dialogue Source'
+    print 'simulated dialogues?'
+    sim_result = validate(file_best_simulation, Class.POSITIV, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
+    print 'real dialogues? '
+    real_result = validate(file_experiment, Class.POSITIV, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
     
         
     results = []

@@ -1,7 +1,7 @@
 from common.ngram.model_generator import NGramSize
 from common.measuring.measures import MeasureName
 
-validation_processes = 12
+validation_processes = 4
 
 sizes = [
               NGramSize.ONE,
