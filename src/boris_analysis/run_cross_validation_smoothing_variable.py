@@ -92,7 +92,7 @@ def run_validation(job):
     smoothing_value     = job.configuration.smoothing_value
     criteria            = job.criteria
     
-    print 'Executing job: {} with configuration: {}'.format(job.job_number, job.configuration)
+    print 'Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration)
         
     cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
     cross_validator.add_documents(job.negative_dialogs)

@@ -11,7 +11,6 @@ from common.util.names import Class
 class TestROC(unittest.TestCase):
 
     def test_get_roc_points(self):
-        # TODO: Test an umgedehte Reihenfolge anpassen!
 
         ids = ['a', 'b', 'c', 'd', 'e']
 
@@ -32,9 +31,9 @@ class TestROC(unittest.TestCase):
         self.assertEqual(fp_rate[4], 1.0)
 
         self.assertEqual((round(tp_rate[0], 3)), 0.0)
-        self.assertEqual((round(tp_rate[1], 3)), 0.0)
-        self.assertEqual((round(tp_rate[2], 3)), 0.333)
-        self.assertEqual((round(tp_rate[3], 3)), 0.667)
+        self.assertEqual((round(tp_rate[1], 3)), 0.333)
+        self.assertEqual((round(tp_rate[2], 3)), 0.667)
+        self.assertEqual((round(tp_rate[3], 3)), 1.0)
         self.assertEqual((round(tp_rate[4], 3)), 1.0)
 
         # plt = roc.create_plot(roc_points)

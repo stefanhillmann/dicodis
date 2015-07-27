@@ -41,12 +41,12 @@ class Memoized(object):
 @Memoized
 def get_pads(n):
     """
-    Return the pad with n elements.
+    Return the pad with n - 1 elements.
     Pads for a distinct n are 'cached' after first access.
     """
 
     pads = ""
-    for i in range(n):
+    for i in range(n - 1):
         pads = pads + "_"
 
     return pads
