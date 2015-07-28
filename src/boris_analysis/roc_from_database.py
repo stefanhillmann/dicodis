@@ -9,7 +9,7 @@ config = ConfigParser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
-port = config.get('database', 'port')
+port = config.getint('database', 'port')
 database = config.get('database', 'db_name')
 
 dbm = pe.DbManager(host, port, database)
