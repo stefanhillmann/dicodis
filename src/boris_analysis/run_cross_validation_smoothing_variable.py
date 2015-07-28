@@ -9,19 +9,25 @@ from common.dialog_document.dialog_reader import DialogsReader
 from common.util.persistence import EvaluationResult
 import common.util.persistence as db
 from common.util.names import Class
+import ConfigParser
 
 logging.basicConfig(level=logging.WARNING)
 
-# evaluation_id = time_util.shorter_human_readable_timestamp()
-evaluation_id = 'complete_2015_07_27'
-host = 'localhost'
-port = 27017
-database = 'classification_cross_validation'
-doc_result_collection = 'documents_result'
+
+# read configuration
+config = ConfigParser.ConfigParser()
+config.read('local_config.ini')
+
+host = config.get('database', 'host')
+port = config.get('database', 'port')
+database = config.get('database', 'db_name')
+doc_result_collection = config.get('database', 'doc_result_collection')
+
+evaluation_id = config.get('cross_validation', 'evaluation_id')
+base_directory = config.get('cross_validation', 'source_directory')
 
 id_column_name = 'iteration'
 
-base_directory = '/home/stefan/git/DialogueClassifying/'
 
 file_turns_succeeded        = base_directory + 'data/turnsSucceeded.csv'
 file_turns_failed           = base_directory + 'data/turnsFailed.csv'

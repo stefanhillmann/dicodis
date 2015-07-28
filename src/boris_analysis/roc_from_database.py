@@ -3,10 +3,14 @@ __author__ = 'stefan'
 import common.util.persistence as pe
 from common.analyse import roc
 from common.util.names import Class
+import ConfigParser
 
-host = 'localhost'
-port = 27017
-database = 'classification_cross_validation'
+config = ConfigParser.ConfigParser()
+config.read('local_config.ini')
+
+host = config.get('database', 'host')
+port = config.get('database', 'port')
+database = config.get('database', 'db_name')
 
 dbm = pe.DbManager(host, port, database)
 db = dbm.get_connection()

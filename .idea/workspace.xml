@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ec84e9f1-4e7b-4485-a5eb-2509501f1e2b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/ngram/cached_pads.py" afterPath="$PROJECT_DIR$/src/common/ngram/cached_pads.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/documentation/local_config.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/boris_analysis/auc_from_database.py" afterPath="$PROJECT_DIR$/src/boris_analysis/auc_from_database.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py" afterPath="$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/boris_analysis/roc_from_database.py" afterPath="$PROJECT_DIR$/src/boris_analysis/roc_from_database.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py" afterPath="$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/ngram/test_padding.py" afterPath="$PROJECT_DIR$/src/common/ngram/test_padding.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/analyse/test_roc.py" afterPath="$PROJECT_DIR$/src/common/analyse/test_roc.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="DialogueClassifying.iws" />
@@ -27,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="run_cross_validation_smoothing_variable.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="run_cross_validation_smoothing_variable.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.092495635">
-              <caret line="69" column="18" selection-start-line="69" selection-start-column="18" selection-end-line="69" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="63" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="63" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -39,61 +40,55 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_padding.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/ngram/test_padding.py">
+      <file leaf-file-name="ConfigParser.py" pinned="false" current-in-tab="false">
+        <entry file="file:///usr/lib/python2.7/ConfigParser.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+              <caret line="606" column="0" selection-start-line="606" selection-start-column="0" selection-end-line="606" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="run_unittests.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/run_unittests.sh">
+      <file leaf-file-name="local_config.ini" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/boris_analysis/local_config.ini">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="30" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
+              <caret line="3" column="40" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_roc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/analyse/test_roc.py">
+      <file leaf-file-name="auc_from_database.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/boris_analysis/auc_from_database.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-              <folding />
+              <caret line="14" column="44" selection-start-line="7" selection-start-column="0" selection-end-line="14" selection-end-column="44" />
+              <folding>
+                <element signature="e#23#59#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cached_pads.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/ngram/cached_pads.py">
+      <file leaf-file-name="roc_from_database.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/boris_analysis/roc_from_database.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
-              <folding />
+              <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+              <folding>
+                <element signature="e#23#59#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_n_gram.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/ngram/test_n_gram.py">
+      <file leaf-file-name="local_config.ini" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/documentation/local_config.ini">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="30" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="model_generator.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/ngram/model_generator.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="77" column="45" selection-start-line="77" selection-start-column="45" selection-end-line="77" selection-end-column="45" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -114,8 +109,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/common/dialog_document/dialog_reader.py" />
-        <option value="$PROJECT_DIR$/src/dialogs.py" />
         <option value="$PROJECT_DIR$/src/unit_tests/test_measures.py" />
         <option value="$PROJECT_DIR$/src/boris_analysis/create_and_write_n-gram_models.py" />
         <option value="$PROJECT_DIR$/src/boris_analysis/analyse_n-gram_models.py" />
@@ -153,18 +146,20 @@
         <option value="$PROJECT_DIR$/src/boris_analysis/create_all_n-grams.py" />
         <option value="$PROJECT_DIR$/src/boris_analysis/analyse_all_n_grams.py" />
         <option value="$PROJECT_DIR$/src/common/analyse/roc.py" />
-        <option value="$PROJECT_DIR$/src/boris_analysis/roc_from_database.py" />
         <option value="$PROJECT_DIR$/src/boris_analysis/ngram_analyse.py" />
         <option value="$PROJECT_DIR$/src/common/analyse/performance.py" />
         <option value="$PROJECT_DIR$/src/common/util/persistence.py" />
         <option value="$PROJECT_DIR$/src/common/analyse/test_database_result_calculation.py" />
-        <option value="$PROJECT_DIR$/src/boris_analysis/auc_from_database.py" />
-        <option value="$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py" />
         <option value="$PROJECT_DIR$/src/common/analyse/cross_validation.py" />
         <option value="$PROJECT_DIR$/src/common/ngram/test_padding.py" />
         <option value="$PROJECT_DIR$/src/common/ngram/cached_pads.py" />
         <option value="$PROJECT_DIR$/src/common/analyse/test_roc.py" />
+        <option value="$PROJECT_DIR$/src/boris_analysis/config_test.py" />
+        <option value="$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py" />
+        <option value="$PROJECT_DIR$/src/boris_analysis/local_config.ini" />
         <option value="$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py" />
+        <option value="$PROJECT_DIR$/src/boris_analysis/auc_from_database.py" />
+        <option value="$PROJECT_DIR$/src/boris_analysis/roc_from_database.py" />
       </list>
     </option>
   </component>
@@ -248,20 +243,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DialogueClassifying" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DialogueClassifying" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -292,6 +273,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/documentation" />
       <recent name="$PROJECT_DIR$/src/common/analyse" />
       <recent name="$PROJECT_DIR$/src/boris_analysis" />
     </key>
@@ -303,7 +285,7 @@
       <recent name="$PROJECT_DIR$/src/common/" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittest TestROC.test_get_roc_points">
+  <component name="RunManager" selected="Python.run_cross_validation_smoothing_variable">
     <configuration default="false" name="run_unittests.sh" type="BashConfigurationType" factoryName="Bash" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="INTERPRETER_PATH" value="/bin/bash" />
@@ -313,50 +295,6 @@
       <option name="PARAMETERS" value="" />
       <module name="DialogueClassifying" />
       <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="Unittests in test_n_gram" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/common/ngram" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="DialogueClassifying" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/common/ngram/test_n_gram.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Unittest TestNGram.test_bi_gram_creation" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/common/ngram" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="DialogueClassifying" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/common/ngram/test_n_gram.py" />
-      <option name="CLASS_NAME" value="TestNGram" />
-      <option name="METHOD_NAME" value="test_bi_gram_creation" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_METHOD" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
       <method />
     </configuration>
     <configuration default="false" name="Unittest TestPadding.test_padding" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
@@ -401,6 +339,40 @@
       <option name="PUREUNITTEST" value="true" />
       <option name="PARAMS" value="" />
       <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="run_cross_validation_smoothing_variable" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/boris_analysis" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="DialogueClassifying" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="config_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/boris_analysis" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="DialogueClassifying" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/boris_analysis/config_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
@@ -538,18 +510,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Bash.run_unittests.sh" />
-      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittests in test_n_gram" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestNGram.test_bi_gram_creation" />
-      <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestPadding.test_padding" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.Unittest TestROC.test_get_roc_points" />
+      <item index="1" class="java.lang.String" itemvalue="Python tests.Unittest TestPadding.test_padding" />
+      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestROC.test_get_roc_points" />
+      <item index="3" class="java.lang.String" itemvalue="Python.run_cross_validation_smoothing_variable" />
+      <item index="4" class="java.lang.String" itemvalue="Python.config_test" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittest TestROC.test_get_roc_points" />
-        <item index="1" class="java.lang.String" itemvalue="Bash.run_unittests.sh" />
-        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestPadding.test_padding" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Unittest TestNGram.test_bi_gram_creation" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittests in test_n_gram" />
+        <item index="0" class="java.lang.String" itemvalue="Python.run_cross_validation_smoothing_variable" />
+        <item index="1" class="java.lang.String" itemvalue="Python.config_test" />
+        <item index="2" class="java.lang.String" itemvalue="Python tests.Unittest TestROC.test_get_roc_points" />
+        <item index="3" class="java.lang.String" itemvalue="Bash.run_unittests.sh" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Unittest TestPadding.test_padding" />
       </list>
     </recent_temporary>
   </component>
@@ -678,7 +650,13 @@
       <option name="project" value="LOCAL" />
       <updated>1438005520373</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Bugfix:&#10;- wrong pad creation&#10;- roc test definition was wrong&#10;&#10;Feature:&#10;- show criteria in job information">
+      <created>1438007711732</created>
+      <option name="number" value="00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1438007711732</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TodoView">
@@ -695,9 +673,9 @@
     <editor active="false" />
     <layout>
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28421053" sideWeight="0.49604222" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32842106" sideWeight="0.49791232" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46" sideWeight="0.49815303" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36842105" sideWeight="0.35883906" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32842106" sideWeight="0.49604222" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.46" sideWeight="0.4939314" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32842106" sideWeight="0.5039578" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21789473" sideWeight="0.49815303" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -706,7 +684,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21635884" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28105262" sideWeight="0.492876" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36842105" sideWeight="0.64116096" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36842105" sideWeight="0.63852245" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39894736" sideWeight="0.49604222" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -741,7 +719,8 @@
     <MESSAGE value="- Datenbankanbindung" />
     <MESSAGE value="- outdated scripts are deleted&#10;- histogram script is updated" />
     <MESSAGE value="Prepared for a complete evaluation, using all criteria." />
-    <option name="LAST_COMMIT_MESSAGE" value="Prepared for a complete evaluation, using all criteria." />
+    <MESSAGE value="Bugfix:&#10;- wrong pad creation&#10;- roc test definition was wrong&#10;&#10;Feature:&#10;- show criteria in job information" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bugfix:&#10;- wrong pad creation&#10;- roc test definition was wrong&#10;&#10;Feature:&#10;- show criteria in job information" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -758,7 +737,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/src/boris_analysis/roc_from_database.py</url>
-          <line>34</line>
+          <line>38</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
@@ -776,6 +755,16 @@
           <line>18</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py</url>
+          <line>124</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -784,40 +773,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="51" />
+      <option name="time" value="55" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/common/analyse/performance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="61" selection-start-line="62" selection-start-column="61" selection-end-line="62" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/common/classify/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/common/ngram/export.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="47" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/collections.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="437" column="8" selection-start-line="437" selection-start-column="8" selection-end-line="437" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/common/ngram/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -970,16 +930,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/boris_analysis/roc_from_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding>
-            <element signature="e#23#59#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/boris_analysis/analyse_all_n_grams.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1042,7 +992,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1052,24 +1002,6 @@
         <state vertical-scroll-proportion="0.45513514">
           <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.03891892">
-          <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/boris_analysis/auc_from_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4745946">
-          <caret line="73" column="55" selection-start-line="73" selection-start-column="55" selection-end-line="73" selection-end-column="55" />
-          <folding>
-            <element signature="e#23#59#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1086,16 +1018,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="97" column="30" selection-start-line="97" selection-start-column="30" selection-end-line="97" selection-end-column="30" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/common/util/persistence.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="4" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
-          <folding>
-            <element signature="e#102#133#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1173,13 +1095,85 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/common/util/persistence.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+          <folding>
+            <element signature="e#102#133#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydev_monkey_qt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="73" column="8" selection-start-line="73" selection-start-column="8" selection-end-line="73" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python2.7/ConfigParser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="606" column="0" selection-start-line="606" selection-start-column="0" selection-end-line="606" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/boris_analysis/cross_validation_configuration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14729951">
+          <caret line="5" column="36" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/boris_analysis/local_config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="40" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/boris_analysis/run_cross_validation_smoothing_variable.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.092495635">
-          <caret line="69" column="18" selection-start-line="69" selection-start-column="18" selection-end-line="69" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="63" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="63" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/boris_analysis/auc_from_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="44" selection-start-line="7" selection-start-column="0" selection-end-line="14" selection-end-column="44" />
+          <folding>
+            <element signature="e#23#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/boris_analysis/roc_from_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="44" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
+          <folding>
+            <element signature="e#23#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/documentation/local_config.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

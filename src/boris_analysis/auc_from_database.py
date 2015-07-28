@@ -5,11 +5,15 @@ from common.analyse import roc
 from common.util.names import Class
 import cross_validation_configuration
 from common.analyse import performance as per
+import ConfigParser
 
-host = 'localhost'
-port = 27017
-database = 'classification_cross_validation'
-evaluation_id = '2015_07_24__15_55'
+config = ConfigParser.ConfigParser()
+config.read('local_config.ini')
+
+host = config.get('database', 'host')
+port = config.get('database', 'port')
+database = config.get('database', 'db_name')
+evaluation_id = config.get('cross_validation', 'evaluation_id')
 
 configurations = cross_validation_configuration.getConfigurations()
 
