@@ -102,16 +102,12 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
                       negative_class, criteria, job_number)
             jobs.append(job)
 
-    print 'go on'
-
-
-        
-    #print '{} to be executed.'.format( len(jobs) )
-    #pool = Pool(processes=cross_validation_configuration.validation_processes)
-    #results = pool.map(run_validation, jobs)
-    #print 'All jobs finished.'
+    print '{} to be executed.'.format( len(jobs) )
+    pool = Pool(processes=cross_validation_configuration.validation_processes)
+    results = pool.map(run_validation, jobs)
+    print 'All jobs finished.'
     
-    #return results
+    return results
     
 
 def run_validation(job):
