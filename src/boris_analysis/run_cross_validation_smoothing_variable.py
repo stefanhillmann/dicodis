@@ -140,7 +140,7 @@ if __name__ == '__main__':
     
     print 'Criteria: Turn Success'
     print 'Successful?'
-    success_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
+    #success_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
     print 'Failed?'
     #success_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     print 'Best simulation?'
     #simulation_best_result = validate(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
     print 'Worst simulation?'
-    #simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
+    simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
     
     print 'Criteria: Length of Interaction'
     print 'Short interaction?'
