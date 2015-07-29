@@ -23,6 +23,8 @@ port = config.getint('database', 'port')
 database = config.get('database', 'db_name')
 doc_result_collection = config.get('database', 'doc_result_collection')
 
+dbm = db.DbManager(host, port, database)
+
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
 
@@ -61,6 +63,22 @@ class Job:
         self.job_number         = job_number
         
 
+def is_job_already_done(criteria, configuration, no_of_dialogs):
+    db_con = dbm.get_connection()
+    doc_res = db_con[doc_result_collection]
+    r = doc_res.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
+                            'classifier_name': configuration.classifier, 'frequency_threshold': configuration.frequency_threshold,
+                            'smoothing_value': configuration.smoothing_value})
+    count = r.count()
+    is_done = count == no_of_dialogs
+
+    if not is_done and count > 0:
+        print 'Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration)
+        assert count == 0  # emergency hold
+
+    return is_done
+
+
 def validate(positive_data_file, positive_class, negative_data_file, negative_class, id_column_name, criteria):
     
     positive_reader = DialogsReader(positive_data_file)
@@ -70,22 +88,30 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     negative_reader = DialogsReader(negative_data_file)
     negative_dialogs = dialogs.create_dialogs_documents(negative_reader, id_column_name, negative_class)
     print 'Dialogs in negative class: {}'.format( len(negative_dialogs) )
-    
+
     configurations = cross_validation_configuration.getConfigurations()
+
     jobs = []
     job_number = 0
     for configuration in configurations:
-        job_number += 1
-        job = Job(configuration, positive_dialogs, negative_dialogs, positive_class, 
-                  negative_class, criteria, job_number)
-        jobs.append(job)
+        if is_job_already_done(criteria, configuration, len(positive_dialogs) + len(negative_dialogs)):
+            print 'Already done! (criteria: {0}, configuration: {1}'.format(criteria, configuration)
+        else:
+            job_number += 1
+            job = Job(configuration, positive_dialogs, negative_dialogs, positive_class,
+                      negative_class, criteria, job_number)
+            jobs.append(job)
+
+    print 'go on'
+
+
         
-    print '{} to be executed.'.format( len(jobs) )
-    pool = Pool(processes=cross_validation_configuration.validation_processes)
-    results = pool.map(run_validation, jobs)
-    print 'All jobs finished.'
+    #print '{} to be executed.'.format( len(jobs) )
+    #pool = Pool(processes=cross_validation_configuration.validation_processes)
+    #results = pool.map(run_validation, jobs)
+    #print 'All jobs finished.'
     
-    return results
+    #return results
     
 
 def run_validation(job):
