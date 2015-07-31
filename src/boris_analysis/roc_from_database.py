@@ -12,15 +12,20 @@ host = config.get('database', 'host')
 port = config.getint('database', 'port')
 database = config.get('database', 'db_name')
 
+
 dbm = pe.DbManager(host, port, database)
 db = dbm.get_connection()
 
-results = db.document_results
+results = db[config.get('database', 'doc_result_collection')]
 
 # , 'positive_class_distance:': {'$gt': 0.8}
 
-query = {'classifier_name': 'mean kullback leibler', 'frequency_threshold': 1, 'n_gram_size': 1, 'evaluation_id': '2015_07_24__15_55',
-         'smoothing_value': 0.25, 'criteria': 'word_accuracy_100'}
+query = {'classifier_name': 'jensen',
+         'frequency_threshold': 1,
+         'n_gram_size': 6,
+         'evaluation_id': 'complete_2015_07_27',
+         'smoothing_value': 0.5,
+         'criteria': 'word_accuracy_100'}
 
 example_ids = list()
 positive_probability_dict = dict()
