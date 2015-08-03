@@ -20,8 +20,9 @@ configurations = cross_validation_configuration.getConfigurations()
 dbm = pe.DbManager(host, port, database)
 db = dbm.get_connection()
 
-results = db.document_results
-performance = db.performance
+
+results = db[config.get('database', 'doc_result_collection')]
+performance = db[config.get('database', 'performance_collection')]
 
 # get criteria from database
 criteria = results.distinct('criteria')
@@ -56,7 +57,8 @@ def get_precision_recall_and_f_measure(evaluation_id, classifier_name, frequency
     recall = per.compute_recall(tp, fn)
     f_measure = per.compute_f_measure(tp, fp, fn)
 
-    return {'precision': precision, 'recall': recall, 'f_measure': f_measure}
+    return {'precision': precision, 'recall': recall, 'f_measure': f_measure, 'true_positives': tp,
+            'false_positives': fp, 'false_negatives': fn}
 
 for cri in criteria:
     print 'Computing performance results for criteria {0}'.format(cri)
@@ -70,15 +72,16 @@ for cri in criteria:
                  'smoothing_value': conf.smoothing_value,
                  'criteria': cri}
 
-        query_results = results.find(query)
-        auc = get_auc(query_results)
+        #  query_results = results.find(query)
+        #  auc = get_auc(query_results)
         classificator_performance = {'evaluation_id': evaluation_id,
                                      'classifier_name': conf.classifier,
                                      'frequency_threshold': conf.frequency_threshold,
                                      'n_gram_size': conf.size,
                                      'smoothing_value': conf.smoothing_value,
-                                     'criteria': cri,
-                                     'auc': auc}
+                                     'criteria': cri}
+                                     #  'auc': auc}
+
         # add precision, recall and f-value to performance
         p_r_f = get_precision_recall_and_f_measure(evaluation_id, conf.classifier, conf.frequency_threshold, conf.size,
                                                    conf.smoothing_value, cri, results)
