@@ -1,6 +1,7 @@
 library(RMongo)
 library(plyr)
 library(ggplot2)
+library(reshape2)
 
 cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
 
@@ -27,7 +28,7 @@ f_09$range <- '09'
 counts <- rbind(f_05, f_06, f_07, f_08, f_09)
 
 # Ausgabe wieviel Klassifikatoren mit f > [0.6 - 1.0] exisitieren
-cast( count(counts, c('data_set', 'classifier', 'range') ), data_set+classifier~range, fill=0)
+dcast( count(counts, c('data_set', 'classifier', 'range') ), data_set+classifier~range, fill=0)
 
 
 
