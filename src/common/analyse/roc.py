@@ -56,10 +56,14 @@ def create_plot(roc_points):
     plt.ylabel("TPR", fontsize=14)
     plt.title("ROC Curve", fontsize=14)
 
+
     tpr = roc_points['tp_rate']
     fpr = roc_points['fp_rate']
 
+    plt.fill_between(fpr, tpr, facecolor='gray', alpha=0.5)
+
     plt.plot(fpr, tpr)
+    plt.plot([0, 1], [0, 1], linestyle='--', color='black')
 
     return plt
 
@@ -83,7 +87,14 @@ def get_auc(example_ids, positive_probability_dict, true_class_dict, positive_cl
     sorted_ids = sorted(example_ids, key=lambda x: positive_probability_dict[x], reverse=True)
 
     n_of_positives = true_class_dict.values().count(positive_class)
+    if n_of_positives == 0:
+        print 'Zero positives.'
+
     n_of_negatives = true_class_dict.values().count(negative_class)
+    if n_of_negatives == 0:
+        print 'Zero negatives.'
+
+
 
     fp = 0.0
     tp = 0.0

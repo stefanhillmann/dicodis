@@ -36,7 +36,7 @@ def __get_db_performance_count(evaluation_id, classifier_name, frequency_thresho
              'frequency_threshold': frequency_threshold,
              'n_gram_size': n_gram_size,
              'smoothing_value': smoothing_value,
-             'criteria': criteria,
+             'criteria': {'$in': criteria},
              'estimated_class': estimated_class,
              'true_class': true_class}
 

@@ -1,112 +1,99 @@
-import common.dialog_document.dialog_reader
-from common.ngram import export
-from common.ngram import model_generator
-import common.util.list as lu
-from boris_analysis import dialogs
-from common.util import time_util
-from common.corpora_distance import distance
+import logging
+
+from boris_analysis import cross_validation_configuration, dialogs
+from common.dialog_document.dialog_reader import DialogsReader
+from common.util.names import Class
+from common.ngram import model_generator as mg
+from common.corpora_distance import distance as d
+
+import common.util.persistence as db
+
+import ConfigParser
+
+logging.basicConfig(level=logging.WARNING)
 
 
-def printResult():
-    for line in data:
-        print ' '.join(line)
+# read configuration
+config = ConfigParser.ConfigParser()
+config.read('local_config.ini')
 
-def writeCsvFile():
-    file_name = time_util.human_readable_timestamp() + '__n-ngram_counts.csv'
-    path = '../results/' + file_name
-    f = open(path, 'w')
-    for line in data:
-        f.write( ";".join(line) + '\n' )
-    f.close()
+host = config.get('database', 'host')
+port = config.getint('database', 'port')
+database = config.get('database', 'db_name')
+distances_collection = config.get('database', 'distances_collection')
+dbm = db.DbManager(host, port, database)
 
-def createNGramModel(documents, n):
-    n_grams = model_generator.create_n_grams_from_document_list(documents, n)
-    class_model = model_generator.create_n_gram_model( lu.unique_values(n_grams), n_grams )
-    
-    return class_model
+evaluation_id = config.get('cross_validation', 'evaluation_id')
+base_directory = config.get('cross_validation', 'source_directory')
 
-def getDocuments(reader):
-    documents = dialogs.create_dialogs_documents(reader, 'iteration', 'default_class')
-    return documents
-        
-
-SMOOTHIG_VALUE = 0.25
-N_MIN = 3
-N_MAX = 3
-T_MIN = 1
-T_MAX = 1
-
-file_turns_succeeded        = '../data/turnsSucceeded.csv'
-file_turns_failed           = '../data/turnsFailed.csv'
-
-file_best_simulation        = '../data/bestSimulation.csv'
-file_worst_simulation       = '../data/worstSimulation.csv'
-
-file_shortest_interaction   = '../data/shortest49Interactions.csv'
-file_longest_interaction    = '../data/longest49Interactions.csv'
-
-file_wa_100                 = '../data/WA_60.csv'
-file_wa_60                  = '../data/WA_100.csv'
-
-files = {#'successful' : file_turns_succeeded,
-         #'failed' : file_turns_failed,
-         'best_sim' : file_best_simulation,
-         'worst_sim' : file_worst_simulation,
-         #'shortest' : file_shortest_interaction,
-         #'longest': file_longest_interaction,
-         #'wa_100' : file_wa_100,
-         #'wa_60' : file_wa_60
-         }
-data = [['measure', 'reference', 'other', 'threshold', 'n', 'distance']]
+id_column_name = 'iteration'
 
 
-calculator = distance.get_cosine_calculator()
+file_turns_succeeded        = base_directory + 'data/turnsSucceeded.csv'
+file_turns_failed           = base_directory + 'data/turnsFailed.csv'
+
+file_best_simulation        = base_directory + 'data/bestSimulation.csv'
+file_worst_simulation       = base_directory + 'data/worstSimulation.csv'
+
+file_shortest_interaction   = base_directory + 'data/shortest49Interactions.csv'
+file_longest_interaction    = base_directory + 'data/longest49Interactions.csv'
+
+file_wa_100                 = base_directory + 'data/WA_60.csv'
+file_wa_60                  = base_directory + 'data/WA_100.csv'
+
+file_judged_bad             = base_directory + 'data/badJudged.csv'
+file_judged_good            = base_directory + 'data/goodJudged.csv'
 
 
-reference_reader = common.dialog_document.dialog_reader.DialogsReader( '../data/annotatedData_corrected.csv' )
-reference_documents = getDocuments(reference_reader)
+file_experiment             = base_directory + 'data/annotatedData_corrected.csv'
+
+corpora_pairs = {
+    'success': (file_turns_succeeded, file_turns_failed),
+    'simulation_quality': (file_best_simulation, file_worst_simulation),
+    'dialogue_length': (file_shortest_interaction, file_longest_interaction),
+    'word_accuracy': (file_wa_100, file_wa_100),
+    'user_judgement': (file_judged_good, file_judged_bad),
+    'real_vs_worst_sim': (file_experiment, file_worst_simulation),
+    'real_vs_best_sim': (file_experiment, file_best_simulation)
+}
+
+configurations = cross_validation_configuration.getConfigurations()
 
 
-for n in xrange(N_MIN, N_MAX + 1):
-    print 'Run for n = {}'.format(n)
-    for name in files.keys():
-        print '    Run for corpus {}'.format(name)
-        reader = common.dialog_document.dialog_reader.DialogsReader( files[name] )
-        other_documents = getDocuments(reader)
-        
-        reference_n_grams = model_generator.create_n_grams_from_document_list(reference_documents, n)
-        other_n_grams = model_generator.create_n_grams_from_document_list(other_documents, n)
-        
-        # create all list of all n-grams (reference and other corpus), in order to
-        # compute the unique n-grams from both corpora.
-        all_n_grams = list(reference_n_grams)
-        all_n_grams.extend(other_n_grams)
-        unique_n_grams = lu.unique_values(all_n_grams)
-        
-        # create smoothed n-gram-models
-        reference_model = model_generator.create_n_gram_model(unique_n_grams, reference_n_grams)
-        other_model     = model_generator.create_n_gram_model(unique_n_grams, other_n_grams)
-        
-        export.to_csv(reference_model, '/home/stefan/temp/reference_model.csv')
-        export.to_csv(other_model, '/home/stefan/temp/other_model.csv')
-        
-        
-        for t in xrange(T_MIN, T_MAX + 1):
-            print '        Run for t = {}'.format(t)
-            #reference_model = model_generator.remove_rare_n_grams(reference_model, t)
-            #other_model     = model_generator.remove_rare_n_grams(other_model, t)
-            
-            smooth_reference_model = model_generator.smooth_model(reference_model, SMOOTHIG_VALUE)
-            smooth_other_model     = model_generator.smooth_model(other_model, SMOOTHIG_VALUE)
-            
-            export.to_csv(smooth_reference_model, '/home/stefan/temp/smooth_reference_model.csv')
-            export.to_csv(smooth_other_model, '/home/stefan/temp/smooth_other_model.csv')
-                        
-            distance = calculator.compute_distance(smooth_reference_model, smooth_other_model)
-        
-            line = [calculator.name, 'empirical', name, str(t), str(n), str( round(distance, 6) )]
-            data.append(line)
-        
-printResult()
-#writeCsvFile()     
-        
+def read_dialogs(file_path):
+    reader = DialogsReader(file_path)
+    d = dialogs.create_dialogs_documents(reader, id_column_name, Class.POSITIVE)
+    return d
+
+
+def generate_n_gram_model(dialog_list, n, threshold):
+    n_grams = mg.create_n_grams_from_document_list(dialog_list, n)
+    model = mg.generate_model(n_grams)
+    model = mg.remove_rare_n_grams(model, threshold)
+
+    return model
+
+
+distances_list = list()
+for data_set_name in corpora_pairs.keys():
+    print 'Computing distances for {0}.'.format(data_set_name)
+    pair = corpora_pairs[data_set_name]
+    c1_dialogs = read_dialogs(pair[0])
+    c2_dialogs = read_dialogs(pair[1])
+
+    for con in configurations:
+        c1_model = generate_n_gram_model(c1_dialogs, con.size, con.frequency_threshold)
+        c2_model = generate_n_gram_model(c2_dialogs, con.size, con.frequency_threshold)
+
+        measure = d.get_distance_calculator(con.classifier)
+        distance = measure.compute_distance(c1_model, c2_model, con.smoothing_value)
+
+        db_distance = {'data_set': data_set_name, 'distance': distance, 'evaluation_id': evaluation_id}
+        db_distance.update(con.__dict__)
+        distances_list.append(db_distance)
+
+db = dbm.get_connection()
+distances = db[distances_collection]
+
+print 'Write {0} results to database.'.format(len(distances_list))
+distances.insert(distances_list)

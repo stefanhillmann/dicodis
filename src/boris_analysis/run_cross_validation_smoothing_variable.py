@@ -195,6 +195,12 @@ if __name__ == '__main__':
     sim_result = validate(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
     print 'real dialogues? '
     real_result = validate(file_experiment, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
+
+    print 'Criteria: Dialogue Source'
+    print 'simulated dialogues?'
+    sim_result = validate(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated_worst_vs_real')
+    print 'real dialogues? '
+    real_result = validate(file_experiment, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'real_vs_simulated_worst')
     
         
     results = []
