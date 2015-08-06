@@ -15,14 +15,14 @@ def compute_f_measure(true_positive, false_positive, false_negative):
 
 
 def compute_precision(true_positive, false_positive):
-    p = 0
+    p = 0.0
     if true_positive != 0.0:
         p = float(true_positive) / ( true_positive + false_positive )
     return p
 
 
 def compute_recall(true_positive, false_negative):
-    r = 0
+    r = 0.0
     if true_positive != 0.0:
         r = float(true_positive) / ( true_positive + false_negative )
     return r

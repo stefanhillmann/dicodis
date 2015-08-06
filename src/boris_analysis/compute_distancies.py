@@ -51,7 +51,7 @@ corpora_pairs = {
     'success': (file_turns_succeeded, file_turns_failed),
     'simulation_quality': (file_best_simulation, file_worst_simulation),
     'dialogue_length': (file_shortest_interaction, file_longest_interaction),
-    'word_accuracy': (file_wa_100, file_wa_100),
+    'word_accuracy': (file_wa_100, file_wa_60),
     'user_judgement': (file_judged_good, file_judged_bad),
     'real_vs_worst_sim': (file_experiment, file_worst_simulation),
     'real_vs_best_sim': (file_experiment, file_best_simulation)
