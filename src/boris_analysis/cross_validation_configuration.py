@@ -9,26 +9,26 @@ validation_processes = config.getint('cross_validation', 'jobs')
 
 sizes = [
               NGramSize.ONE,
-              NGramSize.TWO,
+              #NGramSize.TWO,
               NGramSize.THREE,
-              NGramSize.FOUR,
-              NGramSize.FIVE,
-              NGramSize.SIX,
-              NGramSize.SEVEN,
-              NGramSize.EIGHT
+              #NGramSize.FOUR,
+              #NGramSize.FIVE,
+              #NGramSize.SIX,
+              #NGramSize.SEVEN,
+              #NGramSize.EIGHT
              ]
 
 smoothing_values = [
                     0.05,
-                    0.25,
-                    0.5
+                    #0.25,
+                    #0.5
                     ]
 
 classifier_names = [
-                    MeasureName.COSINE,
-                    MeasureName.JENSEN,
+                    #MeasureName.COSINE,
+                    #MeasureName.JENSEN,
                     #MeasureName.KULLBACK_LEIBLER,
-                    MeasureName.MEAN_KULLBACK_LEIBLER,
+                    #MeasureName.MEAN_KULLBACK_LEIBLER,
                     #MeasureName.SYMMETRIC_KULLBACK_LEIBLER,
                     MeasureName.RANK_ORDER
                     ]
@@ -36,7 +36,7 @@ classifier_names = [
 frequency_thresholds = [
                         #0,
                         1,
-                        2,
+                        #2,
                         #3,
                         #4,
                         #5,

@@ -166,17 +166,17 @@ if __name__ == '__main__':
     print 'Failed?'
     success_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
-    print 'Criteria: User Judgment'
-    print 'Good'
-    judged_good_result = validate(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
-    print 'Bad'
-    judged_bad_result = validate(file_judged_bad, Class.POSITIVE, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
+    #print 'Criteria: User Judgment'
+    #print 'Good'
+    #judged_good_result = validate(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
+    #print 'Bad'
+    #judged_bad_result = validate(file_judged_bad, Class.POSITIVE, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
         
-    print 'Criteria: Quality of Simulation'
-    print 'Best simulation?'
-    simulation_best_result = validate(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
-    print 'Worst simulation?'
-    simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
+    #print 'Criteria: Quality of Simulation'
+    #print 'Best simulation?'
+    #simulation_best_result = validate(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
+    #print 'Worst simulation?'
+    #simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
     
     print 'Criteria: Length of Interaction'
     print 'Short interaction?'
@@ -184,23 +184,23 @@ if __name__ == '__main__':
     print 'Long interaction'
     length_long_result = validate(file_longest_interaction, Class.POSITIVE, file_shortest_interaction, Class.NEGATIVE, id_column_name, 'long_interactions')
     
-    print 'Criteria: Word Accuracy'
-    print 'Word accuracy is 100?'
-    wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
-    print 'Word accuracy is 60?'
-    wa_60_result = validate(file_wa_60, Class.POSITIVE, file_wa_100, Class.NEGATIVE, id_column_name, 'word_accuracy_60')
+    #print 'Criteria: Word Accuracy'
+    #print 'Word accuracy is 100?'
+    #wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
+    #print 'Word accuracy is 60?'
+    #wa_60_result = validate(file_wa_60, Class.POSITIVE, file_wa_100, Class.NEGATIVE, id_column_name, 'word_accuracy_60')
     
-    print 'Criteria: Dialogue Source'
-    print 'simulated dialogues?'
-    sim_result = validate(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
-    print 'real dialogues? '
-    real_result = validate(file_experiment, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
+    #print 'Criteria: Dialogue Source'
+    #print 'simulated dialogues?'
+    #sim_result = validate(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
+    #print 'real dialogues? '
+    #real_result = validate(file_experiment, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
 
-    print 'Criteria: Dialogue Source'
-    print 'simulated dialogues?'
-    sim_result = validate(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated_worst_vs_real')
-    print 'real dialogues? '
-    real_result = validate(file_experiment, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'real_vs_simulated_worst')
+    #print 'Criteria: Dialogue Source'
+    #print 'simulated dialogues?'
+    #sim_result = validate(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated_worst_vs_real')
+    #print 'real dialogues? '
+    #real_result = validate(file_experiment, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'real_vs_simulated_worst')
     
         
     results = []
