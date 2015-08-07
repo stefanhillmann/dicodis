@@ -4,4 +4,3 @@
 *.synctex.gz
 src/boris_analysis/local_config.ini
 .idea
-*.Rhistory

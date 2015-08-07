@@ -1,9 +1,0 @@
-Criteria;Classifier;n;l;Freq. Threshold;TP;FP;TN;FN;Recall;Precision;F-Measure
-task_successful;rank order;1;0.05;1;0.0;0.0;73.0;123.0;0;0;0
-task_successful;rank order;3;0.05;1;0.0;0.0;73.0;123.0;0;0;0
-task_failed;rank order;1;0.05;1;73.0;123.0;0.0;0.0;1.0;0.372448979592;0.542750929368
-task_failed;rank order;3;0.05;1;73.0;123.0;0.0;0.0;1.0;0.372448979592;0.542750929368
-short_interactions;rank order;1;0.05;1;49.0;50.0;0.0;0.0;1.0;0.494949494949;0.662162162162
-short_interactions;rank order;3;0.05;1;49.0;50.0;0.0;0.0;1.0;0.494949494949;0.662162162162
-long_interactions;rank order;1;0.05;1;0.0;0.0;49.0;50.0;0;0;0
-long_interactions;rank order;3;0.05;1;0.0;0.0;49.0;50.0;0;0;0
