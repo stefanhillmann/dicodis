@@ -6,9 +6,8 @@ cross_validation <- mongoDbConnect("classification_cross_validation", "localhost
 classifier <- dbGetDistinct(cross_validation, "performance", key = 'classifier_name')
 
 for (c in classifier) {
-  print(c)
+  print(sprintf("Classifier: %s", c))
   query = sprintf('{"classifier_name": "%s"}', c)
-  print(query)
-  #p.c <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
-  #stem()
+  p.c <- dbGetQuery(cross_validation, "performance", query, 0, 0)
+  stem(p.c$f_measure)
 }
