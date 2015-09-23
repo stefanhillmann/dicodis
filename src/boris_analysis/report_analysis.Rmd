@@ -1,0 +1,148 @@
+---
+title: "Analysis of Distance Measures"
+author: "Stefan Hillmann"
+date: "23. September 2015"
+output: html_document
+---
+
+Requiered R packages
+====================
+
+```{r}
+library(RMongo)
+library(ggplot2)
+library(plyr)
+library(reshape2)
+```
+
+
+Classifier Performance
+======================
+
+## Variables and Hyphothesis ##
+
+explanatory variables:
+
+* distance measure $D$
+    + cosine distance $D_C$
+    + jensen divergency $D_J$
+    + mean kullbak leibler divergency $D_M$
+    + rank oder disance $D_R$
+* n-garm size $n$
+    + $n \in \{1, \ldots, 8\}$ 
+* smoothing valzue $\lambda$
+    + $\lambda_s = 0.05$
+    + $\lambda_m = 0.25$
+    + $\lambda_s = 0.5$
+* frequency threshold $t$ (only n-grams with higher frequency are used)
+    + $t_0 = 0$ 
+    + $t_1 = 1$
+* criteria $c$
+
+response variable:
+
+* f-measure $f$
+
+Get the performance results (_pr_) for each classifier
+
+```{r}
+cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+pr.C <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "cosine"}', 0, 0)
+pr.J <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "jensen"}', 0, 0)
+pr.M <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "mean kullback leibler"}', 0, 0)
+pr.R <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "rank order"}', 0, 0)
+```
+
+### Overview on the data ###
+
+Set binwidth
+```{r}
+bw = 0.02
+```
+
+
+#### Cosine Measure ####
+
+```{r}
+ggplot(pr.C, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth = bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Jensen divergence ####
+
+```{r}
+ggplot(pr.J, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Mean Kullback Leibler ####
+
+```{r}
+ggplot(pr.M, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Rank Order ####
+
+```{r}
+ggplot(pr.R, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+
+### Influence of $t$ ###
+
+Compute the difference of $f(D, n, \lambda, c|t_0) - f(D, n, \lambda, c|t_0)$.
+In other words, compute the change in $f$ when $t$ varies ceteris paribus.
+
+```{r}
+  cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+  pr.complete <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
+  f_by_t <- dcast(pr.complete, classifier_name + criteria + n_gram_size + smoothing_value ~ frequency_threshold, value.var = "f_measure")
+  f_by_t$f_diff <- f_by_t$`1` - f_by_t$`2`
+```
+
+
+```{r}
+ggplot(f_by_t, aes(x=f_diff)) + 
+    geom_histogram(aes(y=..density..),  colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+
+
+## Distribution of f-measure ##
+
+
+### Stem-leave plot ($f \ge 0.5$) ###
+Stem-leave plot for each distance measure used as a classifier.
+The plot contains only the values for $f>=0.5$.
+
+
+```{r}
+#  to_file <- FALSE
+# 
+# cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+# classifier <- dbGetDistinct(cross_validation, "performance", key = 'classifier_name')
+# 
+# for (c in classifier) {
+#   print(sprintf("Classifier: %s", c))
+#   query = sprintf('{"classifier_name": "%s", "f_measure": {$gte: 0.5}}', c)
+#   p.c <- dbGetQuery(cross_validation, "performance", query, 0, 0)
+#   if (to_file) {
+#     file_name <- sprintf('stem_leaf_%s.txt', c)
+#     
+#     fileConn<-file(file_name)
+#     # content <- latexTranslate(capture.output(stem(p.c$f_measure)))
+#     content <- capture.output(stem(p.c$f_measure))
+#     writeLines(content, fileConn)
+#     close(fileConn)
+#   } else {
+#     stem(p.c$f_measure)
+#   }
+# }
+```
