@@ -2,7 +2,9 @@
 title: "Analysis of Distance Measures"
 author: "Stefan Hillmann"
 date: "23. September 2015"
-output: html_document
+output:
+  html_document:
+    fig_caption: yes
 ---
 
 Requiered R packages
@@ -13,6 +15,8 @@ library(RMongo)
 library(ggplot2)
 library(plyr)
 library(reshape2)
+library(scatterplot3d)
+library(knitr)
 ```
 
 
@@ -96,22 +100,103 @@ ggplot(pr.R, aes(x=f_measure)) +
 
 ### Influence of $t$ ###
 
+#### Difference in $f$ ####
+
 Compute the difference of $f(D, n, \lambda, c|t_0) - f(D, n, \lambda, c|t_0)$.
-In other words, compute the change in $f$ when $t$ varies ceteris paribus.
+In other words, compute the change in $f$ when $t$ varies (ceteris paribus).
 
 ```{r}
   cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
   pr.complete <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
   f_by_t <- dcast(pr.complete, classifier_name + criteria + n_gram_size + smoothing_value ~ frequency_threshold, value.var = "f_measure")
-  f_by_t$f_diff <- f_by_t$`1` - f_by_t$`2`
+  f_by_t$f_diff <- abs(f_by_t$`1` - f_by_t$`2`)
 ```
 
 
-```{r}
+Histogram of $f(D, n, \lambda, c|t_0) - f(D, n, \lambda, c|t_0)$ (f_diff).
+
+```{r fig.cap="Histogram of f_diff. There not just zero values but a lot between 0 and 0.25 (and even larger)"}
 ggplot(f_by_t, aes(x=f_diff)) + 
     geom_histogram(aes(y=..density..),  colour="black", fill="white") +
     geom_density(alpha=.2, fill="#FF6666")
 ```
+
+
+```{r fig.cap="3D plot which shows the dependency between f_1 and f_2 (f-values for t=1 and t=2) and the resulting difference. The plot shows only data where both f values are >= 0.8"}
+  large_f <- f_by_t[which(f_by_t$`1` > 0.8 & f_by_t$`2` > 0.8),]
+  scatterplot3d(large_f$`1`, large_f$`2`, large_f$f_diff, type = "h")
+```
+
+
+## 10 best combinations for each Classifier ##
+```{r}
+  n_best = 3
+```
+
+### Cosine ###
+
+```{r}
+  best.C <- arrange(pr.C, desc(f_measure))
+  best.C <- best.C[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.C)
+```
+
+#### Best n for each criteria ####
+
+```{r}
+  for(c_name in sort(unique(pr.C$criteria))) {
+    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+### Jensen ###
+
+```{r}
+  best.J <- arrange(pr.J, desc(f_measure))
+  best.J <- best.J[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.J)
+```
+
+#### Best n for each criteria ####
+
+```{r}
+  for(c_name in sort(unique(pr.J$criteria))) {
+    print(kable(arrange(pr.J[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+### Mean Kullback Leibler ###
+
+```{r}
+  best.M <- arrange(pr.M, desc(f_measure))
+  best.M <- best.M[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.M)
+```
+
+#### Best n for each criteria ####
+
+```{r}
+  for(c_name in sort(unique(pr.M$criteria))) {
+    print(kable(arrange(pr.M[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+### Rank Order ###
+
+```{r}
+  best.R <- arrange(pr.R, desc(f_measure))
+  best.R <- best.R[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.R)
+```
+
+#### Best n for each criteria ####
+
+```{r}
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.R[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
 
 
 
