@@ -290,106 +290,554 @@ pr.R &lt;- dbGetQuery(cross_validation, &quot;performance&quot;, '{&quot;classif
 <div id="best-n-for-each-criteria" class="section level4">
 <h4>Best n for each criteria</h4>
 <pre class="r"><code>  for(c_name in sort(unique(pr.C$criteria))) {
-    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)], caption = &quot;Cosine&quot;))
   }</code></pre>
-<pre><code>## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_bad   cosine             0.6260870             2                     1              0.50
-## juged_bad   cosine             0.6250000             3                     1              0.50
-## juged_bad   cosine             0.6196078             2                     2              0.25
-## 
-## 
-## criteria     classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_good   cosine             0.7191781             8                     1               0.5
-## juged_good   cosine             0.7123288             7                     1               0.5
-## juged_good   cosine             0.7090301             8                     2               0.5
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## long_interactions   cosine             0.8737864             1                     1              0.05
-## long_interactions   cosine             0.8490566             1                     1              0.25
-## long_interactions   cosine             0.8256881             1                     1              0.50
-## 
-## 
-## criteria   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ---------  ----------------  ----------  ------------  --------------------  ----------------
-## real       cosine             0.2787573             3                     1              0.05
-## real       cosine             0.2747506             2                     1              0.05
-## real       cosine             0.2628571             1                     2              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## real_vs_simulated_worst   cosine             0.2620281             2                     1              0.05
-## real_vs_simulated_worst   cosine             0.2496644             3                     1              0.05
-## real_vs_simulated_worst   cosine             0.2170819             3                     2              0.05
-## 
-## 
-## criteria             classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------  ----------------  ----------  ------------  --------------------  ----------------
-## short_interactions   cosine             0.8631579             1                     1              0.05
-## short_interactions   cosine             0.8392857             1                     2              0.05
-## short_interactions   cosine             0.8260870             1                     1              0.25
-## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated   cosine             0.6361711             3                     1              0.05
-## simulated   cosine             0.6119467             1                     2              0.05
-## simulated   cosine             0.6067982             1                     1              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated_worst_vs_real   cosine             0.5470241             2                     1              0.05
-## simulated_worst_vs_real   cosine             0.4957111             1                     1              0.05
-## simulated_worst_vs_real   cosine             0.4578080             3                     1              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_best   cosine             0.6668076             5                     2              0.50
-## simulation_quality_best   cosine             0.6663853             6                     1              0.50
-## simulation_quality_best   cosine             0.6663848             6                     1              0.25
-## 
-## 
-## criteria                   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_worst   cosine             0.5647958             1                     1              0.50
-## simulation_quality_worst   cosine             0.5609973             1                     1              0.25
-## simulation_quality_worst   cosine             0.5582510             1                     1              0.05
-## 
-## 
-## criteria      classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_failed   cosine             0.5622490             3                     1              0.25
-## task_failed   cosine             0.5496183             3                     2              0.50
-## task_failed   cosine             0.5488722             7                     1              0.25
-## 
-## 
-## criteria          classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_successful   cosine             0.6519824             2                     2              0.25
-## task_successful   cosine             0.6473029             1                     2              0.50
-## task_successful   cosine             0.6428571             2                     2              0.05
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_100   cosine             0.3092784             5                     1              0.05
-## word_accuracy_100   cosine             0.3076923             4                     1              0.05
-## word_accuracy_100   cosine             0.2833333             4                     1              0.25
-## 
-## 
-## criteria           classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_60   cosine             0.7471264             2                     2              0.25
-## word_accuracy_60   cosine             0.7251462             2                     2              0.05
-## word_accuracy_60   cosine             0.7176471             2                     2              0.50</code></pre>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">cosine</td>
+<td align="right">0.6260870</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">cosine</td>
+<td align="right">0.6250000</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">cosine</td>
+<td align="right">0.6196078</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">cosine</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.5</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">cosine</td>
+<td align="right">0.7123288</td>
+<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">0.5</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">cosine</td>
+<td align="right">0.7090301</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8737864</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8490566</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8256881</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2787573</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2747506</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2628571</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2620281</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2496644</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2170819</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8631579</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8392857</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">cosine</td>
+<td align="right">0.8260870</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6361711</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6119467</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6067982</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.5470241</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4957111</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4578080</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">cosine</td>
+<td align="right">0.6668076</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">cosine</td>
+<td align="right">0.6663853</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">cosine</td>
+<td align="right">0.6663848</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.5647958</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.5609973</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.5582510</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">cosine</td>
+<td align="right">0.5622490</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">cosine</td>
+<td align="right">0.5496183</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">cosine</td>
+<td align="right">0.5488722</td>
+<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">cosine</td>
+<td align="right">0.6519824</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">cosine</td>
+<td align="right">0.6473029</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">cosine</td>
+<td align="right">0.6428571</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">cosine</td>
+<td align="right">0.3092784</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">cosine</td>
+<td align="right">0.3076923</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">cosine</td>
+<td align="right">0.2833333</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Cosine</caption>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">cosine</td>
+<td align="right">0.7471264</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">cosine</td>
+<td align="right">0.7251462</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">cosine</td>
+<td align="right">0.7176471</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="jensen" class="section level3">
@@ -496,104 +944,538 @@ pr.R &lt;- dbGetQuery(cross_validation, &quot;performance&quot;, '{&quot;classif
 <pre class="r"><code>  for(c_name in sort(unique(pr.J$criteria))) {
     print(kable(arrange(pr.J[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }</code></pre>
-<pre><code>## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_bad   jensen             0.6456693             5                     2              0.50
-## juged_bad   jensen             0.6406926             1                     1              0.25
-## juged_bad   jensen             0.6392694             5                     2              0.25
-## 
-## 
-## criteria     classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_good   jensen             0.7191781             8                     1              0.25
-## juged_good   jensen             0.7152318             8                     1              0.05
-## juged_good   jensen             0.7152318             8                     2              0.25
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## long_interactions   jensen             0.8936170             1                     1              0.25
-## long_interactions   jensen             0.8791209             1                     1              0.50
-## long_interactions   jensen             0.8571429             1                     2              0.50
-## 
-## 
-## criteria   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ---------  ----------------  ----------  ------------  --------------------  ----------------
-## real       jensen             0.2274882             1                     2              0.05
-## real       jensen             0.2268308             1                     1              0.05
-## real       jensen             0.2013354             2                     1              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## real_vs_simulated_worst   jensen             0.1993896             2                     2              0.05
-## real_vs_simulated_worst   jensen             0.1992883             2                     1              0.05
-## real_vs_simulated_worst   jensen             0.1990858             1                     1              0.25
-## 
-## 
-## criteria             classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------  ----------------  ----------  ------------  --------------------  ----------------
-## short_interactions   jensen             0.9038462             1                     1              0.25
-## short_interactions   jensen             0.8971963             1                     1              0.50
-## short_interactions   jensen             0.8785047             1                     2              0.50
-## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated   jensen             0.4061722             1                     1              0.05
-## simulated   jensen             0.3004292             1                     2              0.05
-## simulated   jensen             0.0407156             8                     2              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated_worst_vs_real   jensen             0.2902542             1                     1              0.05
-## simulated_worst_vs_real   jensen             0.1100592             1                     2              0.05
-## simulated_worst_vs_real   jensen             0.0075662             2                     2              0.05
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_best   jensen             0.6666667             5                     2              0.25
-## simulation_quality_best   jensen             0.6666667             5                     2              0.50
-## simulation_quality_best   jensen             0.6666667             6                     2              0.25
-## 
-## 
-## criteria                   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_worst   jensen             0.5991925             1                     1              0.50
-## simulation_quality_worst   jensen             0.5736345             1                     1              0.25
-## simulation_quality_worst   jensen             0.5625731             1                     1              0.05
-## 
-## 
-## criteria      classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_failed   jensen             0.5691700             5                     2              0.50
-## task_failed   jensen             0.5676856             6                     2              0.50
-## task_failed   jensen             0.5560538             5                     2              0.25
-## 
-## 
-## criteria          classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_successful   jensen             0.7572816             7                     2              0.05
-## task_successful   jensen             0.7524752             8                     2              0.25
-## task_successful   jensen             0.7443366             8                     2              0.05
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_100   jensen             0.4583333             5                     2              0.05
-## word_accuracy_100   jensen             0.3636364             7                     2              0.05
-## word_accuracy_100   jensen             0.3589744             8                     2              0.05
-## 
-## 
-## criteria           classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_60   jensen             0.8944724             7                     2              0.05
-## word_accuracy_60   jensen             0.8787879             7                     2              0.25
-## word_accuracy_60   jensen             0.8704663             8                     2              0.05</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6456693</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6406926</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6392694</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7152318</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7152318</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8791209</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8571429</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">jensen</td>
+<td align="right">0.2274882</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">jensen</td>
+<td align="right">0.2268308</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">jensen</td>
+<td align="right">0.2013354</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.1993896</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.1992883</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.1990858</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8971963</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8785047</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">jensen</td>
+<td align="right">0.4061722</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">jensen</td>
+<td align="right">0.3004292</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">jensen</td>
+<td align="right">0.0407156</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">jensen</td>
+<td align="right">0.2902542</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">jensen</td>
+<td align="right">0.1100592</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">jensen</td>
+<td align="right">0.0075662</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.5991925</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.5736345</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">jensen</td>
+<td align="right">0.5625731</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5691700</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5676856</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5560538</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7572816</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7524752</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.4583333</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.3636364</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.3589744</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8944724</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8787879</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8704663</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="mean-kullback-leibler-1" class="section level3">
@@ -700,104 +1582,538 @@ pr.R &lt;- dbGetQuery(cross_validation, &quot;performance&quot;, '{&quot;classif
 <pre class="r"><code>  for(c_name in sort(unique(pr.M$criteria))) {
     print(kable(arrange(pr.M[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }</code></pre>
-<pre><code>## 
-## 
-## criteria    classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------------  ----------  ------------  --------------------  ----------------
-## juged_bad   mean kullback leibler    0.6610169             5                     2               0.5
-## juged_bad   mean kullback leibler    0.6396761             1                     1               0.5
-## juged_bad   mean kullback leibler    0.6320000             1                     2               0.5
-## 
-## 
-## criteria     classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------  ----------------------  ----------  ------------  --------------------  ----------------
-## juged_good   mean kullback leibler    0.7191781             8                     1              0.25
-## juged_good   mean kullback leibler    0.7157191             7                     2              0.50
-## juged_good   mean kullback leibler    0.7152318             8                     1              0.05
-## 
-## 
-## criteria            classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## long_interactions   mean kullback leibler    0.8936170             1                     1              0.25
-## long_interactions   mean kullback leibler    0.8888889             1                     1              0.50
-## long_interactions   mean kullback leibler    0.8842105             1                     1              0.05
-## 
-## 
-## criteria   classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ---------  ----------------------  ----------  ------------  --------------------  ----------------
-## real       mean kullback leibler    0.2244186             1                     2              0.05
-## real       mean kullback leibler    0.2216896             1                     1              0.05
-## real       mean kullback leibler    0.2033195             2                     1              0.05
-## 
-## 
-## criteria                  classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## real_vs_simulated_worst   mean kullback leibler    0.1998980             2                     2              0.05
-## real_vs_simulated_worst   mean kullback leibler    0.1995927             2                     1              0.05
-## real_vs_simulated_worst   mean kullback leibler    0.1988838             1                     2              0.25
-## 
-## 
-## criteria             classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## short_interactions   mean kullback leibler    0.9074074             1                     1              0.50
-## short_interactions   mean kullback leibler    0.9038462             1                     1              0.25
-## short_interactions   mean kullback leibler    0.8932039             1                     1              0.05
-## 
-## 
-## criteria    classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------------  ----------  ------------  --------------------  ----------------
-## simulated   mean kullback leibler    0.3101434             1                     1              0.05
-## simulated   mean kullback leibler    0.2718341             1                     2              0.05
-## simulated   mean kullback leibler    0.0541872             2                     1              0.05
-## 
-## 
-## criteria                  classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## simulated_worst_vs_real   mean kullback leibler    0.1796610             1                     1              0.05
-## simulated_worst_vs_real   mean kullback leibler    0.0478528             1                     2              0.05
-## simulated_worst_vs_real   mean kullback leibler    0.0138278             2                     2              0.05
-## 
-## 
-## criteria                  classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_best   mean kullback leibler    0.6669504             5                     2              0.05
-## simulation_quality_best   mean kullback leibler    0.6669481             6                     1              0.05
-## simulation_quality_best   mean kullback leibler    0.6666667             5                     2              0.25
-## 
-## 
-## criteria                   classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_worst   mean kullback leibler    0.6053459             1                     1              0.50
-## simulation_quality_worst   mean kullback leibler    0.5978437             1                     1              0.25
-## simulation_quality_worst   mean kullback leibler    0.5978288             1                     2              0.50
-## 
-## 
-## criteria      classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------  ----------------------  ----------  ------------  --------------------  ----------------
-## task_failed   mean kullback leibler    0.5638767             6                     2              0.50
-## task_failed   mean kullback leibler    0.5634921             5                     2              0.50
-## task_failed   mean kullback leibler    0.5609756             4                     2              0.25
-## 
-## 
-## criteria          classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------------  ----------------------  ----------  ------------  --------------------  ----------------
-## task_successful   mean kullback leibler    0.7443366             8                     2              0.05
-## task_successful   mean kullback leibler    0.7407407             8                     2              0.25
-## task_successful   mean kullback leibler    0.7392739             7                     2              0.05
-## 
-## 
-## criteria            classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_100   mean kullback leibler    0.4545455             5                     2              0.05
-## word_accuracy_100   mean kullback leibler    0.3870968             3                     2              0.05
-## word_accuracy_100   mean kullback leibler    0.3870968             7                     2              0.05
-## 
-## 
-## criteria           classifier_name          f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------------  ----------------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_60   mean kullback leibler    0.9054726             7                     2              0.05
-## word_accuracy_60   mean kullback leibler    0.8723404             5                     2              0.05
-## word_accuracy_60   mean kullback leibler    0.8717949             8                     2              0.05</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6610169</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.5</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6396761</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.5</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6320000</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.5</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7157191</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7152318</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8888889</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8842105</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.2244186</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.2216896</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.2033195</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.1998980</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.1995927</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.1988838</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9074074</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8932039</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3101434</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.2718341</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.0541872</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.1796610</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.0478528</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.0138278</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669504</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669481</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6053459</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5978437</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5978288</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5638767</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5634921</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5609756</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7407407</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7392739</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.4545455</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9054726</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8723404</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8717949</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="rank-order-1" class="section level3">
@@ -904,109 +2220,2094 @@ pr.R &lt;- dbGetQuery(cross_validation, &quot;performance&quot;, '{&quot;classif
 <pre class="r"><code>  for(c_name in sort(unique(pr.R$criteria))) {
     print(kable(arrange(pr.R[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }</code></pre>
-<pre><code>## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_bad   rank order         0.6142857             1                     1              0.05
-## juged_bad   rank order         0.6142857             1                     1              0.25
-## juged_bad   rank order         0.6142857             1                     1              0.50
-## 
-## 
-## criteria     classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------  ----------------  ----------  ------------  --------------------  ----------------
-## juged_good   rank order                 0             1                     1              0.05
-## juged_good   rank order                 0             1                     1              0.25
-## juged_good   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## long_interactions   rank order                 0             1                     1              0.05
-## long_interactions   rank order                 0             1                     1              0.25
-## long_interactions   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ---------  ----------------  ----------  ------------  --------------------  ----------------
-## real       rank order          0.198783             1                     1              0.05
-## real       rank order          0.198783             1                     1              0.25
-## real       rank order          0.198783             1                     1              0.50
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## real_vs_simulated_worst   rank order          0.198783             1                     1              0.05
-## real_vs_simulated_worst   rank order          0.198783             1                     1              0.25
-## real_vs_simulated_worst   rank order          0.198783             1                     1              0.50
-## 
-## 
-## criteria             classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------  ----------------  ----------  ------------  --------------------  ----------------
-## short_interactions   rank order         0.6621622             1                     1              0.05
-## short_interactions   rank order         0.6621622             1                     1              0.25
-## short_interactions   rank order         0.6621622             1                     1              0.50
-## 
-## 
-## criteria    classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated   rank order                 0             1                     1              0.05
-## simulated   rank order                 0             1                     1              0.25
-## simulated   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulated_worst_vs_real   rank order                 0             1                     1              0.05
-## simulated_worst_vs_real   rank order                 0             1                     1              0.25
-## simulated_worst_vs_real   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria                  classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_best   rank order                 0             1                     1              0.05
-## simulation_quality_best   rank order                 0             1                     1              0.25
-## simulation_quality_best   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria                   classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -------------------------  ----------------  ----------  ------------  --------------------  ----------------
-## simulation_quality_worst   rank order         0.6666667             1                     1              0.05
-## simulation_quality_worst   rank order         0.6666667             1                     1              0.25
-## simulation_quality_worst   rank order         0.6666667             1                     1              0.50
-## 
-## 
-## criteria      classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_failed   rank order         0.5427509             1                     1              0.05
-## task_failed   rank order         0.5427509             1                     1              0.25
-## task_failed   rank order         0.5427509             1                     1              0.50
-## 
-## 
-## criteria          classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ----------------  ----------------  ----------  ------------  --------------------  ----------------
-## task_successful   rank order                 0             1                     1              0.05
-## task_successful   rank order                 0             1                     1              0.25
-## task_successful   rank order                 0             1                     1              0.50
-## 
-## 
-## criteria            classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## ------------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_100   rank order         0.2556391             1                     1              0.05
-## word_accuracy_100   rank order         0.2556391             1                     1              0.25
-## word_accuracy_100   rank order         0.2556391             1                     1              0.50
-## 
-## 
-## criteria           classifier_name    f_measure   n_gram_size   frequency_threshold   smoothing_value
-## -----------------  ----------------  ----------  ------------  --------------------  ----------------
-## word_accuracy_60   rank order                 0             1                     1              0.05
-## word_accuracy_60   rank order                 0             1                     1              0.25
-## word_accuracy_60   rank order                 0             1                     1              0.50</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">rank order</td>
+<td align="right">0.6142857</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">rank order</td>
+<td align="right">0.6142857</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">rank order</td>
+<td align="right">0.6142857</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.198783</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0.6621622</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0.6621622</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">rank order</td>
+<td align="right">0.6621622</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">rank order</td>
+<td align="right">0.5427509</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">rank order</td>
+<td align="right">0.5427509</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">rank order</td>
+<td align="right">0.5427509</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">rank order</td>
+<td align="right">0.2556391</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">rank order</td>
+<td align="right">0.2556391</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">rank order</td>
+<td align="right">0.2556391</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">rank order</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
+</div>
+<div id="worst-n-for-each-criteria-independent-from-classifier" class="section level2">
+<h2>Worst n for each criteria — Independent from classifier</h2>
+<pre class="r"><code>  n_best &lt;- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6610169</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6456693</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6406926</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6396761</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6392694</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">cosine</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7157191</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7152318</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8888889</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8842105</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8791209</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2787573</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2747506</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2628571</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2354430</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2343655</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2620281</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2496644</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2170819</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2138571</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2120718</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9074074</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8971963</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8932039</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6361711</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6119467</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6067982</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.5798133</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.4778511</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.5470241</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4957111</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4578080</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4103314</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.3547897</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669504</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669481</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">cosine</td>
+<td align="right">0.6668076</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5691700</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5676856</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5638767</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5634921</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">cosine</td>
+<td align="right">0.5622490</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7572816</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7524752</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7407407</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.4583333</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.4545455</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.3636364</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9054726</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8944724</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8787879</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8723404</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8717949</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="best-n-for-each-criteria-independent-from-classifier" class="section level2">
+<h2>Best n for each criteria — Independent from classifier</h2>
+<pre class="r"><code>  n_best &lt;- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6610169</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6456693</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6406926</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_bad</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6396761</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_bad</td>
+<td align="left">jensen</td>
+<td align="right">0.6392694</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">cosine</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7191781</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">juged_good</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7157191</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">juged_good</td>
+<td align="left">jensen</td>
+<td align="right">0.7152318</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8936170</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8888889</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">long_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8842105</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">long_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8791209</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2787573</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2747506</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2628571</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2354430</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real</td>
+<td align="left">cosine</td>
+<td align="right">0.2343655</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2620281</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2496644</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2170819</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2138571</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">real_vs_simulated_worst</td>
+<td align="left">cosine</td>
+<td align="right">0.2120718</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9074074</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9038462</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">short_interactions</td>
+<td align="left">jensen</td>
+<td align="right">0.8971963</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">short_interactions</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8932039</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6361711</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6119467</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.6067982</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.5798133</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated</td>
+<td align="left">cosine</td>
+<td align="right">0.4778511</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.5470241</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4957111</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4578080</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.4103314</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulated_worst_vs_real</td>
+<td align="left">cosine</td>
+<td align="right">0.3547897</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669504</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.6669481</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">cosine</td>
+<td align="right">0.6668076</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_best</td>
+<td align="left">jensen</td>
+<td align="right">0.6666667</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">simulation_quality_worst</td>
+<td align="left">rank order</td>
+<td align="right">0.6666667</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5691700</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">jensen</td>
+<td align="right">0.5676856</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5638767</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="even">
+<td align="left">task_failed</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.5634921</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+</tr>
+<tr class="odd">
+<td align="left">task_failed</td>
+<td align="left">cosine</td>
+<td align="right">0.5622490</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7572816</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7524752</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">jensen</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7443366</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">task_successful</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.7407407</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.4583333</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.4545455</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_100</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.3870968</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_100</td>
+<td align="left">jensen</td>
+<td align="right">0.3636364</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">criteria</th>
+<th align="left">classifier_name</th>
+<th align="right">f_measure</th>
+<th align="right">n_gram_size</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.9054726</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8944724</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">jensen</td>
+<td align="right">0.8787879</td>
+<td align="right">7</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="even">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8723404</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+<tr class="odd">
+<td align="left">word_accuracy_60</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">0.8717949</td>
+<td align="right">8</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="distribution-of-f-measure" class="section level2">
 <h2>Distribution of f-measure</h2>
+<div id="distribution-of-all-f-values" class="section level3">
+<h3>Distribution of all f-values</h3>
+<pre class="r"><code>    ggplot(pr.complete, aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour=&quot;black&quot;, fill=&quot;white&quot;) +
+      geom_density(alpha=.2, fill=&quot;#FF6666&quot;)</code></pre>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAHgCAIAAAD17khjAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO3deXxTVf7/8Xtvkqb7RjcoUJai7KWy71UWkV3AhUGULzAqo+IyuI3ODMIMiIrjPqICLiNFBQQUQRRkdUQKiEjZt67pQrrSNmmS+/vjDvcXS9lK2rSH1/Phw0dyuMn9nJwm79ztRFZVVQIAAGJRvF0AAADwPAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAEZvV3AFcnJyanV54+IiCgtLa2oqKjVtXiFyWRyOp0ul8vbhXheWFiY3W4/d+6ctwvxPIPBIEmS0+n0diGeFxQUpChKUVGRtwvxPEVRDAZDZWWltwvxPH9/f19fX6vV6u1CaoWPj4/dbvd2FZcSHR1dswc2jICv1U86WZYNBoOqqkJ+nhqNRofDoaqqtwvxPEVRZFkWctQMBoPL5RKya7IsizpqkiQpiiJq1wwGg6hdE/XDX2IXPQAAQiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQEZvF+B9qqoOHz780KFDqqrqjcHBwR9//HFUVJQXCwMAoMYIeMnhcKxfv/62227r3Lmz1pKXl7dkyZJTp04R8ACABoqA/59x48ZNnz5du33gwIElS5Z4tx4AAK4Fx+ABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgo7cLuCKyLNf9k8uyXKvrrRti9OISRO2dqAMnn+ftQjxP65SQXdPQNa9QVbXGj20AAe90Os1mc+09/8WG1mQy1ep664aiKD4+Pt6uolbIsmwwGAQYowspiiJJksFg8HYhnqcoiizLQo6aLMta77xdiOcZjUZRR02SpHr+MSJ4wBsMhoqKitp7fofDUW273W6v1fXWDbPZbLfbr+VPpN4KDg52Op0CjNGFfHx8XC7Xxf4yGzQ/Pz9FUYQcNYPBYDQabTabtwvxPJPJpKqqkKMmSZKvr6+oXeMYPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQMbaXsGZM2e+/fbbvLy84ODgAQMGJCQkSJJktVrXrFljsViioqLGjBkTERFR22UAAHBdqd0teJvN9tlnnyUkJMyaNeu22277+uuv09LSVFVNTk5u3rz5zJkz4+PjP/30U1VVa7UMAACuN7Ub8FlZWSaTqUePHmazOT4+Pj4+/uTJk5mZmcXFxUlJSQEBAf3797fb7WlpabVaBgAA15va3UXfpEmTadOmybIsSZLdbs/KymrXrp3Vao2KijIYDJIkKYoSHR1ttVrj4uK0h6iqmpqa6v4kISEhAQEBtVek3W6vtt1sNvv5+dXeeuuG0WhUFDHPtJBl2Wg0CjBGFzIajS6Xy2QyebsQzzMYDIqiCDlqynneLsTzjEajLMtCjpokSSaTSQup+snlctX4sbUb8Gaz2Ww2S5JksVjWrFnTqlWrDh06pKSk+Pj4uC9TVlam33W5XF988YX7k3Tq1Gn8+PG1V+TFAj4oKCgsLKz21otrZzAYtD8wNCy8sxoiRs0rKisra/zYWj/Jzm63b968OTU1NSkpKTExUfsa6J6pNpvN/YuhwWB4+umn3Z/BYDBYLJbaq9DhcFTbbrVaa3W9dcPHx6eyslLIsxwiIiLsdntxcbG3C/E8k8nkcrmcTqe3C/G80NBQRVGsVqu3C/E8g8FgMBgutsHQoAUGBvr7++fm5nq7kFphNpttNpu3q7goVVUbN25cs8fWbsC7XK7k5OSAgICHHnpI39IKDw/Pz893uVyKoqiqmpeXFx4e7v6oC3cEXcs+iisp8mLttbreuqGqqsvlEjLgpfO983YVnqeqKl1rcGRZVhRFyK5pHyBCdk0S92NEqu2T7I4fP56Xl3fLLbeUl5cXFhYWFhZWVFTExsYGBgbu2rXL6XSmpKQYjUb9ADwAAPCI2t2Cz8rKKi0tfeONN/SWwYMH9+vXb+LEiatXr966dWtkZOSkSZPq8wkOAAA0RLUb8ElJSUlJSRe2h4eHT506tVZXDQDA9UzAKzoAAAABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAioJgE/f/7848ePe7wUAADgKTUJ+AULFrRp06Zr164LFiw4ceKEx2sCAADXyFiDx+Tm5m7evHnlypULFy585plnunbteuedd06YMKFVq1Yer0+SJKfT6efnVxvPrLHb7dW2m83mWl1v3VAURVHEPBAjy7LRaBRgjC6kKIqqqiaTyduFeJ7BYFAURchRk2VZlmUh325Go1GWZSFHTZKkev4H6XK5avzYmgS8j4/PsGHDhg0b9u67727fvn3VqlVvvvnm008/3a1bNy3pW7ZsWeOCLmQwGMrLyz34hFU4HI5q2202W62ut26YzWa73a6qqrcL8bygoCCHwyHAGF3Ix8fH5XJd7C+zQfP19VVVVchRMxgMRqPRZrN5uxDPMxqNoo6aJEm+vr4VFRXerqJWXNOXTYPBcOONNyYkJNx0002yLO/Zs+ef//xnq1atxo8fn5GR4akSAQDA1apJwKuqunfv3jlz5nTv3r1JkyYPP/ywqqrvv/9+dnZ2fn7+unXrDh48OGrUKI/XCgAArlBNdtHHxsZmZ2dHRkaOHDny+eefHzJkiL+/v/6vw4cPP3bs2Jw5czxXJAAAuDo1CfhRo0ZNmjSpb9++BoNBb6ysrCwrKwsJCZEkafLkyePGjfNYjQAA4CrVZBf9e++916RJE/d0lyRp27ZtzZo1026Hh4frtwEAQN27ii345cuXL1++XLv94IMPBgYGuv9rampqdHS0J0sDAAA1dRUB7+Pjo4d6QEBAlYDv3bv3xIkTPVkaAACoqasI+HHjxmlH1o8fP/7WW2+xEx4AgHqrJifZ/fTTTx6vAwAAeNBVBPyUKVPat2//1FNPvfLKKxdbZtasWZ6oCgAAXJOrCPiPPvpo0KBBTz311FtvvXWxZQh4AADqg6sI+JKSEu3SuNOnT9dWOQAAwBOu4jr4wMBA95/c0X+/5NixY998801+fr6HSwMAADVVk4lu0tPThw4dOn36dEmSNm7c2K5duxEjRtxwww179uzxdHkAAKAmahLwM2fOTE1NHT16tCRJ8+bNGzBgwIkTJzp37vz88897ujwAAFATNQn4rVu3/vnPfx4zZkxJScn27dsfeeSRVq1aTZw4cffu3R6vDwAA1EBNAt7lcgUEBEiStGnTJlmWk5KSJEkyGAwVFRWeLQ4AANRMTSa66dGjx5IlSzp27Dhv3ryBAweGhYVZrdZly5a1bdvW4/UBAIAaqEnAv/zyy7feemvfvn39/f03btwoSVKPHj3S09NXrlzp6fIAAEBN1CTgExISTp48mZqaGhcXFxkZKUnSggULEhIS4uPjPV0eAACoiZoEvCRJ/v7+3bp10++OHz/eQ/UAAAAPqEnAW63Wv/71rykpKU6ns8o/paSkeKIqAABwTWoS8Pfff//XX389ceLE6OhojxcEAACuXU0CfuPGjQsXLnzooYc8Xg0EsGTJkiNHjri3+Pj4PPLII1FRUd4qCQCuQzUJ+NjY2FatWnm8FIhh4cKF/v7+jRs31u46HI79+/f36tVrxIgR3i0MAK4rNZnoZurUqe+9996FB+ABzYwZM1LO++677yS3nyYCANSNmmzBN27cODc3t1OnTiNHjoyMjJRlWf8nfg8eAID6oCYBr/+ozOeff17lnwh4AADqg5oE/OnTpz1dBgAA8KSaHIPXVVZWnj59uqKigiOsAADUKzUM+I8//jg+Pt7X17dly5anT5+eMmXKvHnziHkAAOqJmgT8p59+et999/Xp02fNmjUmk0mSpKFDh86ZM+fNN9/0dHkAAKAmanIMfv78+VOmTFm6dKkkSYqiSJI0adKk/fv3v/vuuzNnzvRwgQAA4OrVZAv+5MmTt912W5XGbt26cfIdAAD1RE0C/sYbb9yxY0eVxt9++61NmzaeKAkAAFyrmuyif+ihh/74xz/6+vree++9qqrm5OTs3Llz4cKF8+fP93h9AACgBmoS8NOmTSsqKpo7d+7LL78sSVJSUpK/v/+sWbMeeeQRT5cHAABqoiYBL8vyn//85/vvvz81NTU9Pb1Jkybt27cPDQ31eHEAAKBmahLwmqCgoJ49e/bs2dOD1QAAAI+4ioCPiIi47DL5+fnXUAwAAPCMqwj4f/zjH9oNu93+t7/9LTg4+M4774yNjc3Ozv78888VRXnrrbdqp0gAAHB1riLgH3zwQe3GQw891KFDh02bNvn6+motc+fOHTRo0Ndffz18+HDP1wgAAK5STa6DX7NmjXaZnN5iNpunT5++Zs0azxUGAABqriYB73K5MjMzqzSmp6cbDAZPlAQAAK5VTQJ++PDh8+bNW7lypcvlkiTJ5XKtWLFi/vz57J8HAKCeqMllcv/6179OnDgxYcKEoKCgJk2aZGVllZSUDB48eOHChR6vDwAA1EBNAj4oKGjz5s1bt25NSUmxWCyxsbE9evTo27evx4sDAAA1U8OJbmRZTkpKSkpK8mgxAADAM2pyDB4AANRzBDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAjIWDer2bZtm4+PT69evbS7Vqt1zZo1FoslKipqzJgxERERdVMGAADXiVrfgs/Kytq0adP27dv1FlVVk5OTmzdvPnPmzPj4+E8//VRV1douAwCA60qtB3xmZmZ5eXlAQIB7S3FxcVJSUkBAQP/+/e12e1paWm2XAQDAdaXWd9F3795dkqTly5frLVarNSoqymAwSJKkKEp0dLTVao2Li9P+VVXV7Oxs92fw8/MzmUy1V+HF9h8YjcZaXW/dMBqNqqrW5T4SWZYvbDQYDB5/MWVZVhRFgDG6kNFodLlc1b6SDZ2iKKKOmsFgMBgMLpfL24V4nqIokiQJOWpSvf+ov5ZP7zo6Bu+uvLzcx8dHv2s2m8vKyvS7Lpfrvffec1++U6dO48ePr7167HZ7te2hoaGRkZG1t15RVRtLwcHBtfFi+vn5+fn5efxpUdt4ZzVEjJpXVFZW1vixXgh4Pz8/90y12Wzun9GKotx///1Vls/Ly6u9ei4W8IWFhbW63rrh4+NTWVlZl1vw1a6ruLjY4y9meHi43W4vLS317NPWByaTyeVyOZ1ObxfiecHBwYqiFBYWersQz9O24C/2edKg+fv7+/n5nT171tuF1Aqz2Wyz2bxdxUWpqhoVFVWzx3oh4MPDw/Pz810ul6Ioqqrm5eWFh4fr/yrLcpMmTao8JCsrq/bqudjHqMPhuJavTvWEoij1IeCdTqfHX0xVVV0ulwBjdCFZll0ul8Ph8HYhnqftwRZy1Fwul6qqonZNEnTUJEkyGAyids0L18HHxsYGBgbu2rXL6XSmpKQYjUb9ADwAAPAIL2zBy7I8ceLE1atXb926NTIyctKkSUKeTAQAgBfVUcDffffd7nfDw8OnTp1aN6sGAOA6xFS1AAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAERMADACAgAh4AAAER8AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAEZPR2AQAAaffu3Tk5Oe4tERERvXr18lY9EAABDwBelpeXd/vtt6uqWqV99+7dTZo08UpJEAC76AHAy+x2u6qqycnJ1vNWrVolSZLNZvN2aWjA2IIHgHohMDAwLCxMv+3dYiAAtuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAioAVwm53Q6/fz8au/57XZ7te1ms7lW11s3FEVRlDr9GifL8oWNPj4+Hn8xZVk2Go0CjNGFFEVRVdVkMnm7EM8zGAyKogg5arIsy7Jcs7ebr69vte315FPIaDTKslwfKqkN9fwP0uVy1fixDSDgDQZDeXl57T2/w+Gott1ms9XqeuuG2WzW5tCoszVWuy673e7xFzMoKMjhcAgwRhfy8fFxuVwX+8ts0Hx9fVVVFXLUDAaD0Wis2dQ0FRUV1bbXk08ho9Eo6qhJkuTr63ux17+hYxc9AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEAEPAAAAiLgAQAQEAEPAICAGsBc9EC19u/f/+OPP7rPj202m0eMGOHv7+/FqgCgniDg0VDde++9qampVRrtdvukSZO8Ug/qjNPp3Lx5c5WfdWnatGmXLl28VRJQDxHwaKgcDscDDzwwf/58vSU8PFzIX2BDFT/99NOUKVOqNPr7+x87dswb5QD1FMfg0YD5+vqGufF2OagjdrtdkqS9e/daz5s/f77WCEDHFjyABikkJET/Vufn5+fdYoB6iC14AAAERMADACAgAh4AAAER8AAACIiT7ADgShUXF3/wwQcVFRXujV26dBk+fLi3SgIuhoAHgCu1efPmhQsXhoaGyrKstZSXl4eEhBDwqIfYRQ8AV8rlckmSdPr0af0S/KeeekpVVW/XBVSDgAcAQEAEPAAAAiLgAQAQEAEPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAJiLvr/efnll998883S0lJFUcxmsyRJixcvPnToUJcuXTp16mQwGLxdIAAAV4GAlyorKyVJkmy2vj16BAcFOZ3OM+np6UeP7k9J2bB+vdPlCgoK6tGjR//+/W+77bamTZt6u14AAC6PgP+fwb17v/2Pf2i3jx8/fnL37pdffLFV69YHjx37ad++jTt2zJs3b86cOb17977rrrtGjBjh6+vr3YIBALgEjsFfir+fX/fOnR+5776v3n8/9dtvX3722fLCwpkzZyYmJv7zn//MysrydoEAAFSPgL9SwYGBk8eO3fDhh1uTk8fccsviDz4YOHDgc889R8wDAOohdtFftXbx8Qufe+6ZGTMWf/75ki++WLZs2T333PPYY481atTI26UBEER+fr4kSdOmTdPO+dXccMMNr7/+uveKQgPDFnwNRYaHP/Pgg7tXr3548uTPli/v27fva6+9VlZW5u26AIggLS1NkqQuXbr0Oi8oKGjVqlXergsNCQF/TUKCgp558MGU1avvGj78X6++2r9//xUrVqiq6u26AIhg7ty5i867++67vV0OGhgC3gMahYXNmzXrh2XLbmje/NFHHx09evQvv/zi7aIAANc1jsF7zI2tWq14++31W7b87bXXRo0adc899zz99NOhoaHerqu+KCoqKioqKi4udrlcWktAQEBwcHBISIiPj493awMA8RDwHnZbUtItffq8u2zZa0uXfvXVV88999zdd98ty7K366pTBQUFK1euPHHixG+//Xbw4EFJkh5++OH/TSh0AVmWo6KiQkJCmjdv3q5du7i4uHbt2rVr18793CIAwNUi4D3P7OPz6JQpd40Y8dzChbNmzfrss8/mzJnTuXNnb9dVi1RVPXr06JYtW3bt2lVUVPTqq6+++uqrfr6+7eLj4+Pisvz8hg0d2qdnz9CgIEVRAgMCDIpSWlbmdDrPlZWdLSxMy8pKy8qy5OUt//TTPKtVkiSj0di5c+fExMTu3bv37t07IiLC210EgAaGgK8tMZGRi198cctPPz3/6qsjRoy46667nn766cjISG/X5Un5+fnbt2/fuHHjjz/+mJ+f72s2d7zhhqbBwaOGDp01c2bLZs0kSSooKBgyZMiogQP79+9/Jc9Zcu7cb0eP/nr48P5DhzZ8/fXixYtlWb7xxhv79Olz88039+3bly17ALgSBHztSurV64dlyxYtW/bKBx98/fXXjz/++NSpU00mk7fruiZnz55dtWrV+vXr9+7d63A4Ot5ww8QRI27u1at7585mH58777zzprZttXSvgaCAgN6Jib0TE7W7uWfP7tyzZ8PWratXrVqyZImvr2/v3r1vu+22W2+91XMdAgABEfC1zmQ0PnzvveOGDZv75ptz5879z3/+88ILL9xyyy3eruuqFRUVrVu3btWqVT///LOqqj0SEv72yCMjbr65aUxM7a00qlGj24cOvX3oUFVVDx47tmHbtnWbNz/11FPPPvusj4/P/v37rVZreHh47RUAAA0UAV9HmkRF/Xvu3Kl33PH8woWTJ09OSkp65plnOnXq5O26Lq+srGzDhg1ffvnltm3bXC5X365dX3zyyduSkqLqduY+WZY73nBDxxtumDV9eu7Zs99u3z7v9de3btkSExOTlJQ0YcKEu+66qy7rQT23fPnyN998s8qkFPfdd98DDzxQZzWUlZVVVlb6+vpyXAleQcDXqe6dO69funTF+vULFi0aPnz4hAkTnnjiiWY13Ztd2/bu3bt8+fK1a9eWlJR0adfurw8/PGrQoFrdXr9CUY0aTR47dsf69R0TEiLj4lZt2DBjxoxHH31UkqQDBw6Ul5f7+fl5u0Z42f79+8+dOzd16lS9Zfny5Xv27LmqJ7HZbPrlndqN7du3S5L017/+tby8vKioSFXVvXv3Wq3WPn36FBcXq6paUlLidDqrfTYfH5/Q0NDg4GDt6tCQkJDg4ODQ0NCmTZtqh+3sdvs19BioioCva4qi3DlixNihQ5PXrv3XkiWrVq0aM2bMY4891qpVK2+X9j+nTp1asWLFmjVrTp06FR0RMWXcuImjRsXHxXm7rmqEBAY+MmXKI1OmpGdn/+fLL+e++mpycvLatWtHjhw5atSo/v37G438hV+/YmJiXnzxRf3u7t27tRtF5+mx7X4jOzs7Pz9fu2uz2ao8pyzLRln+evXq8NDQsJAQSZJCfXxsAQEjBwwwGgzBQUGSqgYGBBgMhioPrLDZbDZbhd1eXFJSWFJSVFKSc+bM0dLSTIulqKREW2b8+PHR0dEtWrS48cYbtbnoMzMz27RpU0uvD4THx593+JhM940ff+eIEUtXrPj3p5+uXr162LBhDzzwQNeuXb1VUnZ29rp161asWHHgwAF/P7/Rgwa9+vTTvRITDUoDmO6wWePGz/7pTyuXLBl3111nKyo+/+abzz77rFGjRqNGjRo7dmy3bt2ut6kIrk82my0tLU3L6VOnTuXl5c2aNauwsLCgoKCwsPCnn36qrKyMjY298IH+fn6hQUHBQUEhQUGhQUFN27QJCQpq3qRJaHCw3q79l/Lzzy+99NKW9esDAwO1xy5atGjlypV/nznTYDAYDIYabIU7nM7fDh16+LHHbr/jDpOf36n09AN79vx25IgkSTfffHNYWFhiYmK3bt2Kioqu8fXB9YaA9yY/X98/3XPP1DvuWP7VV4uSk0ePHt2uXbs//vGPY8aM8fX1rZsa8vPzN2zYsG7dup07dyqynNSr1yPz5g3p2zfA379uCpAkKSsra9GiRVVmwunSpcudd955tU/VOCLijyNHPvPgg3sPHly1YcOar7/+8MMPmzVrNmLEiOHDhycmJioN4fsKLqaysjIjI+O3336TJOn9998vLS3NyMjIyck5ePCgw+GoshtMluUvkpOjIiLCQkIaBQe3aNQo0N9/7KhREeHh7nEeHBRk8uqeHqPBEBsdHWQyjXC7mvSjjz565bXXHn7iifScnL2//fbx0qWWvDxJkvr37/7yKLEAACAASURBVN+lS5eePXv27du3ZcuWXiwb9R8B732+ZvOUCRPuHTfuu507Fy1b9sQTT/z973+/9dZbJ0yY0KdPnwv39V07VVUPHTq0YcOGTZs2HThwQFLVnl26vPjkk2OGDAkNDvb46i7rwIEDP//88y233KKn77Fjx7755psaBLzupg4dburQ4YXHH9+ZkvLlxo2fL1/+7rvvxsTEjB07dvjw4V7cU4LLKikpSU9Pz87Ozs7OzsrKysrKysnJyc3NtVgs7lMdv/7aa62aNw8NDm7drFmwLB86cGDWE0+EBAZGNmoUExHx2fLlp0+eXL58uf60M2bMMJvN0xvOyZhmg+G2gQObN2+u3X170aJX3357UI8e23fv/vLLL1VVbdy4cd/zqt0zgescAV8NbSfbypUrf/jhB70xJCRk8uTJtbenV1GUW/v3v7V//yMnT36xfv3a779fsWJFRETEgAED+vbt269fv6ZNm17L8zudzsOHD+/bt+/HH3/88ccf8/LyzD4+/bt3f/mZZ24bOLBRWJinOlJj//jHP/RJ6d94441vv/322p/ToCgDevQY0KPHS888s+Wnn77cuDH500/ffffdqKioQYMGDR8+vF+/fsyEX5e+//77tWvXVlRU6C0Oh6Nbt25+fn7p6enp6eknTpz4+eef9RSXJcnHYDArSvPY2MSWLf3M5tDAQJfdfvTgwbVr1+qplpyc/NqJE3ePHKk/rbmBzzZxociwsEa+vv/8858lSTpbULD7wIGf9+/fmZLy5apVTpcrLi6ub9++gwYN6t+/f0BAgLeLRb1AwFfDYrFIkpSdna0f9CouLs7MzBw9erT+4zEZGRlr166tcrpst27devfufS2rLi8v3/HDDyEu1+RbbsnIyzuclrbl+++1H4GOi4vr2rVrp06d4uPjmzVr1rx580tfe1NYWHjy5Mljx44dP378119//fXXX4uLiyVJurFVq7uHD0/q2bN7586+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HBnZ+PzRTUmSzmRmHjhyJPXYsVMZGft+/vnLVavKz3/cBwYGNm3aNCoqKioqKjo6OiQkJDIyUruhMRgMAQEB17619N///lc7EuR0Ou12u7Y/uV27domJiUVFRWVlZdr3p/nz57s/ymg0DhkypKioqLS01OVynT59uqysTD9TXbN69erVq1cbFcVoMJgMBsnp9FEUg6JE+viYfX1NimJSlJmPPDJ6xAjjFV+66XK5IiIivvnmG71l+PDh1/gKVKugoEBRlP/7v//TWz799NMqy1RUVBQUFLj/USmK0qdPn0vs6tBOZHnnnXc6duyotSxYsMB9Q/zKjRw58i9/+Yt+t1u3bjV4kmsky3LXjh0b+/s/MX16/wEDdv/6646UlB0pKfPnzXM4ncHBwQkJCT179uzSpUtiYmJo/ThogmtBwHtMRUVFSUmJNlW1RpblDh06XCJLSkpK/va3v136abOysiRJmj59uvu2UWJiovvxvPfff/+///1vlQfecccd7hNx18C+ffveeeedKlcK9O/f3/1jtMZGjRqlz8F56tSpKgGfmppaXFz8xhtvuDdeScC3b99eP/MxKyvru+++e+edd/Tzmbdt2/bEE09cbKpwTUFBwcGDB91PEZBluV27do0aNYqLjY2LjR3p9kuAeVZrelbWqYyMDz78MC8392hW1q8Oh93hqKisdF3kJAPZja+vb5MmTS6c1EiWZYfDoe97UFVVv6Cj2unMHnzwwQsbfUymsJCQAH//4uLi8nPndm/fLkuSyWAwGQyhitK6WbM/PfBAaHBwaEhIWHDwIw89FBkRMejmm/WJCz/++OPp06frP81SWlqalJSUk5n53x9/1Ffh5+fXtWtX/S/zxIkTL7/8svsxmpKSksseycrPz8/Kytq7d6/ecukBuhiDwXDffffpd9etW1dlgTNnzlz4R7Vnzx5930atHsyqGxaLRTueqLvYLgdfs1nbhy9J0rmyspQDB/YePLhzz56333qrvKJCluX4+PjOnTtrR6Z69erFpXcNEQHvMUePHs3MzJw3b557Y3BwcHR0tH5X28hISEjQ7mq76ebMmdOvXz+tZdWqVW+99Zb7M2jboEOHDtU/Rnfv3r1v3z73ZZxOZ69evdxXfc8991z6U7KsrGzOnDllZWXujYqi3HPPPfr5RFu3bs3NzZ04caK+wPbt23/88ccuXbro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wy+7gNFovPSjUKsuO2oulys5OTkgIOChhx7StickScrKyiopKbnxxhu1uyaTSeAfgqyfLjtw1Y7RZR+FWnWFr//evXvbtWunb+vzdqv/xN9FHxsbGxgYuGvXLqfTmZKSYjQatWNLhw4dysvLu9gCF3sU6sZlR+348eN5eXm33HJLeXl5YWFhYWFhRUWFqqqff/754cOHbTbbkSNHTpw4oX/6oG5cduCqHSPebt512VHTpKamxsfH63d5u9V/4l8mJ0mS1WpdvXp1bm5uZGSkfonnq6++2qdPn169el1sgWobUWcuPWpbtmzZsmWL+/KDBw/u16/fvn37tm3bVlJSEhkZ6Ma94AAABSlJREFUOXjwYM76qXuXfbtVO0a83bzrsqNWUlKycOHCWbNmuV/pztutnrsuAh4AgOuN+LvoAQC4DhHwAAAIiIAHAEBABDwAAAIi4IGG58iRIwkJCWazmTnbAVwMAQ80PO+9915OTs6qVauioqK8XQuAekr8mewA8Zw7d65jx44jRozwdiEA6i+24IEGZtiwYYsWLdq0aZMsy6dPn77EkvHx8R9++OHjjz8eGxvbunXrd999NycnZ8yYMWFhYS1atPj888+1xVRVXbx4cdeuXQMCAjp37rxs2TL9GYqLi2fMmBEbG2s2m1u1avXCCy+4XC7tn/bv3z9s2LCwsLBGjRqNGzcuPT1daw8MDPzwww/1Z5g+ffqwYcO02y1atEhOTp49e3Z4ePjx48cvsV4A146ABxqYJUuW3H333b179z527FhsbOylF/7b3/6mqurSpUu7dOkyY8aMHj16dO/effny5Y0bN546darNZpMk6V//+tf06dP79OmzZMmSxMTESZMmffLJJ9rDn3jiic8++2z69OlLly4dNmzY7Nmzly9fLklSWVnZrbfeWlhYuGDBgr/85S+7du2aNm3aFRb/0UcfTZw4MTw8/BLrBeABKoCG5oEHHhg0aNBlF2vduvWtt96q3c7OzpYk6dFHH9Xubt68WZKko0ePlpSUhISEPPnkk/qj7rnnntatW2u3x44d+/777+v/1KlTJ23J3bt3S5K0c+dOrX316tVTp051uVyqqgYEBCxdulR/yLRp0/Qa4uLi4uLiSktLVVW99HoBXDu24AGR9enTR7uhzS6u342MjJQkyel0pqamFhUV3XvvvfpD7rrrrlOnTlVWVkqS9OWXX06fPl2SpOzs7GXLlh09elTbRd+8eXN/f//HH398zZo1JSUlY8aMWbx4sSzLl61n/PjxAQEBkiRder0Arh0BD4hM/3HPau9KkqQdO+/atavveePGjXO5XJmZmZIk/frrryNGjGjcuHFCQsKyZctCQ0O1R0VFRW3cuNHf33/cuHFhYWE333zzd999V20B6u9/7UI/7f/S6wVw7TiLHriuxcTESJK0cePG6OjoKu3FxcW9e/e+++67N2zY0LlzZ1mWe/TooS/Qt2/fH374oaCgYMuWLW+++eZtt912+PBh958T1VgsFve7+k+GX2K9nusccF1jCx64rrVv397Pz+/48eNtz9uzZ8/8+fPNZvOuXbvKyspmz56dkJAgy3J+fn5qaqr2qJUrV7Zp08ZqtYaFhd1+++0ffPCB0+k8evSoJEkGgyE3N1dbrKCgYMeOHVe73rrpOCA8tuCB61pYWNisWbNmzpyZlpbWsWPHPXv2vP76688//7wsy/Hx8QaD4eGHH54wYUJBQcHbb79tMpm2bNmyf//+hISEtLS0O++8c+LEiU6nMzk5OTQ0VNu+v+mmmxYuXNi0aVN/f/8FCxbExcVd7Xrr9gUAhEXAA9e7F154oVGjRh988MHLL78cFxf34osvzpw5U5Kkli1bfvzxx3//+99nzJiRkJDw2muvGQyGKVOmfPfdd7NmzVqxYsXs2bNnzpzp6+vbrVu37777TjuP77333nvggQfuv//+1q1bz5w5Mzs7+2Ib8RdbLwCPkKucAgMAAATAMXgAAATELnqgofrqq6+effbZi/3r0qVLu3fvXpf1AKhX2EUPAICA2EUPAICACHgAAAREwAMAICACHgAAARHwAAAIiIAHAEBABDwAAAIi4AEAEBABDwCAgAh4AAAE9P8ArbK/dMz8oLsAAAAASUVORK5CYII=" />
+</div>
+</div>
+<div id="distribution-of-all-f-values-without-rank-order" class="section level3">
+<h3>Distribution of all f-values WITHOUT rank order</h3>
+<pre class="r"><code>    ggplot(pr.complete[which(pr.complete$classifier_name != 'rank order'),], aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour=&quot;black&quot;, fill=&quot;white&quot;) +
+      geom_density(alpha=.2, fill=&quot;#FF6666&quot;)</code></pre>
+<div class="figure">
+<img src="data:image/png;base64,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KhUKIe8H9uhx4dChQX36NGvWTKvTlWg0Dx4+jLl6dcy4cTzLZufm8jx/PzHRWFbm7u5ertcbjUadXq/WaBILC4tNzsoWhz2XSiT2dnYMw7g6ODCEBHl6EkKcnZycHRx+2bJl4IABL/TtK4yvnpaSsnjRou9WrRLHSF63bt26devW/OMfTZs2FUri/v7bQSrtYXJZeXU3a3kCYT1v3bp1pkO2OTo6fvnll+IJaElJSXFxcS+99JIY6rXptdLS0mbNmpnm7v379+tavVpq3bq16Yfq0KFDBw8eFCtJwdWku3btOnTokGlJ5TNYpSwbGRExYMCAMrX69N9//3X27JFDh3755RepVNqxY8eBAwf26dMnJCSkIQ8lBLWEgLeY/Px8Z2dn8WRmQsiuXbv+85//bNu2TSxhWXbGjBlmbDF88skn4mVyK1eurLBD3gwlJSXz588X998KnJycli1bZnoGmUwmM/1BXLRoUf1cHGhDt27d0mq1piei79q1a/369aanVrEsGxUV1bVrV9MZR44cKfb+6dOn58bGXj9zRnwzlWVlLZ2czh4/Ll5k//333x88eHDLli2V6yCVSo1GY5Ubskd27erXpcurj9e6GJ1OyrI1nvQnkUhM+7HC0Ga1IexaaNu2bYsWLYSSjIyMv/766+233xbP5hOmmTdvnnildVJSUm3OrujQocP8+fPFp7///ntdq2cerVYbFhYm3lNKrVbv3LmzfhZtJdevX5dKpabnSZiukFVgp1QO7t17cO/e3xJyLynpr3Pnjl+48M3SpYsWLXJ3d+/evXv37t179uwp9jg0Ogh4S/L29ja97duuXbt8fX2Fs1oE27ZtS0pKagi7BPPz8xMTEwcNGuTt7S2UxMXFXb58OSoqSlyTqHwmTkpKSkpKiuleikePHjWi77+wO+SDDz4Q26jVasvKykxv11tUVBQQEGDaj7t37/b29ja9jdCOHTsSExMrBLwpYbOpW7du4vl358+fr7B3PTk5OT8/v8Iun379+pnuIFmzZk2FMLbtJU8DBgwQ92QcOHDgr7/+6tatm3ju+oULFypcs9DwRUREvP34rjD5+fmNPeAJIUFBQaaf3l9//bU2c4UEBoYEBs6aOFGr012+cePomTMnL136448/eJ738fHp2rVrr169wsPDW7VqRceWfVxc3MyZM3U6HSGEYRhh501YWNi6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BAcHi0/xdWv46L9MjhCSn5+/b9++nJwcDw8P8RLPf//73927d+/atWt1E1RZCPXmyb128uTJkydPmk7fv3//nj17Xrt27fTp0yqVysPDo3///jjrp/7V+HWrso/wdbOtGntNpVItX7583rx5ple64+vWwD0TAQ8AAPCsoX8XPQAAwDMIAQ8AAEAhBDwAAACFEPAAAAAUQsADND737t1r166dXC7HmO0AUB0EPEDjs27duuzs7N9//93T09PWdQGABor+kewA6FNaWhoWFjZ06FBbVwQAGi5swQM0MoMHD167dm10dDTDMCkpKU+YMjg4eNOmTe+//76vr29QUNCPP/6YnZ09YsQIV1fX5s2b79y5U5iM5/mff/65Y8eO9vb2bdu23bp1q/gKxcXFM2fO9PX1lcvlgYGB//znP41Go/CvGzduDB482NXVtUmTJqNGjUpPTxfKHRwcNm3aJL5CVFTU4MGDhcfNmzfftm3bwoUL3dzcEhISnrBcAHh6CHiARmbDhg3jxo3r1q3b/fv3fX19nzzxF198wfP8xo0bn3/++ZkzZ3bu3LlTp07bt29v2rTp1KlTtVotIWTFihVRUVHdu3ffsGFD+/btJ0yY8Msvvwizz507d8eOHVFRURs3bhw8ePDChQu3b99OCCkrKxs0aFBhYeHSpUs//fTTS5cuTZs2rZaV37x58/jx493c3J6wXACwAB4AGpsZM2b069evxsmCgoIGDRokPH748CEh5L333hOeHj9+nBASHx+vUqmcnZ0//PBDca7XX389KChIeDxy5Mj169eL/woPDxem/Pvvvwkh586dE8r37ds3depUo9HI87y9vf3GjRvFWaZNmybWISAgICAgoKSkhOf5Jy8XAJ4etuABaNa9e3fhgTC6uPjUw8ODEGIwGO7cuVNUVPTGG2+Is7z66qvJycnl5eWEkL1790ZFRRFCHj58uHXr1vj4eGEXvb+/v52d3fvvv79//36VSjVixIiff/6ZYZga6/PKK6/Y29sTQp68XAB4egh4AJqJN/es8ikhRDh23rFjR8Vjo0aNMhqNGRkZhJCbN28OHTq0adOm7dq127p1q4uLizCXp6fn0aNH7ezs/l97dwySTBjHcfyOQ9Qmj4YaBJEKIsIDyUCcHB0LidqaFCFucgkEdSqJwBAXEQQXF51apBu8oaXBwUVEnFwSEQ8a2uR9B3mlN16DeCPe9/H72e7uOf7Pc8uP57kHnuPjY1VVw+GwYRh/7MCP30+7WGz7/7gugL/HLnpgpW1ubkqS9PDwsLGx8e7+y8tLMBg8PT1tNps+n0+W5cPDw0WDUCjUarUsyzJNs1AoRCKRXq/39jjRudFo9PZycWT4B3W/bnDASmMGD6y0vb09p9M5GAx2f2m321dXV3a7/enp6fX1NZPJaJomy/JkMul2u/O3Go3Gzs7OdDpVVfXo6KhcLs9ms36/L0mSoijj8XjezLKsx8fHz9b9noEDwmMGD6w0VVWTyaSu68PhcH9/v91u393dpVIpWZa3t7cVRbm4uIhGo5ZlFYtFm81mmman09E0bTgcnpycnJ2dzWazWq3mcrnm83u/3397e+t2u9fW1nK5nMfj+Wzd7/0AgLAIeGDVZbPZ9fX1crl8c3Pj8Xiur691XZckyev1VqvVdDqdSCQ0Tcvn84qinJ+fG4aRTCbr9Xomk9F13eFwHBwcGIYx38dXKpXi8XgsFtva2tJ1/fn5edkkflldAF9CfrcFBgAACIB/8AAACIgleuB/dX9/f3l5uexppVIJBALf2R8A/xSW6AEAEBBL9AAACIiABwBAQAQ8AAACIuABABAQAQ8AgIAIeAAABETAAwAgIAIeAAABEfAAAAiIgAcAQEA/AfsqEVl+J5gsAAAAAElFTkSuQmCC" />
+</div>
+<p>Much less zero values, but the shape is still the same.</p>
+</div>
+</div>
+<div id="n-best-for-combined-performance" class="section level2">
+<h2>n best for combined performance</h2>
+<ul>
+<li>Compute for the combined f-measure (e.g., criteria long_interactions and short_interaction )</li>
+</ul>
 <div id="stem-leave-plot-f-ge-0.5" class="section level3">
 <h3>Stem-leave plot (<span class="math">\(f \ge 0.5\)</span>)</h3>
 <p>Stem-leave plot for each distance measure used as a classifier. The plot contains only the values for <span class="math">\(f&gt;=0.5\)</span>.</p>

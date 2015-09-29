@@ -143,9 +143,9 @@ ggplot(f_by_t, aes(x=f_diff)) +
 
 #### Best n for each criteria ####
 
-```{r}
+```{r results='asis'}
   for(c_name in sort(unique(pr.C$criteria))) {
-    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)], caption = "Cosine"))
   }
 ```
 
@@ -159,7 +159,7 @@ ggplot(f_by_t, aes(x=f_diff)) +
 
 #### Best n for each criteria ####
 
-```{r}
+```{r results='asis'}
   for(c_name in sort(unique(pr.J$criteria))) {
     print(kable(arrange(pr.J[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }
@@ -175,7 +175,7 @@ ggplot(f_by_t, aes(x=f_diff)) +
 
 #### Best n for each criteria ####
 
-```{r}
+```{r results='asis'}
   for(c_name in sort(unique(pr.M$criteria))) {
     print(kable(arrange(pr.M[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }
@@ -191,16 +191,105 @@ ggplot(f_by_t, aes(x=f_diff)) +
 
 #### Best n for each criteria ####
 
-```{r}
+```{r results='asis'}
   for(c_name in sort(unique(pr.R$criteria))) {
     print(kable(arrange(pr.R[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
   }
 ```
 
+## Worst n for each criteria --- Independent from classifier ##
 
+```{r results='asis'}
+  n_best <- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+## Best n for each criteria --- Independent from classifier ##
+
+```{r results='asis'}
+  n_best <- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
 
 
 ## Distribution of f-measure ##
+
+### Distribution of all f-values ###
+
+```{r}
+    ggplot(pr.complete, aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour="black", fill="white") +
+      geom_density(alpha=.2, fill="#FF6666")
+```
+
+### Distribution of all f-values WITHOUT rank order ###
+
+```{r}
+    ggplot(pr.complete[which(pr.complete$classifier_name != 'rank order'),], aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour="black", fill="white") +
+      geom_density(alpha=.2, fill="#FF6666")
+```
+
+Much less zero values, but the shape is still the same.
+
+## n best for combined performance ##
+
+* Compute for the combined f-measure (e.g., criteria long\_interactions and short\_interaction ) from TP, TN, FP, and FN (according to Forman 2010)
+* analys what are the bes combinations
+
+### Compute combined f-measure ###
+
+```{r}
+    fmeasure <- function(tp, fp, fn) {
+      f = (2 * tp) / ((2 * tp) + fp + fn)
+      return(f)
+    }
+  
+  # check if function f_measure works correct (or at least as the python version)
+  # f_diff_test <- pr.complete$f_measure - fmeasure(pr.complete$true_positives, pr.complete$false_positives, pr.complete$false_negatives)
+  # table(f_diff_test) # f_diff_test should contain only zeros!
+```
+
+```{r}
+  # juged_bad and juged_good
+  juged.data <- pr.complete[which(pr.complete$criteria %in% c('juged_bad', 'juged_good')), ]
+  interact_length.data <- pr.complete[which(pr.complete$criteria %in% c('short_interactions', 'long_interactions')), ]
+  
+  # equal: classifier_name,  n_gram_size, frequency_threshold, smoothing_value
+  # different: criteria
+  
+  combined_f_measure <- function(criteria.data) {
+    for (n in unique(criteria.data$n_gram_size)) {
+      for (c in unique(criteria.data$classifier_name)) {
+        for (t in unique(criteria.data$frequency_threshold)) {
+          for (s in unique(criteria.data$smoothing_value)) {
+            # print(sprintf('n: %s, c: %s, t: %s, s: %s', n, c, t, s))
+            scenarios <- criteria.data[which(
+              criteria.data$n_gram_size == n & criteria.data$classifier_name == c & criteria.data$frequency_threshold == t & criteria.data$smoothing_value == s
+            ), ]
+            
+            result <- data.frame()
+            result$tp <- sum(scenarios$true_positives)
+            result$fp <- sum(scenarios$false_positives)
+            result$fn <- sum(scenarios$false_negatives)
+            result$f <- fmeasure(result$tp, result$fp, result$fn)
+          }
+        }
+      }
+    }
+    return(result)
+  }
+  
+  r <- combined_f_measure(juged.data[1:4,])
+  r
+
+```
+
+
 
 
 ### Stem-leave plot ($f \ge 0.5$) ###
