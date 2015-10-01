@@ -4306,8 +4306,537 @@ pr.R &lt;- dbGetQuery(cross_validation, &quot;performance&quot;, '{&quot;classif
 <div id="n-best-for-combined-performance" class="section level2">
 <h2>n best for combined performance</h2>
 <ul>
-<li>Compute for the combined f-measure (e.g., criteria long_interactions and short_interaction )</li>
+<li>Compute for the combined f-measure (e.g., criteria long_interactions and short_interaction ) from TP, TN, FP, and FN (according to Forman 2010)</li>
+<li>analys what are the best combinations</li>
 </ul>
+<div id="compute-combined-f-measure" class="section level3">
+<h3>Compute combined f-measure</h3>
+<pre class="r"><code>    fmeasure &lt;- function(tp, fp, fn) {
+      f = (2 * tp) / ((2 * tp) + fp + fn)
+      return(f)
+    }
+  
+  # check if function f_measure works correct (or at least as the python version)
+  # f_diff_test &lt;- pr.complete$f_measure - fmeasure(pr.complete$true_positives, pr.complete$false_positives, pr.complete$false_negatives)
+  # table(f_diff_test) # f_diff_test should contain only zeros!</code></pre>
+<pre class="r"><code>  # juged_bad and juged_good
+  juged.data &lt;- pr.complete[which(pr.complete$criteria %in% c('juged_bad', 'juged_good')), ]
+  interact_length.data &lt;- pr.complete[which(pr.complete$criteria %in% c('short_interactions', 'long_interactions')), ]
+  real_simulated.data &lt;- pr.complete[which(pr.complete$criteria %in% c('real', 'simulated')), ]
+  success.data &lt;- pr.complete[which(pr.complete$criteria %in% c('task_failed', 'task_successful')), ]
+  word_accuracy.data &lt;- pr.complete[which(pr.complete$criteria %in% c('word_accuracy_100', 'word_accuracy_60')), ]
+  simulation_quality.data &lt;- pr.complete[which(pr.complete$criteria %in% c('simulation_quality_best', 'simulation_quality_worst')), ]
+  real_vs_worst_sim.data &lt;- pr.complete[which(pr.complete$criteria %in% c('real_vs_simulated_worst', 'simulated_worst_vs_real')), ]
+  
+  # check if the data split is complete and correct (compair count and selected row sums)
+  check.split &lt;- rbind(juged.data, interact_length.data, real_simulated.data, success.data, word_accuracy.data, simulation_quality.data, real_vs_worst_sim.data)
+  if (nrow(pr.complete) != nrow(check.split)) stop('Error in splitted data.')
+  if (sum(pr.complete$f_measure) != sum(check.split$f_measure)) stop('Error in splitted data.')
+  if (mean(pr.complete$f_measure) != mean(check.split$f_measure)) stop('Error in splitted data.')
+  if (median(pr.complete$f_measure) != median(check.split$f_measure)) stop('Error in splitted data.')
+  
+  
+  # equal: classifier_name,  n_gram_size, frequency_threshold, smoothing_value
+  # different: criteria
+  combined_f_measure &lt;- function(criteria.data) {
+    # find all rows with equal parameters and sum tp, pf, and fn
+    comb &lt;- ddply(criteria.data,
+          c('n_gram_size', 'classifier_name', 'frequency_threshold', 'smoothing_value'),
+          summarise,
+          tp = sum(true_positives),
+          fp = sum(false_positives),
+          fn = sum(false_negatives))
+    # compute f measure
+    comb$f_measure &lt;- fmeasure(tp = comb$tp, fp = comb$fp, fn = comb$fn)
+    
+    return(comb)
+  }
+  
+  juged.comb &lt;- combined_f_measure(juged.data)
+  interact_length.comb &lt;- combined_f_measure(interact_length.data)
+  real_simulated.comb &lt;- combined_f_measure(real_simulated.data)
+  success.comb &lt;- combined_f_measure(success.data)
+  word_accuracy.comb &lt;- combined_f_measure(word_accuracy.data)
+  simulation_quality.comb &lt;- combined_f_measure(simulation_quality.data)
+  real_vs_worst_sim.comb &lt;- combined_f_measure(real_vs_worst_sim.data)</code></pre>
+<pre class="r"><code>  n_best &lt;- 5
+  print(kable( arrange(juged.comb, desc(f_measure))[1:n_best,], caption = 'Judgement'))</code></pre>
+<table>
+<caption>Judgement</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">6</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.50</td>
+<td align="right">117</td>
+<td align="right">77</td>
+<td align="right">77</td>
+<td align="right">0.6030928</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">jensen</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">115</td>
+<td align="right">79</td>
+<td align="right">79</td>
+<td align="right">0.5927835</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">115</td>
+<td align="right">79</td>
+<td align="right">79</td>
+<td align="right">0.5927835</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">jensen</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">115</td>
+<td align="right">79</td>
+<td align="right">79</td>
+<td align="right">0.5927835</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">115</td>
+<td align="right">79</td>
+<td align="right">79</td>
+<td align="right">0.5927835</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(interact_length.comb, desc(f_measure))[1:n_best,], caption = 'Dialogue lenght'))</code></pre>
+<table>
+<caption>Dialogue lenght</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">jensen</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">89</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0.8989899</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">89</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0.8989899</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+<td align="right">89</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0.8989899</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">jensen</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+<td align="right">88</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">0.8888889</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">88</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">0.8888889</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(real_simulated.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and simulation'))</code></pre>
+<table>
+<caption>Source of dialogues (real and simulation</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">917</td>
+<td align="right">859</td>
+<td align="right">859</td>
+<td align="right">0.5163288</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">873</td>
+<td align="right">903</td>
+<td align="right">903</td>
+<td align="right">0.4915541</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">839</td>
+<td align="right">937</td>
+<td align="right">937</td>
+<td align="right">0.4724099</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">831</td>
+<td align="right">945</td>
+<td align="right">945</td>
+<td align="right">0.4679054</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">668</td>
+<td align="right">1108</td>
+<td align="right">1108</td>
+<td align="right">0.3761261</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(success.comb, desc(f_measure))[1:n_best,], caption = 'Task success'))</code></pre>
+<table>
+<caption>Task success</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">121</td>
+<td align="right">75</td>
+<td align="right">75</td>
+<td align="right">0.6173469</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">121</td>
+<td align="right">75</td>
+<td align="right">75</td>
+<td align="right">0.6173469</td>
+</tr>
+<tr class="odd">
+<td align="right">8</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">119</td>
+<td align="right">77</td>
+<td align="right">77</td>
+<td align="right">0.6071429</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">118</td>
+<td align="right">78</td>
+<td align="right">78</td>
+<td align="right">0.6020408</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="left">cosine</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">117</td>
+<td align="right">79</td>
+<td align="right">79</td>
+<td align="right">0.5969388</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(word_accuracy.comb, desc(f_measure))[1:n_best,], caption = 'Word accuracy'))</code></pre>
+<table>
+<caption>Word accuracy</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">97</td>
+<td align="right">19</td>
+<td align="right">19</td>
+<td align="right">0.8362069</td>
+</tr>
+<tr class="even">
+<td align="right">7</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">95</td>
+<td align="right">21</td>
+<td align="right">21</td>
+<td align="right">0.8189655</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">92</td>
+<td align="right">24</td>
+<td align="right">24</td>
+<td align="right">0.7931034</td>
+</tr>
+<tr class="even">
+<td align="right">7</td>
+<td align="left">jensen</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">92</td>
+<td align="right">24</td>
+<td align="right">24</td>
+<td align="right">0.7931034</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">2</td>
+<td align="right">0.25</td>
+<td align="right">91</td>
+<td align="right">25</td>
+<td align="right">25</td>
+<td align="right">0.7844828</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(simulation_quality.comb, desc(f_measure))[1:n_best,], caption = 'Simulation quality'))</code></pre>
+<table>
+<caption>Simulation quality</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">1685</td>
+<td align="right">1475</td>
+<td align="right">1475</td>
+<td align="right">0.5332278</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">1682</td>
+<td align="right">1478</td>
+<td align="right">1478</td>
+<td align="right">0.5322785</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">1681</td>
+<td align="right">1479</td>
+<td align="right">1479</td>
+<td align="right">0.5319620</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.50</td>
+<td align="right">1679</td>
+<td align="right">1481</td>
+<td align="right">1481</td>
+<td align="right">0.5313291</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">mean kullback leibler</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">1678</td>
+<td align="right">1482</td>
+<td align="right">1482</td>
+<td align="right">0.5310127</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>  print(kable( arrange(real_vs_worst_sim.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and worst simulation'))</code></pre>
+<table>
+<caption>Source of dialogues (real and worst simulation</caption>
+<thead>
+<tr class="header">
+<th align="right">n_gram_size</th>
+<th align="left">classifier_name</th>
+<th align="right">frequency_threshold</th>
+<th align="right">smoothing_value</th>
+<th align="right">tp</th>
+<th align="right">fp</th>
+<th align="right">fn</th>
+<th align="right">f_measure</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">779</td>
+<td align="right">997</td>
+<td align="right">997</td>
+<td align="right">0.4386261</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">659</td>
+<td align="right">1117</td>
+<td align="right">1117</td>
+<td align="right">0.3710586</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.05</td>
+<td align="right">658</td>
+<td align="right">1118</td>
+<td align="right">1118</td>
+<td align="right">0.3704955</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">2</td>
+<td align="right">0.05</td>
+<td align="right">566</td>
+<td align="right">1210</td>
+<td align="right">1210</td>
+<td align="right">0.3186937</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">cosine</td>
+<td align="right">1</td>
+<td align="right">0.25</td>
+<td align="right">503</td>
+<td align="right">1273</td>
+<td align="right">1273</td>
+<td align="right">0.2832207</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="stem-leave-plot-f-ge-0.5" class="section level3">
 <h3>Stem-leave plot (<span class="math">\(f \ge 0.5\)</span>)</h3>
 <p>Stem-leave plot for each distance measure used as a classifier. The plot contains only the values for <span class="math">\(f&gt;=0.5\)</span>.</p>

@@ -12,12 +12,21 @@ Requiered R packages
 
 ```{r}
 library(RMongo)
+library(rmongodb)
 library(ggplot2)
 library(plyr)
 library(reshape2)
 library(scatterplot3d)
 library(knitr)
 ```
+
+Functions
+=========
+
+## Area Under the Curve for a Sceanrio ##
+
+
+
 
 
 Classifier Performance
@@ -239,7 +248,7 @@ Much less zero values, but the shape is still the same.
 ## n best for combined performance ##
 
 * Compute for the combined f-measure (e.g., criteria long\_interactions and short\_interaction ) from TP, TN, FP, and FN (according to Forman 2010)
-* analys what are the bes combinations
+* analys what are the best combinations
 
 ### Compute combined f-measure ###
 
@@ -258,37 +267,128 @@ Much less zero values, but the shape is still the same.
   # juged_bad and juged_good
   juged.data <- pr.complete[which(pr.complete$criteria %in% c('juged_bad', 'juged_good')), ]
   interact_length.data <- pr.complete[which(pr.complete$criteria %in% c('short_interactions', 'long_interactions')), ]
+  real_simulated.data <- pr.complete[which(pr.complete$criteria %in% c('real', 'simulated')), ]
+  success.data <- pr.complete[which(pr.complete$criteria %in% c('task_failed', 'task_successful')), ]
+  word_accuracy.data <- pr.complete[which(pr.complete$criteria %in% c('word_accuracy_100', 'word_accuracy_60')), ]
+  simulation_quality.data <- pr.complete[which(pr.complete$criteria %in% c('simulation_quality_best', 'simulation_quality_worst')), ]
+  real_vs_worst_sim.data <- pr.complete[which(pr.complete$criteria %in% c('real_vs_simulated_worst', 'simulated_worst_vs_real')), ]
+  
+  # check if the data split is complete and correct (compair count and selected row sums)
+  check.split <- rbind(juged.data, interact_length.data, real_simulated.data, success.data, word_accuracy.data, simulation_quality.data, real_vs_worst_sim.data)
+  if (nrow(pr.complete) != nrow(check.split)) stop('Error in splitted data.')
+  if (sum(pr.complete$f_measure) != sum(check.split$f_measure)) stop('Error in splitted data.')
+  if (mean(pr.complete$f_measure) != mean(check.split$f_measure)) stop('Error in splitted data.')
+  if (median(pr.complete$f_measure) != median(check.split$f_measure)) stop('Error in splitted data.')
+  
   
   # equal: classifier_name,  n_gram_size, frequency_threshold, smoothing_value
   # different: criteria
-  
   combined_f_measure <- function(criteria.data) {
-    for (n in unique(criteria.data$n_gram_size)) {
-      for (c in unique(criteria.data$classifier_name)) {
-        for (t in unique(criteria.data$frequency_threshold)) {
-          for (s in unique(criteria.data$smoothing_value)) {
-            # print(sprintf('n: %s, c: %s, t: %s, s: %s', n, c, t, s))
-            scenarios <- criteria.data[which(
-              criteria.data$n_gram_size == n & criteria.data$classifier_name == c & criteria.data$frequency_threshold == t & criteria.data$smoothing_value == s
-            ), ]
-            
-            result <- data.frame()
-            result$tp <- sum(scenarios$true_positives)
-            result$fp <- sum(scenarios$false_positives)
-            result$fn <- sum(scenarios$false_negatives)
-            result$f <- fmeasure(result$tp, result$fp, result$fn)
-          }
-        }
-      }
-    }
-    return(result)
+    # find all rows with equal parameters and sum tp, pf, and fn
+    comb <- ddply(criteria.data,
+          c('n_gram_size', 'classifier_name', 'frequency_threshold', 'smoothing_value'),
+          summarise,
+          tp = sum(true_positives),
+          fp = sum(false_positives),
+          fn = sum(false_negatives))
+    # compute f measure
+    comb$f_measure <- fmeasure(tp = comb$tp, fp = comb$fp, fn = comb$fn)
+    
+    return(comb)
   }
   
-  r <- combined_f_measure(juged.data[1:4,])
-  r
-
+  juged.comb <- combined_f_measure(juged.data)
+  interact_length.comb <- combined_f_measure(interact_length.data)
+  real_simulated.comb <- combined_f_measure(real_simulated.data)
+  success.comb <- combined_f_measure(success.data)
+  word_accuracy.comb <- combined_f_measure(word_accuracy.data)
+  simulation_quality.comb <- combined_f_measure(simulation_quality.data)
+  real_vs_worst_sim.comb <- combined_f_measure(real_vs_worst_sim.data)
 ```
 
+
+```{r results='asis'}
+  n_best <- 5
+  print(kable( arrange(juged.comb, desc(f_measure))[1:n_best,], caption = 'Judgement'))
+  print(kable( arrange(interact_length.comb, desc(f_measure))[1:n_best,], caption = 'Dialogue lenght'))
+  print(kable( arrange(real_simulated.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and simulation)'))
+  print(kable( arrange(success.comb, desc(f_measure))[1:n_best,], caption = 'Task success'))
+  print(kable( arrange(word_accuracy.comb, desc(f_measure))[1:n_best,], caption = 'Word accuracy'))
+  print(kable( arrange(simulation_quality.comb, desc(f_measure))[1:n_best,], caption = 'Simulation quality'))
+  print(kable( arrange(real_vs_worst_sim.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and worst simulation)'))
+```
+
+
+## Area Under the Curve (AUC) ##
+
+```{r}
+  compute_auc <- function(classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value, db_connection) {
+    
+    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                     classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value)
+    
+    print(query)
+    
+    sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
+    
+    roc <- roc(sceanrio$true_class,
+               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
+               levels = c('positive', 'negative'))
+    
+    return(roc$auc)
+    
+  }
+  
+  compute_auc_2 <- function(d, db_connection) {
+    
+    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                    d[4], as.numeric(d[12]), as.numeric(d[11]), d[2], as.numeric(d[13]))
+    
+    query <- mongo.bson.from.JSON(query)
+    
+    cursor <- mongo.find(db_connection, "classification_cross_validation.documents_result", query, limit=0L)
+    
+    sceanrio <- data.frame(stringsAsFactors = FALSE)
+    while (mongo.cursor.next(cursor)) {
+      tmp <- mongo.bson.to.list(mongo.cursor.value(cursor))
+      tmp.df <- as.data.frame(t(unlist(tmp)), stringsAsFactors = F)
+      sceanrio <- rbind.fill(sceanrio, tmp.df)
+    }
+    mongo.cursor.destroy(cursor)
+    
+    roc <- roc(sceanrio$true_class,
+              as.numeric(sceanrio$positive_class_distance) - as.numeric(sceanrio$negative_class_distance),
+              levels = c('positive', 'negative'))
+    
+    return(roc$auc)
+    
+  }
+```
+
+
+```{r}
+  
+  mongo <- mongo.create(host="localhost" , db="classification_cross_validation")
+  
+  pr.complete.auc <- pr.complete
+  pr.complete.auc$auc <- -1
+  
+  apply(pr.complete.auc[1,], 1, compute_auc_2, db_connection = mongo)
+  
+  pr.complete.auc$auc <- compute_auc(classifier_name = pr.complete.auc$classifier_name,
+                                     frequency_threshold = pr.complete.auc$frequency_threshold,
+                                     n_gram_size = pr.complete.auc$n_gram_size,
+                                     criteria = pr.complete.auc$criteria,
+                                     smoothing_value = pr.complete.auc$smoothing_value,
+                                     db_connection = cross_validation)
+  
+  pr.complete.auc$auc <- compute_auc(classifier_name = 'cosine',
+                                     frequency_threshold = 1,
+                                     n_gram_size = 1,
+                                     criteria = 'long_interactions',
+                                     smoothing_value = 0.5,
+                                     db_connection = cross_validation)
+```
 
 
 
