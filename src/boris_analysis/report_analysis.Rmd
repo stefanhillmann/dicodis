@@ -322,7 +322,9 @@ Much less zero values, but the shape is still the same.
 ## Area Under the Curve (AUC) ##
 
 ```{r}
-  compute_auc <- function(classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value, db_connection) {
+  compute_auc <- function(classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value) {
+    
+    db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
     
     query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
                      classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value)
@@ -334,6 +336,8 @@ Much less zero values, but the shape is still the same.
     roc <- roc(sceanrio$true_class,
                sceanrio$positive_class_distance - sceanrio$negative_class_distance,
                levels = c('positive', 'negative'))
+    
+    dbDisconnect(db_connection)
     
     return(roc$auc)
     
@@ -363,6 +367,25 @@ Much less zero values, but the shape is still the same.
     return(roc$auc)
     
   }
+  
+  compute_auc_3 <- function(d) {
+    
+   query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                    d[4], as.numeric(d[12]), as.numeric(d[11]), d[2], as.numeric(d[13]))
+    
+   db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+    
+   sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
+    
+   roc <- roc(sceanrio$true_class,
+               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
+               levels = c('positive', 'negative'))
+    
+   dbDisconnect(db_connection)
+    
+   return(roc$auc)
+    
+  }
 ```
 
 
@@ -373,7 +396,31 @@ Much less zero values, but the shape is still the same.
   pr.complete.auc <- pr.complete
   pr.complete.auc$auc <- -1
   
-  apply(pr.complete.auc[1,], 1, compute_auc_2, db_connection = mongo)
+  
+  
+  system.time(auc <- apply(pr.complete.auc[1:2000,], 1, compute_auc_3))
+  
+  
+  within(pr.complete.auc[1,], {
+    db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+    
+    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                     classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value)
+    
+    print(query)
+    
+    sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
+    
+    roc <- roc(sceanrio$true_class,
+               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
+               levels = c('positive', 'negative'))
+    
+    pr.complete.auc$auc <- roc$auc
+    
+    dbDisconnect(db_connection)
+  })
+  
+  
   
   pr.complete.auc$auc <- compute_auc(classifier_name = pr.complete.auc$classifier_name,
                                      frequency_threshold = pr.complete.auc$frequency_threshold,
@@ -381,6 +428,9 @@ Much less zero values, but the shape is still the same.
                                      criteria = pr.complete.auc$criteria,
                                      smoothing_value = pr.complete.auc$smoothing_value,
                                      db_connection = cross_validation)
+  
+  
+  
   
   pr.complete.auc$auc <- compute_auc(classifier_name = 'cosine',
                                      frequency_threshold = 1,
