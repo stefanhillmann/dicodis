@@ -391,53 +391,6 @@ Much less zero values, but the shape is still the same.
 
 ```{r}
   
-  mongo <- mongo.create(host="localhost" , db="classification_cross_validation")
-  
-  pr.complete.auc <- pr.complete
-  pr.complete.auc$auc <- -1
-  
-  
-  
-  system.time(auc <- apply(pr.complete.auc[1:2000,], 1, compute_auc_3))
-  
-  
-  within(pr.complete.auc[1,], {
-    db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
-    
-    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
-                     classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value)
-    
-    print(query)
-    
-    sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
-    
-    roc <- roc(sceanrio$true_class,
-               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
-               levels = c('positive', 'negative'))
-    
-    pr.complete.auc$auc <- roc$auc
-    
-    dbDisconnect(db_connection)
-  })
-  
-  
-  
-  pr.complete.auc$auc <- compute_auc(classifier_name = pr.complete.auc$classifier_name,
-                                     frequency_threshold = pr.complete.auc$frequency_threshold,
-                                     n_gram_size = pr.complete.auc$n_gram_size,
-                                     criteria = pr.complete.auc$criteria,
-                                     smoothing_value = pr.complete.auc$smoothing_value,
-                                     db_connection = cross_validation)
-  
-  
-  
-  
-  pr.complete.auc$auc <- compute_auc(classifier_name = 'cosine',
-                                     frequency_threshold = 1,
-                                     n_gram_size = 1,
-                                     criteria = 'long_interactions',
-                                     smoothing_value = 0.5,
-                                     db_connection = cross_validation)
 ```
 
 

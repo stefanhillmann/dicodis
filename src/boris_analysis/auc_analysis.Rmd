@@ -1,0 +1,155 @@
+---
+title: "AUC Analysis"
+author: "Stefan Hillmann"
+date: "6. Oktober 2015"
+output: html_document
+---
+
+
+```{r}
+  library(RMongo)
+  library(ggplot2)
+  library(plyr)
+  library(reshape2)
+  library(knitr)
+```
+
+Load data
+```{r}
+  cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+  performance <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
+```
+
+Filter just one half of the symmetric (regarding to AUC) data
+```{r}
+#   juged.data <- pr.complete[which(pr.complete$criteria %in% c('juged_bad', 'juged_good')), ]
+#   interact_length.data <- pr.complete[which(pr.complete$criteria %in% c('short_interactions', 'long_interactions')), ]
+#   real_simulated.data <- pr.complete[which(pr.complete$criteria %in% c('real', 'simulated')), ]
+#   success.data <- pr.complete[which(pr.complete$criteria %in% c('task_failed', 'task_successful')), ]
+#   word_accuracy.data <- pr.complete[which(pr.complete$criteria %in% c('word_accuracy_100', 'word_accuracy_60')), ]
+#   simulation_quality.data <- pr.complete[which(pr.complete$criteria %in% c('simulation_quality_best', 'simulation_quality_worst')), ]
+#   real_vs_worst_sim.data <- pr.complete[which(pr.complete$criteria %in% c('real_vs_simulated_worst', 'simulated_worst_vs_real')), ]
+  
+  cutted <- performance[performance$criteria=='juged_bad',]
+  cutted <- rbind(cutted, performance[performance$criteria=='short_interactions',])
+  cutted <- rbind(cutted, performance[performance$criteria=='real',])
+  cutted <- rbind(cutted, performance[performance$criteria=='task_failed',])
+  cutted <- rbind(cutted, performance[performance$criteria=='word_accuracy_100',])
+  cutted <- rbind(cutted, performance[performance$criteria=='simulation_quality_best',])
+  cutted <- rbind(cutted, performance[performance$criteria=='real_vs_simulated_worst',])
+  
+  # Set names for criteria
+  cutted$criteria_name <- 'NA'
+  cutted[which(cutted$criteria == 'juged_bad'),]$criteria_name <- 'user jugedment'
+  cutted[which(cutted$criteria == 'short_interactions'),]$criteria_name <- 'dialogue length'
+  cutted[which(cutted$criteria == 'real'),]$criteria_name <- 'real vs simulated'
+  cutted[which(cutted$criteria == 'task_failed'),]$criteria_name <- 'task success'
+  cutted[which(cutted$criteria == 'word_accuracy_100'),]$criteria_name <- 'word accuracy'
+  cutted[which(cutted$criteria == 'simulation_quality_best'),]$criteria_name <- 'real vs. simulated (good)'
+  cutted[which(cutted$criteria == 'real_vs_simulated_worst'),]$criteria_name <- 'real vs. simulated (bad)'
+```
+
+
+# Overview #
+
+Histogram of AUC for all `r nrow(performance)` scenarios.
+
+```{r auc_histo_cutted, echo=FALSE}
+  ggplot(cutted, aes(x = auc)) + 
+    geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth=0.01) +
+    geom_density(alpha=.2, fill="#FF6666") + 
+    geom_vline(aes(xintercept=mean(auc, na.rm=T)),
+               color="red", linetype="dashed", size=1) + 
+    geom_vline(aes(xintercept=median(auc, na.rm=T)),
+               color="red", size=1)
+```
+
+Mean: `r mean(cutted$auc)`
+
+Median: `r median(cutted$auc)`
+
+## Distribution of AUC values per Distance Measure ##
+
+```{r auc_per_measure, echo=FALSE, cache=TRUE}
+  measures <- unique(cutted$classifier_name)
+  for (i in 1:length(measures)) {
+    m <- measures[i]
+    print(
+    ggplot(cutted[which(cutted$classifier_name == m),], aes(x = auc)) + 
+    geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth=0.01) +
+    geom_density(alpha=.2, fill="#FF6666") + 
+    geom_vline(aes(xintercept=mean(auc, na.rm=T)),
+               color="red", linetype="dashed", size=1) + 
+    geom_vline(aes(xintercept=median(auc, na.rm=T)),
+               color="red", size=1) +
+    ggtitle(m)
+    )
+  }
+```
+
+## AUC in dependency of measures and criteria ##
+
+```{r}
+  ggplot(cutted, aes(x=criteria_name, y=auc, color=classifier_name)) + geom_point() +
+  theme(axis.text.x = element_text(angle=90))
+```
+
+## Rank Order ##
+
+### AUC in dependency of n-gram size and criteria ###
+
+```{r}
+  ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(n_gram_size))) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=90))
+```
+
+### AUC in dependency of frequency threshold and criteria ###
+
+```{r}
+  ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(frequency_threshold))) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=90))
+```
+
+### AUC in dependency of frequency threshold and criteria ###
+
+```{r}
+  ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(smoothing_value))) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=90))
+```
+
+
+
+# Detailed view on selected scenarios #
+
+## Histogram for t=1, n=8, word_accuracy_60 and s = 0.25 ##
+
+Get scenatios with AUC = 1.
+
+```{r}
+  # get all performance entries with auc = 1
+  p <- cutted[which(cutted$auc == 1),]
+    #dbGetQuery(cross_validation, "performance", "{auc: 1}", 0, 0)
+```
+
+```{r auc_dot_plots, cache=TRUE, echo=FALSE}
+  # loop over the entries and plot the related data from document_results
+  for (i in 1:nrow(p)) {
+    p_row <- p[i,]
+    q <- sprintf("{classifier_name: '%s', frequency_threshold: %d, n_gram_size: %d, criteria: '%s', smoothing_value: %f}",
+                 p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
+    r <- dbGetQuery(cross_validation, "documents_result", q, 0, 0)
+    
+    title <- sprintf("classifier_name: '%s', frequency_threshold: %d,\n n_gram_size: %d, criteria: '%s', smoothing_value: %.2f",
+                 p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
+    print(ggplot(r, aes(x=positive_class_distance-negative_class_distance, fill=true_class)) +
+    geom_dotplot(dotsize = 0.75) + 
+    ggtitle(title))
+  }
+```
+
+
+
+
