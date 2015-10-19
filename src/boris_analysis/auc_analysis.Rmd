@@ -38,15 +38,21 @@ Filter just one half of the symmetric (regarding to AUC) data
   cutted <- rbind(cutted, performance[performance$criteria=='simulation_quality_best',])
   cutted <- rbind(cutted, performance[performance$criteria=='real_vs_simulated_worst',])
   
+  # for rank order we need only one case for smoothing value, as the smoothing value is
+  # not used for rank order
+  # select all rows where criteria name is not "rank order" and smoothing_value is not in (0.05, 0.25)
+  # That keeps all classifier != "rank order", and for "rank order" only those with smoothin_value == 0.5
+  cutted <- cutted[which( !(cutted$classifier_name == "rank order" & cutted$smoothing_value %in% c(0.05, 0.25)) ), ]
+  
   # Set names for criteria
   cutted$criteria_name <- 'NA'
   cutted[which(cutted$criteria == 'juged_bad'),]$criteria_name <- 'user jugedment'
   cutted[which(cutted$criteria == 'short_interactions'),]$criteria_name <- 'dialogue length'
-  cutted[which(cutted$criteria == 'real'),]$criteria_name <- 'real vs simulated'
+  cutted[which(cutted$criteria == 'real'),]$criteria_name <- 'real vs sim. (good)'
   cutted[which(cutted$criteria == 'task_failed'),]$criteria_name <- 'task success'
   cutted[which(cutted$criteria == 'word_accuracy_100'),]$criteria_name <- 'word accuracy'
-  cutted[which(cutted$criteria == 'simulation_quality_best'),]$criteria_name <- 'real vs. simulated (good)'
-  cutted[which(cutted$criteria == 'real_vs_simulated_worst'),]$criteria_name <- 'real vs. simulated (bad)'
+  cutted[which(cutted$criteria == 'simulation_quality_best'),]$criteria_name <- 'simulation quality'
+  cutted[which(cutted$criteria == 'real_vs_simulated_worst'),]$criteria_name <- 'real vs. sim. (bad)'
 ```
 
 
@@ -120,6 +126,27 @@ Median: `r median(cutted$auc)`
   theme(axis.text.x = element_text(angle=90))
 ```
 
+# Details about different AUC, Scenarios, Measures #
+
+## Tables with 5 best classifiers per criteria ##
+
+```{r results="asis"}
+  criteria <- unique(cutted$criteria) # get criteria for filtering
+  for (i in 1:length(criteria)) {
+    crit <- criteria[i]
+    cutted.crit <- cutted[which(cutted$criteria == crit),] # get data for current criteria
+    cutted.crit <- arrange(cutted.crit, desc(auc)) # sort data for criteria by auc (descending)
+    print(kable(cutted.crit[1:5, c(2, 3, 5, 12, 13, 14, 15)])) # print the firs 5 rows (i.e. 5 best classifier) for criteria
+  }
+```
+
+## Table with statistical information per criteria and measure information ##
+
+```{r results="asis", echo=FALSE}
+  stats <- ddply(cutted, c('criteria_name', 'classifier_name'), summarize, mean = mean(auc), median = median(auc), sd = sd(auc), min = min(auc), max=max(auc))
+  print(kable(stats, digits = 3))
+```
+
 
 
 # Detailed view on selected scenarios #
@@ -149,6 +176,8 @@ Get scenatios with AUC = 1.
     ggtitle(title))
   }
 ```
+
+
 
 
 
