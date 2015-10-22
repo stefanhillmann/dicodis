@@ -14,11 +14,90 @@ output: html_document
   library(knitr)
 ```
 
+```{r functions}
+  # Multiple plot function
+  # 
+  # from: http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/
+  #
+  # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+  # - cols:   Number of columns in layout
+  # - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+  #
+  # If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+  # then plot 1 will go in the upper left, 2 will go in the upper right, and
+  # 3 will go all the way across the bottom.
+  #
+  multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+    library(grid)
+  
+    # Make a list from the ... arguments and plotlist
+    plots <- c(list(...), plotlist)
+  
+    numPlots = length(plots)
+  
+    # If layout is NULL, then use 'cols' to determine layout
+    if (is.null(layout)) {
+      # Make the panel
+      # ncol: Number of columns of plots
+      # nrow: Number of rows needed, calculated from # of cols
+      layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                      ncol = cols, nrow = ceiling(numPlots/cols))
+    }
+  
+   if (numPlots==1) {
+      print(plots[[1]])
+  
+    } else {
+      # Set up the page
+      grid.newpage()
+      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+  
+      # Make each plot, in the correct location
+      for (i in 1:numPlots) {
+        # Get the i,j matrix positions of the regions that contain this subplot
+        matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+  
+        print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                        layout.pos.col = matchidx$col))
+      }
+    }
+  }
+```
+
+
 Load data
 ```{r}
   cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
   performance <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
 ```
+
+
+```{r colormap}
+  colormap <- c("#3B4CC0", "#445ACC", "#4D68D7", "#5775E1", "#6282EA", "#6C8EF1", "#779AF7", "#82A5FB", "#8DB0FE", "#98B9FF", "#A3C2FF", "#AEC9FD", "#B8D0F9", "#C2D5F4", "#CCD9EE", "#D5DBE6", "#DDDDDD", "#E5D8D1", "#ECD3C5", "#F1CCB9", "#F5C4AD", "#F7BBA0", "#F7B194", "#F7A687", "#F49A7B", "#F18D6F", "#EC7F63", "#E57058", "#DE604D", "#D55042", "#CB3E38", "#C0282F", "#B40426")
+  
+  discrete_cm <- function(count) {
+    
+    c = 0
+    if(is.numeric(count) & length(count) == 1) {
+      c = count  
+    }
+    
+    if(length(count) > 1) {
+      c = length(count)
+    }
+    
+    colors <- colormap[round(seq(1, length(colormap), length.out = c))]
+    return(colors)
+  }
+  
+  # To use for fills, add
+  # scale_fill_manual(values=colormap)
+
+  # To use for line and point colors, add
+  # scale_colour_manual(values=colormap)
+
+```
+
 
 Filter just one half of the symmetric (regarding to AUC) data
 ```{r}
@@ -54,6 +133,48 @@ Filter just one half of the symmetric (regarding to AUC) data
   cutted[which(cutted$criteria == 'simulation_quality_best'),]$criteria_name <- 'simulation quality'
   cutted[which(cutted$criteria == 'real_vs_simulated_worst'),]$criteria_name <- 'real vs. sim. (bad)'
 ```
+
+```{r write_auc_latex_tables}
+  temp_1 <- data.frame(c = cutted$classifier_name, s = cutted$criteria_name, n = cutted$n_gram_size, 
+                    t = cutted$frequency_threshold, l = cutted$smoothing_value, auc = round(cutted$auc, 2))
+  data = c()
+  for (size in 1:8) {
+    temp_2 <- temp_1[which(temp_1$n == size), ]
+    
+    data[[size]] <- dcast(temp_2, t + s + c +n ~ l, value.var = "auc")
+  }
+  
+  auc_cols = 5:7
+  latex_table <-  cbind(data[[1]][,-4], data[[2]][,5:7], data[[3]][,auc_cols], data[[4]][,auc_cols], data[[5]][,auc_cols], data[[6]][,auc_cols], data[[7]][,auc_cols], data[[8]][,auc_cols])
+  latex_table$c <- revalue(latex_table$c, c("cosine"="cos", "jensen"="j", "mean kullback leibler"="mkl", "rank order"="ro"))
+  latex_table[is.na(latex_table)] <- "" # replace NA (rank order has no AUC values for 2 of 3 smoothing values) by empty string ("")
+  
+  # Dateinamen zusammenbauen
+  file_name <- '/home/stefan/git/diss-dokument/cued/Tables/SimEval/cross_validation_results-auc.tex'
+  fileConn<-file(file_name)
+  
+  value_rows <- paste(rep("r", 3*8), collapse = "")
+  lines <- c()
+  lines <- append(lines, sprintf("\\begin{tabular}{@{}ccc%s@{}} \\toprule", value_rows)) # begin tabular
+  lines <- append(lines, " &&&  \\multicolumn{24}{c}{$n$} \\\\ \\cmidrule(l){4-27}") # just the column name "n"
+  lines <- append(lines, " &&& \\multicolumn{3}{c}{1} & \\multicolumn{3}{c}{2} & \\multicolumn{3}{c}{3} & \\multicolumn{3}{c}{4} & \\multicolumn{3}{c}{5} & \\multicolumn{3}{c}{6} & \\multicolumn{3}{c}{7} & \\multicolumn{3}{c}{8} \\\\ \\cmidrule(lr){4-6} \\cmidrule(lr){7-9} \\cmidrule(lr){10-12} \\cmidrule(lr){13-15} \\cmidrule(lr){16-18} \\cmidrule(lr){19-21} \\cmidrule(lr){22-24} \\cmidrule(l){25-27}") # first header line with the values for n (each n spans 3 cols)
+  # the single lamba columns
+  lines <- append(lines,  sprintf(" $t$ & $c$ & $d$ & %s \\\\ \\midrule", paste(rep("$\\las$ & $\\lam$ & $\\lal$", 8), collapse = " & ")))
+  
+  for(r in 1:nrow(latex_table)) {
+    
+    df_args <- c(latex_table[r,], sep=" & ")
+    line <- do.call(paste, df_args)
+    line <- paste(c("  ", line, " \\\\"), collapse = "")
+    lines <- append(lines, line)
+  }
+  lines <- append(lines, "\\bottomrule \n\\end{tabular}")
+  
+  writeLines(lines, fileConn)
+  close(fileConn)
+
+```
+
 
 
 # Overview #
@@ -97,7 +218,8 @@ Median: `r median(cutted$auc)`
 
 ```{r}
   ggplot(cutted, aes(x=criteria_name, y=auc, color=classifier_name)) + geom_point() +
-  theme(axis.text.x = element_text(angle=90))
+  theme(axis.text.x = element_text(angle=90)) +
+  scale_colour_manual(values = discrete_cm(unique(cutted$classifier_name)))
 ```
 
 ## Rank Order ##
@@ -107,7 +229,8 @@ Median: `r median(cutted$auc)`
 ```{r}
   ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(n_gram_size))) +
   geom_point() +
-  theme(axis.text.x = element_text(angle=90))
+  theme(axis.text.x = element_text(angle=90)) +
+  scale_colour_manual(values = discrete_cm(unique(cutted$n_gram_size)))
 ```
 
 ### AUC in dependency of frequency threshold and criteria ###
@@ -115,7 +238,8 @@ Median: `r median(cutted$auc)`
 ```{r}
   ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(frequency_threshold))) +
   geom_point() +
-  theme(axis.text.x = element_text(angle=90))
+  theme(axis.text.x = element_text(angle=90)) +
+  scale_colour_manual(values = discrete_cm(unique(cutted$frequency_threshold)))
 ```
 
 ### AUC in dependency of frequency threshold and criteria ###
@@ -123,7 +247,8 @@ Median: `r median(cutted$auc)`
 ```{r}
   ggplot(cutted[which(cutted$classifier_name == 'rank order'),], aes(x=criteria_name, y=auc, color=factor(smoothing_value))) +
   geom_point() +
-  theme(axis.text.x = element_text(angle=90))
+  theme(axis.text.x = element_text(angle=90)) +
+  scale_colour_manual(values = discrete_cm(unique(cutted$smoothing_value)))
 ```
 
 # Details about different AUC, Scenarios, Measures #
@@ -145,6 +270,78 @@ Median: `r median(cutted$auc)`
 ```{r results="asis", echo=FALSE}
   stats <- ddply(cutted, c('criteria_name', 'classifier_name'), summarize, mean = mean(auc), median = median(auc), sd = sd(auc), min = min(auc), max=max(auc))
   print(kable(stats, digits = 3))
+```
+
+## Best configuration of each classifier for each criteria
+
+```{r _all_best}
+  # get each best classifier for each criteria
+  cutted.all_best <- ddply(cutted, c("classifier_name", "criteria_name"), function(X) X[X$auc == max(X$auc),])
+  
+  cutted.all_best <- cutted.all_best[ c(-23, -24, -25, -26),] # take only one of the 5 best for rank order in dialogue length (all 5 with auc = 1)
+  
+  kable(cutted.all_best[, c(5, 15, 12, 13, 14, 3)])
+```
+
+```{r all_best_dotplots, cache=TRUE, echo=FALSE}
+  # loop over cutted.all_best and print dotplot from related data in collection documents_result
+  for (cn in unique(cutted.all_best$classifier_name)) {
+    subplots <- c()
+    for (i in 1:nrow(cutted.all_best[which(cutted.all_best$classifier_name == cn), ])) {
+      p_row <- cutted.all_best[i,]
+      q <- sprintf("{classifier_name: '%s', frequency_threshold: %d, n_gram_size: %d, criteria: '%s', smoothing_value: %f}",
+                   p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
+      r <- dbGetQuery(cross_validation, "documents_result", q, 0, 0)
+      
+      title <- sprintf("D: '%s', f_min: %d,n: %d, c: '%s', l: %.2f",
+                   p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
+      
+      plot <- ggplot(r, height=600, width=800, aes(x=positive_class_distance-negative_class_distance, fill=true_class)) +
+        geom_histogram(position = "identity") +
+        ggtitle(
+          bquote(
+            atop(
+              list(AUC==.(round(p_row$auc, 3)), n==.(p_row$n_gram_size), lambda==.(p_row$smoothing_value), f[min]==.(p_row$smoothing_value)),
+              list(D==.(p_row$classifier_name), c==.(p_row$criteria_name))
+              ))) + 
+        theme(plot.title = element_text(size = 10)) +
+        scale_fill_manual(values = discrete_cm(unique(r$true_class)))
+      
+      subplots[[length(subplots) + 1]] <- plot
+    }
+    
+    print(
+        multiplot(plotlist = subplots, cols = 2)
+      )
+  }
+```
+
+
+
+
+
+# Rank Order Results #
+
+## All Rank Order results ##
+
+```{r ro_results, results="asis"}
+  cutted.ro <- cutted[which(cutted$classifier_name == "rank order"),]
+  kable(arrange(cutted.ro[, c(3, 12, 13, 15)], criteria_name, desc(auc)) )
+```
+
+```{r ro_threshold_analysis}
+  cutted.ro.wide <- dcast(cutted.ro, criteria_name + n_gram_size ~ frequency_threshold, value.var="auc")
+  cutted.ro.wide$auc_threshold_diff <- cutted.ro.wide$`1` - cutted.ro.wide$`2`
+  print(sprintf("Times where AUC of threshold 1 better: %s", nrow(cutted.ro.wide[which(cutted.ro.wide$auc_threshold_diff > 0),])))
+  print(sprintf("Times where AUC of threshold 2 better: %s", nrow(cutted.ro.wide[which(cutted.ro.wide$auc_threshold_diff < 0),])))
+  print(sprintf("Times where AUC of threshold 1 and 2 are equal: %s", nrow(cutted.ro.wide[which(cutted.ro.wide$auc_threshold_diff == 0),])))
+```
+
+# Analysis of smoothing factor's influence in Cosine, Jensen and Mean Kullback-Leibler #
+
+```{r sf_selection}
+  cutted.probmeas <- cutted[which(cutted$classifier_name != "rank order"), ] # rows of probability distirbution based measures
+  cutted.probmeas.wide <- dcast(cutted.probmeas, criteria_name + n_gram_size + frequency_threshold ~ smoothing_value, value.var = "auc")
 ```
 
 
@@ -172,8 +369,9 @@ Get scenatios with AUC = 1.
     title <- sprintf("classifier_name: '%s', frequency_threshold: %d,\n n_gram_size: %d, criteria: '%s', smoothing_value: %.2f",
                  p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
     print(ggplot(r, aes(x=positive_class_distance-negative_class_distance, fill=true_class)) +
-    geom_dotplot(dotsize = 0.75) + 
-    ggtitle(title))
+      geom_dotplot(dotsize = 0.75) + 
+      ggtitle(title) + 
+      scale_fill_manual(values = discrete_cm(unique(r$true_class))))
   }
 ```
 
