@@ -1,8 +1,8 @@
 ---
 title: "AUC Analysis"
 author: "Stefan Hillmann"
-date: "6. Oktober 2015"
-output: html_document
+date: "6\\. Oktober 2015"
+output: pdf_document
 ---
 
 
@@ -27,39 +27,20 @@ output: html_document
   # then plot 1 will go in the upper left, 2 will go in the upper right, and
   # 3 will go all the way across the bottom.
   #
-  multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL, title="") {
     library(grid)
+    library(gridExtra)
   
     # Make a list from the ... arguments and plotlist
     plots <- c(list(...), plotlist)
-  
+    
     numPlots = length(plots)
   
-    # If layout is NULL, then use 'cols' to determine layout
-    if (is.null(layout)) {
-      # Make the panel
-      # ncol: Number of columns of plots
-      # nrow: Number of rows needed, calculated from # of cols
-      layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                      ncol = cols, nrow = ceiling(numPlots/cols))
-    }
-  
-   if (numPlots==1) {
+    if (numPlots==1) {
       print(plots[[1]])
   
     } else {
-      # Set up the page
-      grid.newpage()
-      pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-  
-      # Make each plot, in the correct location
-      for (i in 1:numPlots) {
-        # Get the i,j matrix positions of the regions that contain this subplot
-        matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-  
-        print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                        layout.pos.col = matchidx$col))
-      }
+      do.call("grid.arrange", c(plots, ncol=cols, nrow=ceiling(numPlots/cols), top=title))
     }
   }
 ```
@@ -283,39 +264,37 @@ Median: `r median(cutted$auc)`
   kable(cutted.all_best[, c(5, 15, 12, 13, 14, 3)])
 ```
 
-```{r all_best_dotplots, cache=TRUE, echo=FALSE}
-  # loop over cutted.all_best and print dotplot from related data in collection documents_result
-  for (cn in unique(cutted.all_best$classifier_name)) {
-    subplots <- c()
-    for (i in 1:nrow(cutted.all_best[which(cutted.all_best$classifier_name == cn), ])) {
+
+
+```{r all_best_histo_plots, cache=TRUE, echo=FALSE, fig.height=8.77, fig.width=6.05}
+  doc_results <- NULL
+  for (i in 1:nrow(cutted.all_best)) {
       p_row <- cutted.all_best[i,]
       q <- sprintf("{classifier_name: '%s', frequency_threshold: %d, n_gram_size: %d, criteria: '%s', smoothing_value: %f}",
                    p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
       r <- dbGetQuery(cross_validation, "documents_result", q, 0, 0)
       
-      title <- sprintf("D: '%s', f_min: %d,n: %d, c: '%s', l: %.2f",
-                   p_row$classifier_name, p_row$frequency_threshold, p_row$n_gram_size, p_row$criteria, p_row$smoothing_value)
+      r$criteria_name <- p_row$criteria_name
+      r$auc <- p_row$auc
       
-      plot <- ggplot(r, height=600, width=800, aes(x=positive_class_distance-negative_class_distance, fill=true_class)) +
-        geom_histogram(position = "identity") +
-        ggtitle(
-          bquote(
-            atop(
-              list(AUC==.(round(p_row$auc, 3)), n==.(p_row$n_gram_size), lambda==.(p_row$smoothing_value), f[min]==.(p_row$smoothing_value)),
-              list(D==.(p_row$classifier_name), c==.(p_row$criteria_name))
-              ))) + 
-        theme(plot.title = element_text(size = 10)) +
-        scale_fill_manual(values = discrete_cm(unique(r$true_class)))
-      
-      subplots[[length(subplots) + 1]] <- plot
-    }
-    
-    print(
-        multiplot(plotlist = subplots, cols = 2)
-      )
+      ifelse(is.null(doc_results), doc_results <- r, doc_results <- rbind(doc_results, r))
   }
-```
+      
+  for(cn in unique(doc_results$classifier_name)) {
+    cn_results <- doc_results[which(doc_results$classifier_name == cn), ]
+    
+    plot <- ggplot(cn_results, aes(x=positive_class_distance-negative_class_distance, fill=true_class)) +
+      geom_histogram(position = "identity", alpha = 0.5) +
+      ggtitle(cn) +
+      xlab("score") +
+      theme(plot.title = element_text(size = 10)) +
+      scale_fill_manual(values = discrete_cm(unique(doc_results$true_class)), name="True Class") +
+      facet_wrap( ~ criteria_name, ncol = 2, scales = "free")
+  
+      print(plot)
+  }
 
+```
 
 
 
@@ -358,7 +337,7 @@ Get scenatios with AUC = 1.
     #dbGetQuery(cross_validation, "performance", "{auc: 1}", 0, 0)
 ```
 
-```{r auc_dot_plots, cache=TRUE, echo=FALSE}
+```{r auc__plots, cache=TRUE, echo=FALSE}
   # loop over the entries and plot the related data from document_results
   for (i in 1:nrow(p)) {
     p_row <- p[i,]
