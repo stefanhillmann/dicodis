@@ -1,11 +1,7 @@
-from duplicity.pexpect import searcher_re
-from re import search
-
 __author__ = 'Stefan Hillmann'
 
 import unittest
-from cross_validation import SingleTestResult, ResultAssessor, SummarizedTestResults
-import cross_validation as cv
+from common.analyse.cross_validation import SingleTestResult
 
 import common.measuring.measures as m
 from common.dialog_document.document import Document

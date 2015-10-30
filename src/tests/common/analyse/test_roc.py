@@ -5,7 +5,7 @@ Created on Tue Jul 23 11:32:00 2015
 """
 
 import unittest
-import roc
+import common.analyse.roc
 from common.util.names import Class
 
 class TestROC(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestROC(unittest.TestCase):
         true_classes = {'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
                         'e': Class.NEGATIVE}
 
-        roc_points = roc.get_roc_points(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
+        roc_points = common.analyse.roc.get_roc_points(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
 
         fp_rate = roc_points['fp_rate']
         tp_rate = roc_points['tp_rate']
@@ -48,7 +48,7 @@ class TestROC(unittest.TestCase):
         true_classes = {'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
                         'e': Class.NEGATIVE}
 
-        auc = roc.get_auc(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
+        auc = common.analyse.roc.get_auc(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
 
         self.assertEqual(auc, 0.5)
 

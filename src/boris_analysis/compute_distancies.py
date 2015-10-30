@@ -7,6 +7,7 @@ from common.ngram import model_generator as mg
 from common.corpora_distance import distance as d
 
 import common.util.persistence as db
+import common.util.rank as ru
 
 import ConfigParser
 
@@ -74,6 +75,9 @@ def generate_n_gram_model(dialog_list, n, threshold):
     return model
 
 
+
+
+
 distances_list = list()
 for data_set_name in corpora_pairs.keys():
     print 'Computing distances for {0}.'.format(data_set_name)
@@ -87,6 +91,8 @@ for data_set_name in corpora_pairs.keys():
 
         measure = d.get_distance_calculator(con.classifier)
         distance = measure.compute_distance(c1_model, c2_model, con.smoothing_value)
+
+        norm_rank_order_distance = rank_order_normalized_distance(c1_model, c2_model, distance)
 
         db_distance = {'data_set': data_set_name, 'distance': distance, 'evaluation_id': evaluation_id}
         db_distance.update(con.__dict__)

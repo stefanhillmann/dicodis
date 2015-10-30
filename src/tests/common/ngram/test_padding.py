@@ -5,7 +5,7 @@ Created on Tue Jul 24 13:13:00 2015
 """
 
 import unittest
-import cached_pads as cp
+import common.ngram.cached_pads as cp
 
 class TestPadding(unittest.TestCase):
 
