@@ -1,0 +1,425 @@
+---
+title: "Analysis of Distance Measures"
+author: "Stefan Hillmann"
+date: "23. September 2015"
+output:
+  html_document:
+    fig_caption: yes
+---
+
+Requiered R packages
+====================
+
+```{r}
+library(RMongo)
+library(rmongodb)
+library(ggplot2)
+library(plyr)
+library(reshape2)
+library(scatterplot3d)
+library(knitr)
+```
+
+Functions
+=========
+
+## Area Under the Curve for a Sceanrio ##
+
+
+
+
+
+Classifier Performance
+======================
+
+## Variables and Hyphothesis ##
+
+explanatory variables:
+
+* distance measure $D$
+    + cosine distance $D_C$
+    + jensen divergency $D_J$
+    + mean kullbak leibler divergency $D_M$
+    + rank oder disance $D_R$
+* n-garm size $n$
+    + $n \in \{1, \ldots, 8\}$ 
+* smoothing valzue $\lambda$
+    + $\lambda_s = 0.05$
+    + $\lambda_m = 0.25$
+    + $\lambda_s = 0.5$
+* frequency threshold $t$ (only n-grams with higher frequency are used)
+    + $t_0 = 0$ 
+    + $t_1 = 1$
+* criteria $c$
+
+response variable:
+
+* f-measure $f$
+
+Get the performance results (_pr_) for each classifier
+
+```{r}
+cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+pr.C <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "cosine"}', 0, 0)
+pr.J <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "jensen"}', 0, 0)
+pr.M <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "mean kullback leibler"}', 0, 0)
+pr.R <- dbGetQuery(cross_validation, "performance", '{"classifier_name": "rank order"}', 0, 0)
+```
+
+### Overview on the data ###
+
+Set binwidth
+```{r}
+bw = 0.02
+```
+
+
+#### Cosine Measure ####
+
+```{r}
+ggplot(pr.C, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth = bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Jensen divergence ####
+
+```{r}
+ggplot(pr.J, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Mean Kullback Leibler ####
+
+```{r}
+ggplot(pr.M, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+#### Rank Order ####
+
+```{r}
+ggplot(pr.R, aes(x=f_measure)) + 
+    geom_histogram(aes(y=..density..), binwidth=bw, colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+
+### Influence of $t$ ###
+
+#### Difference in $f$ ####
+
+Compute the difference of $f(D, n, \lambda, c|t_0) - f(D, n, \lambda, c|t_0)$.
+In other words, compute the change in $f$ when $t$ varies (ceteris paribus).
+
+```{r}
+  cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+  pr.complete <- dbGetQuery(cross_validation, "performance", '{}', 0, 0)
+  f_by_t <- dcast(pr.complete, classifier_name + criteria + n_gram_size + smoothing_value ~ frequency_threshold, value.var = "f_measure")
+  f_by_t$f_diff <- abs(f_by_t$`1` - f_by_t$`2`)
+```
+
+
+Histogram of $f(D, n, \lambda, c|t_0) - f(D, n, \lambda, c|t_0)$ (f_diff).
+
+```{r fig.cap="Histogram of f_diff. There not just zero values but a lot between 0 and 0.25 (and even larger)"}
+ggplot(f_by_t, aes(x=f_diff)) + 
+    geom_histogram(aes(y=..density..),  colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")
+```
+
+
+```{r fig.cap="3D plot which shows the dependency between f_1 and f_2 (f-values for t=1 and t=2) and the resulting difference. The plot shows only data where both f values are >= 0.8"}
+  large_f <- f_by_t[which(f_by_t$`1` > 0.8 & f_by_t$`2` > 0.8),]
+  scatterplot3d(large_f$`1`, large_f$`2`, large_f$f_diff, type = "h")
+```
+
+
+## 10 best combinations for each Classifier ##
+```{r}
+  n_best = 3
+```
+
+### Cosine ###
+
+```{r}
+  best.C <- arrange(pr.C, desc(f_measure))
+  best.C <- best.C[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.C)
+```
+
+#### Best n for each criteria ####
+
+```{r results='asis'}
+  for(c_name in sort(unique(pr.C$criteria))) {
+    print(kable(arrange(pr.C[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)], caption = "Cosine"))
+  }
+```
+
+### Jensen ###
+
+```{r}
+  best.J <- arrange(pr.J, desc(f_measure))
+  best.J <- best.J[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.J)
+```
+
+#### Best n for each criteria ####
+
+```{r results='asis'}
+  for(c_name in sort(unique(pr.J$criteria))) {
+    print(kable(arrange(pr.J[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+### Mean Kullback Leibler ###
+
+```{r}
+  best.M <- arrange(pr.M, desc(f_measure))
+  best.M <- best.M[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.M)
+```
+
+#### Best n for each criteria ####
+
+```{r results='asis'}
+  for(c_name in sort(unique(pr.M$criteria))) {
+    print(kable(arrange(pr.M[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+### Rank Order ###
+
+```{r}
+  best.R <- arrange(pr.R, desc(f_measure))
+  best.R <- best.R[1:10, c(2, 4, 7, 11, 12, 13)]
+  kable(best.R)
+```
+
+#### Best n for each criteria ####
+
+```{r results='asis'}
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.R[which(pr.C$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+## Worst n for each criteria --- Independent from classifier ##
+
+```{r results='asis'}
+  n_best <- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+## Best n for each criteria --- Independent from classifier ##
+
+```{r results='asis'}
+  n_best <- 5
+  for(c_name in sort(unique(pr.R$criteria))) {
+    print(kable(arrange(pr.complete[which(pr.complete$criteria == c_name),], desc(f_measure))[1:n_best, c(2, 4, 7, 11, 12, 13)]))
+  }
+```
+
+
+## Distribution of f-measure ##
+
+### Distribution of all f-values ###
+
+```{r}
+    ggplot(pr.complete, aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour="black", fill="white") +
+      geom_density(alpha=.2, fill="#FF6666")
+```
+
+### Distribution of all f-values WITHOUT rank order ###
+
+```{r}
+    ggplot(pr.complete[which(pr.complete$classifier_name != 'rank order'),], aes(x=f_measure)) + 
+      geom_histogram(aes(y=..density..), binwidth = 0.01, colour="black", fill="white") +
+      geom_density(alpha=.2, fill="#FF6666")
+```
+
+Much less zero values, but the shape is still the same.
+
+## n best for combined performance ##
+
+* Compute for the combined f-measure (e.g., criteria long\_interactions and short\_interaction ) from TP, TN, FP, and FN (according to Forman 2010)
+* analys what are the best combinations
+
+### Compute combined f-measure ###
+
+```{r}
+    fmeasure <- function(tp, fp, fn) {
+      f = (2 * tp) / ((2 * tp) + fp + fn)
+      return(f)
+    }
+  
+  # check if function f_measure works correct (or at least as the python version)
+  # f_diff_test <- pr.complete$f_measure - fmeasure(pr.complete$true_positives, pr.complete$false_positives, pr.complete$false_negatives)
+  # table(f_diff_test) # f_diff_test should contain only zeros!
+```
+
+```{r}
+  # juged_bad and juged_good
+  juged.data <- pr.complete[which(pr.complete$criteria %in% c('juged_bad', 'juged_good')), ]
+  interact_length.data <- pr.complete[which(pr.complete$criteria %in% c('short_interactions', 'long_interactions')), ]
+  real_simulated.data <- pr.complete[which(pr.complete$criteria %in% c('real', 'simulated')), ]
+  success.data <- pr.complete[which(pr.complete$criteria %in% c('task_failed', 'task_successful')), ]
+  word_accuracy.data <- pr.complete[which(pr.complete$criteria %in% c('word_accuracy_100', 'word_accuracy_60')), ]
+  simulation_quality.data <- pr.complete[which(pr.complete$criteria %in% c('simulation_quality_best', 'simulation_quality_worst')), ]
+  real_vs_worst_sim.data <- pr.complete[which(pr.complete$criteria %in% c('real_vs_simulated_worst', 'simulated_worst_vs_real')), ]
+  
+  # check if the data split is complete and correct (compair count and selected row sums)
+  check.split <- rbind(juged.data, interact_length.data, real_simulated.data, success.data, word_accuracy.data, simulation_quality.data, real_vs_worst_sim.data)
+  if (nrow(pr.complete) != nrow(check.split)) stop('Error in splitted data.')
+  if (sum(pr.complete$f_measure) != sum(check.split$f_measure)) stop('Error in splitted data.')
+  if (mean(pr.complete$f_measure) != mean(check.split$f_measure)) stop('Error in splitted data.')
+  if (median(pr.complete$f_measure) != median(check.split$f_measure)) stop('Error in splitted data.')
+  
+  
+  # equal: classifier_name,  n_gram_size, frequency_threshold, smoothing_value
+  # different: criteria
+  combined_f_measure <- function(criteria.data) {
+    # find all rows with equal parameters and sum tp, pf, and fn
+    comb <- ddply(criteria.data,
+          c('n_gram_size', 'classifier_name', 'frequency_threshold', 'smoothing_value'),
+          summarise,
+          tp = sum(true_positives),
+          fp = sum(false_positives),
+          fn = sum(false_negatives))
+    # compute f measure
+    comb$f_measure <- fmeasure(tp = comb$tp, fp = comb$fp, fn = comb$fn)
+    
+    return(comb)
+  }
+  
+  juged.comb <- combined_f_measure(juged.data)
+  interact_length.comb <- combined_f_measure(interact_length.data)
+  real_simulated.comb <- combined_f_measure(real_simulated.data)
+  success.comb <- combined_f_measure(success.data)
+  word_accuracy.comb <- combined_f_measure(word_accuracy.data)
+  simulation_quality.comb <- combined_f_measure(simulation_quality.data)
+  real_vs_worst_sim.comb <- combined_f_measure(real_vs_worst_sim.data)
+```
+
+
+```{r results='asis'}
+  n_best <- 5
+  print(kable( arrange(juged.comb, desc(f_measure))[1:n_best,], caption = 'Judgement'))
+  print(kable( arrange(interact_length.comb, desc(f_measure))[1:n_best,], caption = 'Dialogue lenght'))
+  print(kable( arrange(real_simulated.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and simulation)'))
+  print(kable( arrange(success.comb, desc(f_measure))[1:n_best,], caption = 'Task success'))
+  print(kable( arrange(word_accuracy.comb, desc(f_measure))[1:n_best,], caption = 'Word accuracy'))
+  print(kable( arrange(simulation_quality.comb, desc(f_measure))[1:n_best,], caption = 'Simulation quality'))
+  print(kable( arrange(real_vs_worst_sim.comb, desc(f_measure))[1:n_best,], caption = 'Source of dialogues (real and worst simulation)'))
+```
+
+
+## Area Under the Curve (AUC) ##
+
+```{r}
+  compute_auc <- function(classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value) {
+    
+    db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+    
+    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                     classifier_name, frequency_threshold, n_gram_size, criteria, smoothing_value)
+    
+    print(query)
+    
+    sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
+    
+    roc <- roc(sceanrio$true_class,
+               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
+               levels = c('positive', 'negative'))
+    
+    dbDisconnect(db_connection)
+    
+    return(roc$auc)
+    
+  }
+  
+  compute_auc_2 <- function(d, db_connection) {
+    
+    query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                    d[4], as.numeric(d[12]), as.numeric(d[11]), d[2], as.numeric(d[13]))
+    
+    query <- mongo.bson.from.JSON(query)
+    
+    cursor <- mongo.find(db_connection, "classification_cross_validation.documents_result", query, limit=0L)
+    
+    sceanrio <- data.frame(stringsAsFactors = FALSE)
+    while (mongo.cursor.next(cursor)) {
+      tmp <- mongo.bson.to.list(mongo.cursor.value(cursor))
+      tmp.df <- as.data.frame(t(unlist(tmp)), stringsAsFactors = F)
+      sceanrio <- rbind.fill(sceanrio, tmp.df)
+    }
+    mongo.cursor.destroy(cursor)
+    
+    roc <- roc(sceanrio$true_class,
+              as.numeric(sceanrio$positive_class_distance) - as.numeric(sceanrio$negative_class_distance),
+              levels = c('positive', 'negative'))
+    
+    return(roc$auc)
+    
+  }
+  
+  compute_auc_3 <- function(d) {
+    
+   query <- sprintf('{"classifier_name": "%s", "frequency_threshold": %d, "n_gram_size": %d, "criteria": "%s", "smoothing_value": %f}',
+                    d[4], as.numeric(d[12]), as.numeric(d[11]), d[2], as.numeric(d[13]))
+    
+   db_connection <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+    
+   sceanrio <- dbGetQuery(db_connection, "documents_result", query, 0, 0)
+    
+   roc <- roc(sceanrio$true_class,
+               sceanrio$positive_class_distance - sceanrio$negative_class_distance,
+               levels = c('positive', 'negative'))
+    
+   dbDisconnect(db_connection)
+    
+   return(roc$auc)
+    
+  }
+```
+
+
+```{r}
+  
+```
+
+
+
+### Stem-leave plot ($f \ge 0.5$) ###
+Stem-leave plot for each distance measure used as a classifier.
+The plot contains only the values for $f>=0.5$.
+
+
+```{r}
+#  to_file <- FALSE
+# 
+# cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+# classifier <- dbGetDistinct(cross_validation, "performance", key = 'classifier_name')
+# 
+# for (c in classifier) {
+#   print(sprintf("Classifier: %s", c))
+#   query = sprintf('{"classifier_name": "%s", "f_measure": {$gte: 0.5}}', c)
+#   p.c <- dbGetQuery(cross_validation, "performance", query, 0, 0)
+#   if (to_file) {
+#     file_name <- sprintf('stem_leaf_%s.txt', c)
+#     
+#     fileConn<-file(file_name)
+#     # content <- latexTranslate(capture.output(stem(p.c$f_measure)))
+#     content <- capture.output(stem(p.c$f_measure))
+#     writeLines(content, fileConn)
+#     close(fileConn)
+#   } else {
+#     stem(p.c$f_measure)
+#   }
+# }
+```

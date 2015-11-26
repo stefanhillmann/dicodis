@@ -1,11 +1,11 @@
 __author__ = 'stefan'
 
 import common.util.persistence as pe
-from common.analyse import roc
-from common.util.names import Class
 import cross_validation_configuration
 from common.analyse import performance as per
 import ConfigParser
+import pyRserve as pyr
+import numpy as np
 
 config = ConfigParser.ConfigParser()
 config.read('local_config.ini')
@@ -20,26 +20,37 @@ configurations = cross_validation_configuration.getConfigurations()
 dbm = pe.DbManager(host, port, database)
 db = dbm.get_connection()
 
-results = db.document_results
-performance = db.performance
+# Prepare R connection
+rc = pyr.connect()
+rc.voidEval("library(pROC)")
+rc.r.levels = ['positive', 'negative']
+
+
+results = db[config.get('database', 'doc_result_collection')]
+performance = db[config.get('database', 'performance_collection')]
 
 # get criteria from database
 criteria = results.distinct('criteria')
 
 
 def get_auc(data):
-    example_ids = list()
-    positive_probability_dict = dict()
-    true_class_dict = dict()
 
+
+
+
+    predictions = list()
+    true_classes = list()
     for cursor in data:
-        id = cursor['document_id']
-        example_ids.append(id)
-        positive_probability_dict[id] = cursor['positive_class_distance']
-        true_class_dict[id] = cursor['true_class']
+        predictions.append(cursor['positive_class_distance'] - cursor['negative_class_distance'])
+        true_classes.append(cursor['true_class'])
 
-    _auc = roc.get_auc(example_ids, positive_probability_dict, true_class_dict, Class.POSITIVE, Class.NEGATIVE)
-    return _auc
+    rc.r.predictor = np.array(predictions)
+    rc.r.response = np.array(true_classes)
+    rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
+    auc = rc.eval("roc$auc")
+    print(auc[0])
+
+    return auc[0]
 
 
 def get_precision_recall_and_f_measure(evaluation_id, classifier_name, frequency_threshold, n_gram_size, smoothing_value,
@@ -56,7 +67,8 @@ def get_precision_recall_and_f_measure(evaluation_id, classifier_name, frequency
     recall = per.compute_recall(tp, fn)
     f_measure = per.compute_f_measure(tp, fp, fn)
 
-    return {'precision': precision, 'recall': recall, 'f_measure': f_measure}
+    return {'precision': precision, 'recall': recall, 'f_measure': f_measure, 'true_positives': tp,
+            'false_positives': fp, 'false_negatives': fn}
 
 for cri in criteria:
     print 'Computing performance results for criteria {0}'.format(cri)
@@ -72,6 +84,7 @@ for cri in criteria:
 
         query_results = results.find(query)
         auc = get_auc(query_results)
+
         classificator_performance = {'evaluation_id': evaluation_id,
                                      'classifier_name': conf.classifier,
                                      'frequency_threshold': conf.frequency_threshold,
@@ -79,6 +92,7 @@ for cri in criteria:
                                      'smoothing_value': conf.smoothing_value,
                                      'criteria': cri,
                                      'auc': auc}
+
         # add precision, recall and f-value to performance
         p_r_f = get_precision_recall_and_f_measure(evaluation_id, conf.classifier, conf.frequency_threshold, conf.size,
                                                    conf.smoothing_value, cri, results)

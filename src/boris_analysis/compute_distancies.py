@@ -1,12 +1,16 @@
 import logging
+from numpy.core.numeric import NaN
 
 from boris_analysis import cross_validation_configuration, dialogs
 from common.dialog_document.dialog_reader import DialogsReader
 from common.util.names import Class
 from common.ngram import model_generator as mg
 from common.corpora_distance import distance as d
+from common.corpora_distance import normalized_rank_order_distance as nd
+import common.measuring.measures
 
 import common.util.persistence as db
+import common.util.rank as ru
 
 import ConfigParser
 
@@ -51,7 +55,7 @@ corpora_pairs = {
     'success': (file_turns_succeeded, file_turns_failed),
     'simulation_quality': (file_best_simulation, file_worst_simulation),
     'dialogue_length': (file_shortest_interaction, file_longest_interaction),
-    'word_accuracy': (file_wa_100, file_wa_100),
+    'word_accuracy': (file_wa_100, file_wa_60),
     'user_judgement': (file_judged_good, file_judged_bad),
     'real_vs_worst_sim': (file_experiment, file_worst_simulation),
     'real_vs_best_sim': (file_experiment, file_best_simulation)
@@ -88,7 +92,12 @@ for data_set_name in corpora_pairs.keys():
         measure = d.get_distance_calculator(con.classifier)
         distance = measure.compute_distance(c1_model, c2_model, con.smoothing_value)
 
-        db_distance = {'data_set': data_set_name, 'distance': distance, 'evaluation_id': evaluation_id}
+        norm_rank_order_distance = NaN
+        if con.classifier == common.measuring.measures.MeasureName.RANK_ORDER:
+            norm_rank_order_distance = nd.rank_order_normalized_distance(c1_model, c2_model, distance)
+
+        db_distance = {'data_set': data_set_name, 'distance': distance,
+                       'norm_rank_order_distance': norm_rank_order_distance, 'evaluation_id': evaluation_id}
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 

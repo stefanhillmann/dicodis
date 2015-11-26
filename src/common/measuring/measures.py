@@ -94,17 +94,18 @@ def jensen_distance(p, q):
 
 def rank_order_distance(x, y):
     """
-    Computes the Jensen Distance between n-gram vectors p and q.
-    p and q have to contain n-grams an must each ordered ascending by n-gram frequencies.
+    Computes the Rank Order Distance between the rank models x and y.
+    x and y have to contain n-grams and their related ranks (which are usually
+    not equal to the frequency of the n-grams!).
     """
-    module_logger.debug('Computing rank order distance for p = %s and q = %s', x, y)
+    module_logger.debug('Computing rank order distance for x = %s and y = %s', x, y)
 
     distance = 0
     min_rank = min(min(x.values()), min(y.values()))  # get minimum rank from both models (probably always 1)
     max_rank = max(max(x.values()), max(y.values()))  # get the maximum rank from both models
 
     # The default difference is used, if a n-gram is only part of one list.
-    # The default distance should me greater than any other distance. -> +1
+    # The default distance should be greater than any other distance. -> +1
     default_difference = max_rank - min_rank + 1
 
     # collect all unique n_grams

@@ -37,6 +37,8 @@ criteria_to_data_set = {"juged_bad": 'user_judgement',
                         "short_interactions": 'dialogue_length',
                         "real": 'real_vs_best_sim',
                         "simulated": 'real_vs_best_sim',
+                        "simulated_worst_vs_real": 'real_vs_worst_sim',
+                        "real_vs_simulated_worst": 'real_vs_worst_sim',
                         "simulation_quality_best": 'simulation_quality',
                         "simulation_quality_worst": 'simulation_quality',
                         "task_failed": 'success',
@@ -54,13 +56,26 @@ def get_distance(data_set, n, classifier, ft, sv):
     return d['distance']
 
 
-def get_f_measure(criteria, n, classifier, ft, sv):
+def get_performance_value(criteria, n, classifier, ft, sv, value_name):
     query = {'evaluation_id': evaluation_id, 'frequency_threshold': ft, 'smoothing_value': sv,
              'classifier_name': classifier, 'n_gram_size': n, 'criteria': criteria}
 
-    f = db_performance.find_one(query, {'f_measure': 1})
+    f = db_performance.find_one(query, {value_name: 1})
 
-    return f['f_measure']
+    return f[value_name]
+
+
+def get_f_measure(criteria, n, classifier, ft, sv):
+    return get_performance_value(criteria, n, classifier, ft, sv, 'f_measure')
+
+
+def get_precision(criteria, n, classifier, ft, sv):
+    return get_performance_value(criteria, n, classifier, ft, sv, 'precision')
+
+
+def get_recall(criteria, n, classifier, ft, sv):
+    return get_performance_value(criteria, n, classifier, ft, sv, 'recall')
+
 
 results = list()
 for criteria in criteria_to_data_set.keys():
@@ -76,8 +91,11 @@ for criteria in criteria_to_data_set.keys():
 
         distance = get_distance(data_set, n, classifier, ft, sv)
         f_measure = get_f_measure(criteria, n, classifier, ft, sv)
+        precision = get_precision(criteria, n, classifier, ft, sv)
+        recall = get_recall(criteria, n, classifier, ft, sv)
 
-        result = {'criteria': criteria, 'data_set': data_set, 'distance': distance, 'f_measure': f_measure}
+        result = {'criteria': criteria, 'data_set': data_set, 'distance': distance, 'f_measure': f_measure,
+                  'precision': precision, 'recall': recall}
         result.update(c.__dict__)
 
         results.append(result)

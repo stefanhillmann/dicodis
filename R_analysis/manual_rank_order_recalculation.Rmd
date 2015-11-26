@@ -1,0 +1,90 @@
+---
+title: "Untitled"
+author: "Stefan Hillmann"
+date: "24\\. November 2015"
+output: pdf_document
+---
+
+```{r libraries, echo=FALSE}
+  library(RMongo)
+  library(ggplot2)
+  library(plyr)
+  library(reshape2)
+  library(knitr)
+```
+
+```{r data_from_database, cache=TRUE, echo=FALSE}
+  cross_validation <- mongoDbConnect("classification_cross_validation", "localhost", 27017)
+  ngm.all <- dbGetQuery(cross_validation, "corpus_ngram_model", "", 0, 0)
+  ngm.all <- ngm.all[,-2] # remove column X_id
+  ngm.all <- rename(ngm.all, c("freq"="n_gram_freq"))
+```
+
+```{r compute_rank_order_distance, echo=FALSE}
+  use_n = c(1,2,3,4,5,6,7,8)
+  use_f_min = 2
+  corpus.x = "interaction long"
+  corpus.y = "interaction short"
+  
+  k = 300 # considered number of ranked n-grams
+  
+  # get n-gram model for good and bad simulation (for certain n and f_min)
+  ng_model.x <- subset(ngm.all, corpus == corpus.x & n %in% use_n & f_min == use_f_min, select = c(n_gram, n_gram_freq))
+  ng_model.y <- subset(ngm.all, corpus == corpus.y & n %in% use_n & f_min == use_f_min, select = c(n_gram, n_gram_freq))
+
+  # get unique values of frequencies
+  unique_freqs.x <- data.frame(f = unique(ng_model.x$n_gram_freq))
+  unique_freqs.y <- data.frame(f = unique(ng_model.y$n_gram_freq))
+  
+  # order frequencies from high to low
+  rank_map.x <- arrange(unique_freqs.x, desc(f))
+  rank_map.y <- arrange(unique_freqs.y, desc(f))
+  
+  # add ranks to frequencies
+  rank_map.x$rank <- seq(1,nrow(unique_freqs.x))
+  rank_map.y$rank <- seq(1,nrow(unique_freqs.y))
+  
+  # relate rank to n-gram
+  ng_model.x$rank <- rank_map.x$rank[match(ng_model.x$n_gram_freq, rank_map.x$f)]
+  ng_model.y$rank <- rank_map.y$rank[match(ng_model.y$n_gram_freq, rank_map.y$f)]
+  
+  # select the first k n-grams to be used
+  ng_model.x <- arrange(ng_model.x, rank)[1:k,]
+  ng_model.y <- arrange(ng_model.y, rank)[1:k,]
+
+  # default distance, which i used if a n-gram does not occur in both n-gram models
+  default_distance <- max(ng_model.x$rank, ng_model.y$rank) - min(ng_model.x$rank, ng_model.y$rank) + 1
+  
+  # merge both n-gram models (all data for a n-gram in one line)
+  distance_model <- merge(ng_model.x, ng_model.y, by = "n_gram", all = TRUE)
+  
+  # compute distance for each n-gram
+  distance_model$distance <- with(distance_model, ifelse(is.na(rank.x) | is.na(rank.y), default_distance, abs(rank.x - rank.y)))
+
+  distance <- sum(distance_model$distance)
+  max_distance = (nrow(ng_model.x) + nrow(ng_model.y)) * default_distance
+
+  
+  # print results
+  print("Total number of n-grams in x and y:")
+  nrow(ng_model.x) + nrow(ng_model.y)
+  
+  print("Number of n-grams which are not in both models:")
+  nrow(subset(distance_model, is.na(rank.x) | is.na(rank.y)))
+  
+  print("Rank Order Distance:")
+  distance
+  
+  print("Normalized Rank Order Distance:")
+  distance / max_distance
+  
+```
+
+```{r distance_model_table}
+  kable(arrange(distance_model, distance))
+```
+
+
+
+
+
