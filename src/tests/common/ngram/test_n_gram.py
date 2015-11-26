@@ -9,6 +9,7 @@ class TestNGram(unittest.TestCase):
 
     def setUp(self):
         self.bi_gram_list = ['_#b', 'b#a', 'a#a', 'a#a', 'a#b', 'b#a', 'a#c', 'c#_']
+        self.tri_gram_list = ['_#_#b', '_#b#a', 'b#a#a', 'a#a#a', 'a#a#b', 'a#b#a', 'b#a#c', 'a#c#_', 'c#_#_']
         self.token_list = ['b', 'a', 'a', 'a', 'b', 'a', 'c']
 
     def test_model_creation(self):
@@ -25,6 +26,20 @@ class TestNGram(unittest.TestCase):
         n_grams = mg.create_n_grams_from_document(document, 2)
 
         self.assertEqual(n_grams, self.bi_gram_list)
+
+    def test_mixed_n_gram_creation(self):
+        document = Document(names.Class.POSITIVE, self.token_list, 'dialog_id')
+        n_grams = mg.create_n_grams_from_document(document, [2, 3])
+        expected_result = list()
+        expected_result.extend(self.bi_gram_list)
+        expected_result.extend(self.tri_gram_list)
+
+        # test if n_grams and expected_result contain the equal set of n-grams
+        self.assertTrue(len(n_grams) is len(expected_result), "Number of elements has to be equal.")  # equal number of elements?
+
+        # all expected elements are in n_grams?
+        for x in expected_result:
+            self.assertTrue(x in n_grams, "{0} is not in generated n-grams.".format(x))
 
     def test_model_synchronization(self):
         # prepare to test models

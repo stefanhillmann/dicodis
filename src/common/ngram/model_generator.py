@@ -16,21 +16,29 @@ module_logger = logging.getLogger('ngram')
 
 
 def create_n_grams_from_document(document, n):
+    sizes = list()
+    if type(n) is list:
+        sizes.extend(n)
+    if type(n) is int:
+        sizes.append(n)
+
     n_grams = []
     tokens = document.content
-    padded_tokens = add_pads(tokens, n)
 
-    for idxTerm in xrange(len(padded_tokens) - (n - 1)):
-            i = idxTerm
-            j = idxTerm + n
+    for size in sizes:
+        padded_tokens = add_pads(tokens, size)
 
-            ngram_parts = []
+        for idxTerm in xrange(len(padded_tokens) - (size - 1)):
+                i = idxTerm
+                j = idxTerm + size
 
-            for k in xrange(i, j):
-                ngram_parts.append(padded_tokens[k])
+                ngram_parts = []
 
-            ngram = '#'.join(ngram_parts)
-            n_grams.append(ngram)
+                for k in xrange(i, j):
+                    ngram_parts.append(padded_tokens[k])
+
+                ngram = '#'.join(ngram_parts)
+                n_grams.append(ngram)
 
     return n_grams
 

@@ -35,9 +35,6 @@ criteria = results.distinct('criteria')
 
 def get_auc(data):
 
-
-
-
     predictions = list()
     true_classes = list()
     for cursor in data:
