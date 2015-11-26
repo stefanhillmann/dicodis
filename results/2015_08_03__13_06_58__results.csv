@@ -1,0 +1,385 @@
+Criteria;Classifier;n;l;Freq. Threshold;TP;FP;TN;FN;Recall;Precision;F-Measure
+simulated_worst_vs_real;cosine;1;0.05;1;549.0;86.0;110.0;1031.0;0.34746835443;0.864566929134;0.495711060948
+simulated_worst_vs_real;cosine;1;0.25;1;350.0;43.0;153.0;1230.0;0.221518987342;0.89058524173;0.354789660416
+simulated_worst_vs_real;cosine;1;0.5;1;126.0;13.0;183.0;1454.0;0.079746835443;0.906474820144;0.146596858639
+simulated_worst_vs_real;cosine;1;0.05;2;421.0;51.0;145.0;1159.0;0.266455696203;0.891949152542;0.410331384016
+simulated_worst_vs_real;cosine;1;0.25;2;205.0;19.0;177.0;1375.0;0.129746835443;0.915178571429;0.227272727273
+simulated_worst_vs_real;cosine;1;0.5;2;68.0;10.0;186.0;1512.0;0.0430379746835;0.871794871795;0.0820265379976
+simulated_worst_vs_real;jensen;1;0.05;1;274.0;34.0;162.0;1306.0;0.173417721519;0.88961038961;0.290254237288
+simulated_worst_vs_real;jensen;1;0.25;1;3.0;0.0;196.0;1577.0;0.00189873417722;1.0;0.00379027163613
+simulated_worst_vs_real;jensen;1;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;1;0.05;2;93.0;17.0;179.0;1487.0;0.0588607594937;0.845454545455;0.110059171598
+simulated_worst_vs_real;jensen;1;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;1;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;1;0.05;1;159.0;31.0;165.0;1421.0;0.100632911392;0.836842105263;0.179661016949
+simulated_worst_vs_real;mean kullback leibler;1;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;1;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;1;0.05;2;39.0;11.0;185.0;1541.0;0.0246835443038;0.78;0.0478527607362
+simulated_worst_vs_real;mean kullback leibler;1;0.25;2;1.0;0.0;196.0;1579.0;0.000632911392405;1.0;0.00126502213789
+simulated_worst_vs_real;mean kullback leibler;1;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;1;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;2;0.05;1;602.0;19.0;177.0;978.0;0.381012658228;0.969404186795;0.547024079964
+simulated_worst_vs_real;cosine;2;0.25;1;132.0;1.0;195.0;1448.0;0.0835443037975;0.992481203008;0.15411558669
+simulated_worst_vs_real;cosine;2;0.5;1;8.0;1.0;195.0;1572.0;0.00506329113924;0.888888888889;0.0100692259283
+simulated_worst_vs_real;cosine;2;0.05;2;175.0;29.0;167.0;1405.0;0.110759493671;0.857843137255;0.196188340807
+simulated_worst_vs_real;cosine;2;0.25;2;21.0;4.0;192.0;1559.0;0.0132911392405;0.84;0.0261682242991
+simulated_worst_vs_real;cosine;2;0.5;2;1.0;0.0;196.0;1579.0;0.000632911392405;1.0;0.00126502213789
+simulated_worst_vs_real;jensen;2;0.05;1;5.0;0.0;196.0;1575.0;0.00316455696203;1.0;0.00630914826498
+simulated_worst_vs_real;jensen;2;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;2;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;2;0.05;2;6.0;0.0;196.0;1574.0;0.00379746835443;1.0;0.00756620428752
+simulated_worst_vs_real;jensen;2;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;2;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;2;0.05;1;8.0;0.0;196.0;1572.0;0.00506329113924;1.0;0.0100755667506
+simulated_worst_vs_real;mean kullback leibler;2;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;2;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;2;0.05;2;11.0;0.0;196.0;1569.0;0.00696202531646;1.0;0.0138277812696
+simulated_worst_vs_real;mean kullback leibler;2;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;2;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;2;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;3;0.05;1;472.0;10.0;186.0;1108.0;0.298734177215;0.979253112033;0.457807953443
+simulated_worst_vs_real;cosine;3;0.25;1;139.0;0.0;196.0;1441.0;0.0879746835443;1.0;0.161721931355
+simulated_worst_vs_real;cosine;3;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;3;0.05;2;273.0;13.0;183.0;1307.0;0.172784810127;0.954545454545;0.292604501608
+simulated_worst_vs_real;cosine;3;0.25;2;1.0;2.0;194.0;1579.0;0.000632911392405;0.333333333333;0.00126342387871
+simulated_worst_vs_real;cosine;3;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;3;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;3;0.05;1;1.0;0.0;196.0;1579.0;0.000632911392405;1.0;0.00126502213789
+simulated_worst_vs_real;mean kullback leibler;3;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;3;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;3;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;3;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;3;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;3;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;4;0.05;1;59.0;9.0;187.0;1521.0;0.0373417721519;0.867647058824;0.0716019417476
+simulated_worst_vs_real;cosine;4;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;4;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;4;0.05;2;85.0;12.0;184.0;1495.0;0.0537974683544;0.876288659794;0.10137149672
+simulated_worst_vs_real;cosine;4;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;4;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;4;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;4;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;4;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;4;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;4;0.05;2;1.0;0.0;196.0;1579.0;0.000632911392405;1.0;0.00126502213789
+simulated_worst_vs_real;mean kullback leibler;4;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;4;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;4;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;5;0.05;1;9.0;0.0;196.0;1571.0;0.00569620253165;1.0;0.0113278791693
+simulated_worst_vs_real;cosine;5;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;5;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;5;0.05;2;90.0;7.0;189.0;1490.0;0.0569620253165;0.927835051546;0.107334525939
+simulated_worst_vs_real;cosine;5;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;5;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;5;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;5;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;5;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;5;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;5;0.05;2;1.0;0.0;196.0;1579.0;0.000632911392405;1.0;0.00126502213789
+simulated_worst_vs_real;mean kullback leibler;5;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;5;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;5;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;6;0.05;1;5.0;0.0;196.0;1575.0;0.00316455696203;1.0;0.00630914826498
+simulated_worst_vs_real;cosine;6;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;6;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;6;0.05;2;115.0;7.0;189.0;1465.0;0.0727848101266;0.94262295082;0.135135135135
+simulated_worst_vs_real;cosine;6;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;6;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;6;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;6;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;6;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;7;0.05;1;97.0;0.0;196.0;1483.0;0.0613924050633;1.0;0.115682766846
+simulated_worst_vs_real;cosine;7;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;7;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;7;0.05;2;99.0;1.0;195.0;1481.0;0.0626582278481;0.99;0.117857142857
+simulated_worst_vs_real;cosine;7;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;7;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;7;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;7;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;7;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;8;0.05;1;81.0;0.0;196.0;1499.0;0.0512658227848;1.0;0.0975316074654
+simulated_worst_vs_real;cosine;8;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;8;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;8;0.05;2;9.0;2.0;194.0;1571.0;0.00569620253165;0.818181818182;0.0113136392206
+simulated_worst_vs_real;cosine;8;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;cosine;8;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;jensen;8;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;mean kullback leibler;8;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.05;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.25;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.5;1;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.05;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.25;2;0.0;0.0;196.0;1580.0;0;0;0
+simulated_worst_vs_real;rank order;8;0.5;2;0.0;0.0;196.0;1580.0;0;0;0
+real_vs_simulated_worst;cosine;1;0.05;1;110.0;1031.0;549.0;86.0;0.561224489796;0.0964066608238;0.16454749439
+real_vs_simulated_worst;cosine;1;0.25;1;153.0;1230.0;350.0;43.0;0.780612244898;0.110629067245;0.193793540215
+real_vs_simulated_worst;cosine;1;0.5;1;183.0;1454.0;126.0;13.0;0.933673469388;0.111789859499;0.199672667758
+real_vs_simulated_worst;cosine;1;0.05;2;145.0;1159.0;421.0;51.0;0.739795918367;0.111196319018;0.193333333333
+real_vs_simulated_worst;cosine;1;0.25;2;177.0;1375.0;205.0;19.0;0.90306122449;0.114046391753;0.202517162471
+real_vs_simulated_worst;cosine;1;0.5;2;186.0;1512.0;68.0;10.0;0.948979591837;0.109540636042;0.196409714889
+real_vs_simulated_worst;jensen;1;0.05;1;162.0;1306.0;274.0;34.0;0.826530612245;0.110354223433;0.194711538462
+real_vs_simulated_worst;jensen;1;0.25;1;196.0;1577.0;3.0;0.0;1.0;0.110547095319;0.199085830371
+real_vs_simulated_worst;jensen;1;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;1;0.05;2;179.0;1487.0;93.0;17.0;0.913265306122;0.107442977191;0.192266380236
+real_vs_simulated_worst;jensen;1;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;1;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;1;0.05;1;165.0;1421.0;159.0;31.0;0.841836734694;0.104035308953;0.185185185185
+real_vs_simulated_worst;mean kullback leibler;1;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;1;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;1;0.05;2;185.0;1541.0;39.0;11.0;0.94387755102;0.10718424102;0.19250780437
+real_vs_simulated_worst;mean kullback leibler;1;0.25;2;196.0;1579.0;1.0;0.0;1.0;0.110422535211;0.198883815322
+real_vs_simulated_worst;mean kullback leibler;1;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;1;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;2;0.05;1;177.0;978.0;602.0;19.0;0.90306122449;0.153246753247;0.262028127313
+real_vs_simulated_worst;cosine;2;0.25;1;195.0;1448.0;132.0;1.0;0.994897959184;0.11868533171;0.21207177814
+real_vs_simulated_worst;cosine;2;0.5;1;195.0;1572.0;8.0;1.0;0.994897959184;0.110356536503;0.198675496689
+real_vs_simulated_worst;cosine;2;0.05;2;167.0;1405.0;175.0;29.0;0.852040816327;0.106234096692;0.188914027149
+real_vs_simulated_worst;cosine;2;0.25;2;192.0;1559.0;21.0;4.0;0.979591836735;0.109651627641;0.197226502311
+real_vs_simulated_worst;cosine;2;0.5;2;196.0;1579.0;1.0;0.0;1.0;0.110422535211;0.198883815322
+real_vs_simulated_worst;jensen;2;0.05;1;196.0;1575.0;5.0;0.0;1.0;0.110671936759;0.199288256228
+real_vs_simulated_worst;jensen;2;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;2;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;2;0.05;2;196.0;1574.0;6.0;0.0;1.0;0.110734463277;0.199389623601
+real_vs_simulated_worst;jensen;2;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;2;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;2;0.05;1;196.0;1572.0;8.0;0.0;1.0;0.110859728507;0.199592668024
+real_vs_simulated_worst;mean kullback leibler;2;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;2;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;2;0.05;2;196.0;1569.0;11.0;0.0;1.0;0.11104815864;0.199898011219
+real_vs_simulated_worst;mean kullback leibler;2;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;2;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;2;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;3;0.05;1;186.0;1108.0;472.0;10.0;0.948979591837;0.143740340031;0.24966442953
+real_vs_simulated_worst;cosine;3;0.25;1;196.0;1441.0;139.0;0.0;1.0;0.119731215638;0.213857064921
+real_vs_simulated_worst;cosine;3;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;3;0.05;2;183.0;1307.0;273.0;13.0;0.933673469388;0.122818791946;0.217081850534
+real_vs_simulated_worst;cosine;3;0.25;2;194.0;1579.0;1.0;2.0;0.989795918367;0.109419063734;0.197054342306
+real_vs_simulated_worst;cosine;3;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;3;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;3;0.05;1;196.0;1579.0;1.0;0.0;1.0;0.110422535211;0.198883815322
+real_vs_simulated_worst;mean kullback leibler;3;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;3;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;3;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;3;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;3;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;3;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;4;0.05;1;187.0;1521.0;59.0;9.0;0.954081632653;0.109484777518;0.196428571429
+real_vs_simulated_worst;cosine;4;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;4;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;4;0.05;2;184.0;1495.0;85.0;12.0;0.938775510204;0.109589041096;0.196266666667
+real_vs_simulated_worst;cosine;4;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;4;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;4;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;4;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;4;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;4;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;4;0.05;2;196.0;1579.0;1.0;0.0;1.0;0.110422535211;0.198883815322
+real_vs_simulated_worst;mean kullback leibler;4;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;4;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;4;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;5;0.05;1;196.0;1571.0;9.0;0.0;1.0;0.110922467459;0.19969434539
+real_vs_simulated_worst;cosine;5;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;5;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;5;0.05;2;189.0;1490.0;90.0;7.0;0.964285714286;0.112567004169;0.2016
+real_vs_simulated_worst;cosine;5;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;5;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;5;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;5;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;5;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;5;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;5;0.05;2;196.0;1579.0;1.0;0.0;1.0;0.110422535211;0.198883815322
+real_vs_simulated_worst;mean kullback leibler;5;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;5;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;5;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;6;0.05;1;196.0;1575.0;5.0;0.0;1.0;0.110671936759;0.199288256228
+real_vs_simulated_worst;cosine;6;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;6;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;6;0.05;2;189.0;1465.0;115.0;7.0;0.964285714286;0.114268440145;0.204324324324
+real_vs_simulated_worst;cosine;6;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;6;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;6;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;6;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;6;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;7;0.05;1;196.0;1483.0;97.0;0.0;1.0;0.116736152472;0.209066666667
+real_vs_simulated_worst;cosine;7;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;7;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;7;0.05;2;195.0;1481.0;99.0;1.0;0.994897959184;0.116348448687;0.208333333333
+real_vs_simulated_worst;cosine;7;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;7;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;7;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;7;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;7;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;8;0.05;1;196.0;1499.0;81.0;0.0;1.0;0.115634218289;0.207297726071
+real_vs_simulated_worst;cosine;8;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;8;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;8;0.05;2;194.0;1571.0;9.0;2.0;0.989795918367;0.109915014164;0.197858235594
+real_vs_simulated_worst;cosine;8;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;cosine;8;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;jensen;8;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;mean kullback leibler;8;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.05;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.25;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.5;1;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.05;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.25;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
+real_vs_simulated_worst;rank order;8;0.5;2;196.0;1580.0;0.0;0.0;1.0;0.11036036036;0.19878296146
