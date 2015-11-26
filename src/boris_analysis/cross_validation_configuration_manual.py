@@ -34,7 +34,39 @@ def getConfigurations():
     configurations = list()
 
     # Rank Order
-    # configurations.append(Configuration(sizes, MeasureName.RANK_ORDER, 1, 0.5))
+    #  f_min = 1
+    configurations.append(Configuration(sizes, MeasureName.RANK_ORDER, 1, 0.5))
+    #  f_min = 2
     configurations.append(Configuration(sizes, MeasureName.RANK_ORDER, 2, 0.5))
+
+    # Cosine
+    #  f_min = 1
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 1, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 1, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 1, 0.5))
+    #  f_min = 2
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 2, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 2, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.COSINE, 2, 0.5))
+
+    # Jensen
+    #  f_min = 1
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 1, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 1, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 1, 0.5))
+    #  f_min = 2
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 2, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 2, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.JENSEN, 2, 0.5))
+
+    # Mean Kull Back Leibler
+    #  f_min = 1
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 1, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 1, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 1, 0.5))
+    #  f_min = 2
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 2, 0.05))
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 2, 0.25))
+    configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 2, 0.5))
 
     return configurations
