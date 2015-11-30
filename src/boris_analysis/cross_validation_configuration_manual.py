@@ -59,7 +59,7 @@ def getConfigurations():
     configurations.append(Configuration(sizes, MeasureName.JENSEN, 2, 0.25))
     configurations.append(Configuration(sizes, MeasureName.JENSEN, 2, 0.5))
 
-    # Mean Kull Back Leibler
+    # Mean Kullback Leibler
     #  f_min = 1
     configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 1, 0.05))
     configurations.append(Configuration(sizes, MeasureName.MEAN_KULLBACK_LEIBLER, 1, 0.25))

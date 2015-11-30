@@ -1,7 +1,7 @@
 import logging
 from numpy.core.numeric import NaN
 
-from boris_analysis import cross_validation_configuration, dialogs
+from boris_analysis import cross_validation_configuration_manual, dialogs
 from common.dialog_document.dialog_reader import DialogsReader
 from common.util.names import Class
 from common.ngram import model_generator as mg
@@ -10,7 +10,7 @@ from common.corpora_distance import normalized_rank_order_distance as nd
 import common.measuring.measures
 
 import common.util.persistence as db
-import common.util.rank as ru
+
 
 import ConfigParser
 
@@ -61,7 +61,7 @@ corpora_pairs = {
     'real_vs_best_sim': (file_experiment, file_best_simulation)
 }
 
-configurations = cross_validation_configuration.getConfigurations()
+configurations = cross_validation_configuration_manual.getConfigurations()
 
 
 def read_dialogs(file_path):
