@@ -70,22 +70,21 @@ for corpus in corpus_to_file.keys():
     corpus_n_grams = list()
 
     # create models for n_gram_size and f_min from current corpus
-    for n_gram_size in n_gram_size_list:
-        for f_min in f_min_list:
-            corpus_model = generate_n_gram_model(corpus_documents, n_gram_size, f_min)
+    for f_min in f_min_list:
+        corpus_model = generate_n_gram_model(corpus_documents, n_gram_size_list, f_min)
 
-            # create database entries
-            for n_gram in corpus_model.keys():
-                db_entry = {
-                    'corpus': corpus,
-                    'n': n_gram_size,
-                    'f_min': f_min,
-                    'n_gram': n_gram,
-                    'freq': corpus_model[n_gram]
-                }
-                db_items.append(db_entry)
+        # create database entries
+        for n_gram in corpus_model.keys():
+            db_entry = {
+                'corpus': corpus,
+                'n': n_gram_size_list,
+                'f_min': f_min,
+                'n_gram': n_gram,
+                'freq': corpus_model[n_gram]
+            }
+            db_items.append(db_entry)
 
-print("Writing {0} n-gram into database...".format(len(db_items)))
+print("Writing {0} n-grams into database...".format(len(db_items)))
 db = dbm.get_connection()
 model_collection = db[corpus_ngram_model]
 model_collection.insert(db_items)
