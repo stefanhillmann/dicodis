@@ -67,6 +67,10 @@ for corpus in corpus_to_file.keys():
 
     dialog_reader = DialogsReader(corpus_to_file[corpus])
     corpus_documents = dialogs.create_dialogs_documents(dialog_reader, id_column_name, Class.POSITIVE)
+
+    # TODO: Only a test!!!
+    # map(lambda d: d.content.pop(0), corpus_documents)
+
     corpus_n_grams = list()
 
     # create models for n_gram_size and f_min from current corpus
