@@ -128,8 +128,9 @@ def validate(corpora_to_be_used):
     pool = Pool(processes=cross_validation_configuration_manual.validation_processes)
     result = pool.map_async(run_validation, jobs)
 
+    jobs_start = time.time()
     # monitor loop
-    last_size = 0
+    last_size = 1
     while True:
         if result.ready():
             break
@@ -139,8 +140,9 @@ def validate(corpora_to_be_used):
                 print "{0} of {1} jobs done.".format(size, n_jobs)
                 last_size = size
         time.sleep(1)
-
+    jobs_end = time.time()
     print 'All jobs finished.'
+    print 'Execution time for all jobs: {0} seconds.'.format(jobs_end - jobs_start)
 
     
 def run_validation(job):

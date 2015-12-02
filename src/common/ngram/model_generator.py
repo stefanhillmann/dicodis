@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 from common.ngram import smoothing
 from common.util import dict as du
-import cached_pads as cp
+import cached_n_grams
 
 module_logger = logging.getLogger('ngram')
 
@@ -23,22 +23,12 @@ def create_n_grams_from_document(document, n):
         sizes.append(n)
 
     n_grams = []
-    tokens = document.content
+    # The tuple representation (instead of list) of the tokens is needed for the caching mechanism.
+    # It is not possible (in Python) to compute the hash value of a list.
+    tokens = tuple(document.content)
 
     for size in sizes:
-        padded_tokens = add_pads(tokens, size)
-
-        for idxTerm in xrange(len(padded_tokens) - (size - 1)):
-                i = idxTerm
-                j = idxTerm + size
-
-                ngram_parts = []
-
-                for k in xrange(i, j):
-                    ngram_parts.append(padded_tokens[k])
-
-                ngram = '#'.join(ngram_parts)
-                n_grams.append(ngram)
+        n_grams.extend(cached_n_grams.get_n_grams(tokens, size))
 
     return n_grams
 
@@ -49,16 +39,6 @@ def create_n_grams_from_document_list(document_list, n):
         n_grams.extend(create_n_grams_from_document(document, n))
 
     return n_grams
-
-
-def add_pads(document, n):
-    pads = cp.get_pads(n)
-    padded_document = []
-    padded_document.extend(pads)
-    padded_document.extend(document)
-    padded_document.extend(pads)
-    
-    return padded_document
 
 
 def sort_model_by_n_grams(model):
