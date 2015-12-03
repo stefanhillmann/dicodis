@@ -15,7 +15,7 @@ output: pdf_document
 
 ```{r data_from_database, cache=TRUE, echo=FALSE}
   cross_validation <- mongoDbConnect("classification_cross_validation_mixed", "localhost", 27017)
-  ngm.all <- dbGetQuery(cross_validation, "corpus_ngram_model_test", "", 0, 0)
+  ngm.all <- dbGetQuery(cross_validation, "corpus_ngram_model_fitted_size_TEST", "", 0, 0)
   ngm.all <- ngm.all[,-2] # remove column X_id
   ngm.all <- rename(ngm.all, c("freq"="n_gram_freq"))
 ```
@@ -24,15 +24,23 @@ output: pdf_document
 
   
     # use_n = c(1,2,3,4,5,6,7,8)
-  use_f_min = 2
+  use_f_min = 1
   corpus.x = "real user"
-  corpus.y = "simulation bad"
+  corpus.y = "simulation good"
   
   k = Inf #300 # considered number of ranked n-grams
   
   # get n-gram model for good and bad simulation (for certain n and f_min)
   ng_model.x <- subset(ngm.all, corpus == corpus.x & f_min == use_f_min, select = c(n_gram, n_gram_freq))
   ng_model.y <- subset(ngm.all, corpus == corpus.y & f_min == use_f_min, select = c(n_gram, n_gram_freq))
+  
+  if (k < nrow(ng_model.x)) {
+    ng_model.x <- arrange(ng_model.x, desc(n_gram_freq))[1:k,]
+  }
+  
+  if (k < nrow(ng_model.y)) {
+    ng_model.y <- arrange(ng_model.y, desc(n_gram_freq))[1:k,]
+  }
   
   
   # get unique values of frequencies
@@ -64,13 +72,13 @@ output: pdf_document
   
   
   # select the first k n-grams to be used
-  if (k < nrow(ng_model.x)) {
-    ng_model.x <- arrange(ng_model.x, rank)[1:k,]
-  }
-  
-  if (k < nrow(ng_model.y)) {
-    ng_model.y <- arrange(ng_model.y, rank)[1:k,]
-  }
+#   if (k < nrow(ng_model.x)) {
+#     ng_model.x <- arrange(ng_model.x, rank)[1:k,]
+#   }
+#   
+#   if (k < nrow(ng_model.y)) {
+#     ng_model.y <- arrange(ng_model.y, rank)[1:k,]
+#   }
 
   # default distance, which i used if a n-gram does not occur in both n-gram models
   default_distance <- max(ng_model.x$rank, ng_model.y$rank) - min(ng_model.x$rank, ng_model.y$rank) + 1
@@ -85,9 +93,13 @@ output: pdf_document
   max_distance = (nrow(ng_model.x) + nrow(ng_model.y)) * default_distance
 
   
+  
   # print results
   print("Total number of n-grams in x and y:")
   nrow(ng_model.x) + nrow(ng_model.y)
+  
+  print("Number of common n-grams:")
+  length(intersect(ng_model.x$n_gram, ng_model.y$n_gram))
   
   print("Number of n-grams which are not in both models:")
   nrow(subset(distance_model, is.na(rank.x) | is.na(rank.y)))

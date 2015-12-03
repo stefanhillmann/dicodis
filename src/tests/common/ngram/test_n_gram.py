@@ -3,6 +3,7 @@ __author__ = 'Stefan Hillmann'
 import unittest
 import common.ngram.model_generator as mg
 import common.util.names as names
+import common.ngram.cached_n_grams as cng
 from common.dialog_document.document import Document
 
 class TestNGram(unittest.TestCase):
@@ -40,6 +41,16 @@ class TestNGram(unittest.TestCase):
         # all expected elements are in n_grams?
         for x in expected_result:
             self.assertTrue(x in n_grams, "{0} is not in generated n-grams.".format(x))
+
+    def test_get_n_grams_for_little_amount_of_tokens(self):
+        tokens = ('a', 'b')
+        expected_result = ['a', 'b', '_#a', 'a#b', 'b#_']
+        document = Document(names.Class.POSITIVE, tokens, 'dialog_id')
+        size = range(1, 8)
+        result = mg.create_n_grams_from_document(document, size)
+
+        self.assertEqual(len(result), len(expected_result))
+        map(lambda x: self.assertTrue(x in result, "'{0}' is not in result.".format(x)), expected_result)
 
     def test_model_synchronization(self):
         # prepare to test models

@@ -43,17 +43,82 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
 
 
 def create_sub_document(exchange, parameter):
-    values = [] 
-    for p in parameter:
-        value = exchange[p]
-        if value:
-            value = value.strip()  # strip leading/tailing spaces
-            value = value.lower()  # lower case
-            values.append(value)
-       
-    # add values if there one or several
-    if values:
-        return values
-    else:
-        return ''
+    values = []
 
+    sa = parameter[0]
+    field = parameter[1]
+
+    is_explicit_confirmation_request_by_system = False
+
+    if sa == "userSA" or sa == "sysSA":
+        value = normalize_speech_act_name(exchange[sa])
+        if value != "":
+            values.append(value)
+            if sa == "sysSA" and value == "explicit_confirmation":
+                is_explicit_confirmation_request_by_system = True
+    else:
+        raise ValueError("Unknown parameter!", sa)
+
+    # process field value
+    if field == "userFields" or field == "sysRep.field":
+        value = normalize_field_values(exchange[field])
+        if value != "":
+            values.append(value)
+        elif is_explicit_confirmation_request_by_system:
+            # repair wrong annotation in data and set field to "logical" if we handle a explicit confirmation request
+            # from the system
+            values.append("logical")
+    else:
+        raise ValueError("Unknown parameter!", field)
+
+    return values
+
+
+def normalize_speech_act_name(name):
+
+    _name = name.strip()  # strip leading/tailing spaces
+    _name = _name.lower()  # lower case
+
+    norm_names = {
+        "accept": "accept",
+        "accept provide": "accept_provide",
+        "affirm": "accept",
+        "affirm provide": "affirm_provide",
+        "negate": "negate",
+        "neglect": "negate",
+        "provide": "provide",
+        "hangup": "hang_up",
+        "inform": "provide",
+        "bye": "bye",
+        "explconfirm": "explicit_confirmation",
+        "explicitconfirmation": "explicit_confirmation",
+        "indicatevalues": "indicate_values",
+        "indicatevalue": "indicate_values",
+        "indicatevalues1": "indicate_values_1",
+        "indicatevaluesone": "indicate_values_1",
+        "indicatevalues2": "indicate_values_2",
+        "informandoffermore": "inform_and_offer_more",
+        "offermodification": "offer_modification",
+        "offerrefinement": "offer_refinement",
+        "repetitionrequest": "repetition_request",
+        "request": "request",
+        "empty": "",
+        "": ""
+    }
+
+    norm_name = norm_names[_name]
+
+    return norm_name
+
+
+def normalize_field_values(values):
+    _values = values.strip()  # strip leading/tailing spaces
+    _values = _values.lower()  # lower case
+
+    # split and sort values
+    split_values = _values.split()
+    sort_values = sorted(split_values)
+
+    sorted_values = " ".join(sort_values)  # create new string with values separated by a space character
+
+    return sorted_values

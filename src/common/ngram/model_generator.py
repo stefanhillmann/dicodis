@@ -28,7 +28,8 @@ def create_n_grams_from_document(document, n):
     tokens = tuple(document.content)
 
     for size in sizes:
-        n_grams.extend(cached_n_grams.get_n_grams(tokens, size))
+        if len(tokens) >= size:
+            n_grams.extend(cached_n_grams.get_n_grams(tokens, size))
 
     return n_grams
 
