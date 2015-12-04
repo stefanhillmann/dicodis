@@ -4,12 +4,11 @@ Created on Tue Jul 23 09:09:30 2015
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-from common.util import time_util
 from common.ngram import model_generator as mg
 from common.dialog_document.dialog_reader import DialogsReader
 from common.util.names import Class
 import common.util.persistence as pe
-import dialogs
+import boris_analysis.dialogs as dialogs
 
 host = 'localhost'
 port = 27017
@@ -30,7 +29,7 @@ all_documents = dialogs.create_dialogs_documents(dialog_reader, id_column_name, 
 
 all_n_grams = list()
 for n_gram_size in n_gram_size_list:
-    print 'n = {0}'.format(n_gram_size)
+    print('n = {0}'.format(n_gram_size))
     for d in all_documents:
         d_n_grams = mg.create_n_grams_from_document_list([d], n_gram_size)
         for n_gram in d_n_grams:

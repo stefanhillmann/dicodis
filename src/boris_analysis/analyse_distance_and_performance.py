@@ -1,17 +1,14 @@
 __author__ = 'stefan'
 
 
-import ConfigParser
+import configparser
 from common.util import persistence
-import numpy as np
-import texttable as tt
-import cross_validation_configuration
-import matplotlib.pyplot as plt
-import numpy as np
+import boris_analysis.cross_validation_configuration as cvc
+
 
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
@@ -27,7 +24,7 @@ db_distances = db[distances_collection]
 db_performance = db[performance_collection]
 db_distance_performance = db[config.get('database', 'distance_performance_collection')]
 
-configurations = cross_validation_configuration.getConfigurations()
+configurations = cvc.getConfigurations()
 
 criteria = db_performance.distinct('criteria')
 
@@ -79,7 +76,7 @@ def get_recall(criteria, n, classifier, ft, sv):
 
 results = list()
 for criteria in criteria_to_data_set.keys():
-    print 'Criteria: ' + criteria
+    print('Criteria: ' + criteria)
 
     data_set = criteria_to_data_set[criteria]
 

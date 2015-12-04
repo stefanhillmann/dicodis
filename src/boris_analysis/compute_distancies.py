@@ -12,13 +12,13 @@ import common.measuring.measures
 import common.util.persistence as db
 
 
-import ConfigParser
+import configparser
 
 logging.basicConfig(level=logging.WARNING)
 
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
@@ -80,7 +80,7 @@ def generate_n_gram_model(dialog_list, n, threshold):
 
 distances_list = list()
 for data_set_name in corpora_pairs.keys():
-    print 'Computing distances for {0}.'.format(data_set_name)
+    print('Computing distances for {0}.'.format(data_set_name))
     pair = corpora_pairs[data_set_name]
     c1_dialogs = read_dialogs(pair[0])
     c2_dialogs = read_dialogs(pair[1])
@@ -101,8 +101,8 @@ for data_set_name in corpora_pairs.keys():
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
-db = dbm.get_connection()
-distances = db[distances_collection]
+db_connection = dbm.get_connection()
+distances = db_connection[distances_collection]
 
-print 'Write {0} results to database.'.format(len(distances_list))
+print('Write {0} results to database.'.format(len(distances_list)))
 distances.insert(distances_list)

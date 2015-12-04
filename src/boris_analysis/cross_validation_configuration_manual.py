@@ -1,9 +1,9 @@
 from common.ngram.model_generator import NGramSize
 from common.measuring.measures import MeasureName
-import ConfigParser
+import configparser
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 validation_processes = config.getint('cross_validation', 'jobs')
 

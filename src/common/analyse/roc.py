@@ -88,11 +88,11 @@ def get_auc(example_ids, positive_probability_dict, true_class_dict, positive_cl
 
     n_of_positives = true_class_dict.values().count(positive_class)
     if n_of_positives == 0:
-        print 'Zero positives.'
+        print('Zero positives.')
 
     n_of_negatives = true_class_dict.values().count(negative_class)
     if n_of_negatives == 0:
-        print 'Zero negatives.'
+        print('Zero negatives.')
 
 
 

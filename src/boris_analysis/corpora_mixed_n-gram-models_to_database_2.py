@@ -10,6 +10,7 @@ from common.util.names import Class
 import boris_analysis.dialogs as dialogs
 import common.util.persistence as db
 import configparser
+import boris_analysis.corpora_names as cns
 
 # read configuration
 config = configparser.ConfigParser()
@@ -18,42 +19,22 @@ config.read('local_config.ini')
 host = config.get('database', 'host')
 port = config.getint('database', 'port')
 database = config.get('database', 'db_name')
+
+database_dialogues = config.get('dialogue_database', 'dialogues_db_name')
+dialogues_collection = config.get('dialogue_database', 'dialogues_collection')
 corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-dbm = db.DbManager(host, port, database)
 
-base_directory = config.get('cross_validation', 'source_directory')
-id_column_name = 'iteration'
+db_analysis = db.DbManager(host, port, database)
+db_dialogues = db.DbManager(host, port, database_dialogues)
 
-
-file_turns_succeeded        = base_directory + 'data/turnsSucceeded.csv'
-file_turns_failed           = base_directory + 'data/turnsFailed.csv'
-file_best_simulation        = base_directory + 'data/bestSimulation.csv'
-file_worst_simulation       = base_directory + 'data/worstSimulation.csv'
-file_shortest_interaction   = base_directory + 'data/shortest49Interactions.csv'
-file_longest_interaction    = base_directory + 'data/longest49Interactions.csv'
-file_wa_100                 = base_directory + 'data/WA_60.csv'
-file_wa_60                  = base_directory + 'data/WA_100.csv'
-file_judged_bad             = base_directory + 'data/badJudged.csv'
-file_judged_good            = base_directory + 'data/goodJudged.csv'
-file_experiment             = base_directory + 'data/annotatedData_corrected.csv'
-
-corpus_to_file = {
-    'task success': file_turns_succeeded,
-    'task failed': file_turns_failed,
-    'simulation good': file_best_simulation,
-    'simulation bad': file_worst_simulation,
-    'interaction short': file_shortest_interaction,
-    'interaction long': file_longest_interaction,
-    'word accuracy 100': file_wa_100,
-    'word accuracy 60': file_wa_60,
-    'judged bad': file_judged_bad,
-    'judged good': file_judged_good,
-    'real user': file_experiment
-}
+conn_analysis = db_analysis.get_connection()
+conn_dialogues = db_dialogues.get_connection()
 
 n_gram_size_list = range(1, 8 + 1)  # [1, ..., 8]
 f_min_list = [1, 2]
 db_items = list()
+
+corpora = cns.get_all_names()
 
 
 def generate_n_gram_model(dialog_list, n, f_min):
@@ -62,10 +43,13 @@ def generate_n_gram_model(dialog_list, n, f_min):
     model = mg.remove_rare_n_grams(model, f_min)
     return model
 
-for corpus in corpus_to_file.keys():
-    print("Create n-grams for corpus '{0}' from file '{1}'.".format(corpus, corpus_to_file[corpus]))
+for corpus in corpora:
+    print("Create n-grams for corpus '{0}'.".format(corpus))
+    dialogues = conn_dialogues["dialogues"]
+    turns = dialogues.find({"corpora": corpus})
 
-    dialog_reader = DialogsReader(corpus_to_file[corpus])
+
+    # TODO: create n-grams from list of turns?
     corpus_documents = dialogs.create_dialogs_documents(dialog_reader, id_column_name, Class.POSITIVE)
 
     # TODO: Only a test!!!

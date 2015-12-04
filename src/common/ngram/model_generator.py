@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 from common.ngram import smoothing
 from common.util import dict as du
-import cached_n_grams
+import common.ngram.cached_n_grams as cached_n_grams
 
 module_logger = logging.getLogger('ngram')
 
@@ -85,7 +85,7 @@ def smooth_model(model, l):
     
     # create new dictionary with with n-grams and the smoothed values
     n_grams = model.keys()
-    for i in xrange( len(smoothed_values) ):
+    for i in range( len(smoothed_values) ):
         n_gram = n_grams[i]
         probability = smoothed_values[i]
         model[n_gram] = probability

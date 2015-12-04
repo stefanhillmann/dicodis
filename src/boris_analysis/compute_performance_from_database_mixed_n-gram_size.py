@@ -1,13 +1,10 @@
-__author__ = 'stefan'
-
 import common.util.persistence as pe
-import cross_validation_configuration_manual
-from common.analyse import performance as per
-import ConfigParser
+import boris_analysis.cross_validation_configuration_manual as cvc
+import configparser
 import pyRserve as pyr
 import numpy as np
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
@@ -15,7 +12,7 @@ port = config.getint('database', 'port')
 database = config.get('database', 'db_name')
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 
-configurations = cross_validation_configuration_manual.getConfigurations()
+configurations = cvc.getConfigurations()
 
 dbm = pe.DbManager(host, port, database)
 db = dbm.get_connection()
@@ -50,7 +47,7 @@ def get_auc(data):
     return auc[0]
 
 for cri in criteria:
-    print 'Computing performance results for criteria {0}'.format(cri)
+    print('Computing performance results for criteria {0}'.format(cri))
     # collect performance results for each criteria and write them into the database
     performance_results = []
     for conf in configurations:
@@ -76,9 +73,9 @@ for cri in criteria:
         performance_results.append(classificator_performance)
 
     # write results collected for the current criteria into database
-    print 'Start writing results for criteria {0}'.format(cri)
+    print('Start writing results for criteria {0}'.format(cri))
     performance.insert(performance_results)
-    print 'Results for criteria {0} were written to database\n'.format(cri)
+    print('Results for criteria {0} were written to database\n'.format(cri))
 
 dbm.close()
 

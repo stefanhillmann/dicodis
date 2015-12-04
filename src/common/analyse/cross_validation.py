@@ -11,7 +11,7 @@ import common.util.list as lu
 import common.ngram.model_generator as mg
 import common.classify.classifier as classifier
 from common.util.names import Class
-import roc
+import common.analyse.roc as roc
 
 
 

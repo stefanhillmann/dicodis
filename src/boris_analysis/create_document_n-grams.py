@@ -9,7 +9,7 @@ from common.ngram import model_generator as mg
 from common.dialog_document.dialog_reader import DialogsReader
 from common.util.names import Class
 import common.util.persistence as pe
-import dialogs
+import boris_analysis.dialogs as dialogs
 
 evaluation_id = time_util.shorter_human_readable_timestamp()
 host = 'localhost'
@@ -58,15 +58,15 @@ db = dbm.get_connection()
 # Create and write n-grams for each document for each criteria
 for criteria in criteria_to_file.keys():
     file_name = criteria_to_file[criteria]
-    print 'Processing criteria {0} from file {1}'.format(criteria, file_name)
+    print('Processing criteria {0} from file {1}'.format(criteria, file_name))
     dialog_reader = DialogsReader(file_name)
 
     documents = dialogs.create_dialogs_documents(dialog_reader, id_column_name, Class.POSITIVE)
-    print 'Documents for criteria {0}: {1}'.format( criteria, len(documents) )
+    print('Documents for criteria {0}: {1}'.format( criteria, len(documents) ))
 
     n_gram_size_list = range(1, 8 + 1)
     for n_gram_size in n_gram_size_list:
-        print 'Create n-grams with size {0} for criteria {1}'.format(n_gram_size, criteria)
+        print('Create n-grams with size {0} for criteria {1}'.format(n_gram_size, criteria))
         items = list()
         for d in documents:
             d_n_grams = mg.create_n_grams_from_document_list([d], n_gram_size)

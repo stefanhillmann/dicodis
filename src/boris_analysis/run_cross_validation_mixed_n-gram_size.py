@@ -2,21 +2,18 @@ import logging
 from multiprocessing import Pool, Manager
 
 from common.analyse import cross_validation as cv
-from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration_manual, dialogs
-from common.util import time_util
 from common.dialog_document.dialog_reader import DialogsReader
-from common.util.persistence import EvaluationResult
 import common.util.persistence as db
 from common.util.names import Class
-import ConfigParser
+import configparser
 import time
 
 logging.basicConfig(level=logging.WARNING)
 
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
@@ -89,7 +86,7 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
     is_done = count == no_of_dialogs
 
     if not is_done and count > 0:
-        print 'Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration)
+        print('Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration))
         assert count == 0  # emergency hold
 
     return is_done
@@ -101,21 +98,21 @@ def validate(corpora_to_be_used):
     jobs = []
     job_number = 0
 
-    print "Generate Jobs..."
+    print("Generate Jobs...")
     for cor in corpora_to_be_used:
     
         positive_reader = DialogsReader(cor.positive_data_file)
         positive_dialogs = dialogs.create_dialogs_documents(positive_reader, cor.id_column_name, cor.positive_class)
-        print 'Dialogs in positive class: {}'.format( len(positive_dialogs) )
+        print('Dialogs in positive class: {}'.format( len(positive_dialogs) ))
 
         negative_reader = DialogsReader(cor.negative_data_file)
         negative_dialogs = dialogs.create_dialogs_documents(negative_reader, cor.id_column_name, cor.negative_class)
-        print 'Dialogs in negative class: {}'.format( len(negative_dialogs) )
+        print('Dialogs in negative class: {}'.format( len(negative_dialogs) ))
 
         for configuration in configurations:
-            print 'Generate job: criteria: {0}, configuration: {1}'.format(cor.criteria, configuration)
+            print('Generate job: criteria: {0}, configuration: {1}'.format(cor.criteria, configuration))
             if is_job_already_done(cor.criteria, configuration, len(positive_dialogs) + len(negative_dialogs)):
-                print 'Already done! (criteria: {0}, configuration: {1})'.format(cor.criteria, configuration)
+                print('Already done! (criteria: {0}, configuration: {1})'.format(cor.criteria, configuration))
             else:
                 job_number += 1
                 job = Job(configuration, positive_dialogs, negative_dialogs, cor.positive_class,
@@ -123,7 +120,7 @@ def validate(corpora_to_be_used):
                 jobs.append(job)
 
     n_jobs = len(jobs)
-    print '{0} to be executed.'.format( n_jobs )
+    print('{0} to be executed.'.format( n_jobs ))
 
     pool = Pool(processes=cross_validation_configuration_manual.validation_processes)
     result = pool.map_async(run_validation, jobs)
@@ -137,12 +134,12 @@ def validate(corpora_to_be_used):
         else:
             size = q.qsize()
             if size > last_size:
-                print "{0} of {1} jobs done.".format(size, n_jobs)
+                print("{0} of {1} jobs done.".format(size, n_jobs))
                 last_size = size
         time.sleep(1)
     jobs_end = time.time()
-    print 'All jobs finished.'
-    print 'Execution time for all jobs: {0} seconds.'.format(jobs_end - jobs_start)
+    print('All jobs finished.')
+    print('Execution time for all jobs: {0} seconds.'.format(jobs_end - jobs_start))
 
     
 def run_validation(job):
@@ -152,7 +149,7 @@ def run_validation(job):
     smoothing_value     = job.configuration.smoothing_value
     criteria            = job.criteria
     
-    print 'Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration)
+    print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
         
     cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
     cross_validator.add_documents(job.negative_dialogs)

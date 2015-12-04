@@ -1,12 +1,12 @@
 __author__ = 'stefan'
 
 import common.util.persistence as pe
-import ConfigParser
+import configparser
 import pyRserve as pyr
 import numpy as np
 
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')

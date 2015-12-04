@@ -6,8 +6,6 @@ Created on Fri Jun  7 15:05:29 2013
 """
 
 import logging
-
-import common.util.list as lu
 import common.ngram.model_generator as mg
 from common.measuring import measures
 import common.util.names as names
@@ -134,6 +132,6 @@ def get_classifier(classifier_name):
         We return nothing, and the following code will crash, when trying to to do something
         with a not existing classifier 
         """
-        print 'Unknown classifier was requested. Empty string will be returned'
+        print('Unknown classifier was requested. Empty string will be returned')
         
     return created_classifier

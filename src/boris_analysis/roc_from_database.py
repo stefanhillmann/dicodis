@@ -3,9 +3,9 @@ __author__ = 'stefan'
 import common.util.persistence as pe
 from common.analyse import roc
 from common.util.names import Class
-import ConfigParser
+import configparser
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')

@@ -6,16 +6,15 @@ from common.analyse.cross_validation import ResultAssessor
 from boris_analysis import cross_validation_configuration, dialogs
 from common.util import time_util
 from common.dialog_document.dialog_reader import DialogsReader
-from common.util.persistence import EvaluationResult
 import common.util.persistence as db
 from common.util.names import Class
-import ConfigParser
+import configparser
 
 logging.basicConfig(level=logging.WARNING)
 
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
@@ -73,7 +72,7 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
     is_done = count == no_of_dialogs
 
     if not is_done and count > 0:
-        print 'Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration)
+        print('Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration))
         assert count == 0  # emergency hold
 
     return is_done
@@ -83,11 +82,11 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     
     positive_reader = DialogsReader(positive_data_file)
     positive_dialogs = dialogs.create_dialogs_documents(positive_reader, id_column_name, positive_class)
-    print 'Dialogs in positive class: {}'.format( len(positive_dialogs) )
+    print('Dialogs in positive class: {}'.format( len(positive_dialogs) ))
     
     negative_reader = DialogsReader(negative_data_file)
     negative_dialogs = dialogs.create_dialogs_documents(negative_reader, id_column_name, negative_class)
-    print 'Dialogs in negative class: {}'.format( len(negative_dialogs) )
+    print('Dialogs in negative class: {}'.format( len(negative_dialogs) ))
 
     configurations = cross_validation_configuration.getConfigurations()
 
@@ -95,17 +94,17 @@ def validate(positive_data_file, positive_class, negative_data_file, negative_cl
     job_number = 0
     for configuration in configurations:
         if is_job_already_done(criteria, configuration, len(positive_dialogs) + len(negative_dialogs)):
-            print 'Already done! (criteria: {0}, configuration: {1}'.format(criteria, configuration)
+            print('Already done! (criteria: {0}, configuration: {1}'.format(criteria, configuration))
         else:
             job_number += 1
             job = Job(configuration, positive_dialogs, negative_dialogs, positive_class,
                       negative_class, criteria, job_number)
             jobs.append(job)
 
-    print '{} to be executed.'.format( len(jobs) )
+    print('{} to be executed.'.format( len(jobs) ))
     pool = Pool(processes=cross_validation_configuration.validation_processes)
     results = pool.map(run_validation, jobs)
-    print 'All jobs finished.'
+    print('All jobs finished.')
     
     return results
     
@@ -120,7 +119,7 @@ def run_validation(job):
     smoothing_value     = job.configuration.smoothing_value
     criteria            = job.criteria
     
-    print 'Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration)
+    print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
         
     cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
     cross_validator.add_documents(job.negative_dialogs)
@@ -160,46 +159,46 @@ if __name__ == '__main__':
     real_result                 = []
     
     
-    print 'Criteria: Turn Success'
-    print 'Successful?'
+    print('Criteria: Turn Success')
+    print('Successful?')
     success_successful_result = validate(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task_successful')
-    print 'Failed?'
+    print('Failed?')
     success_failed_result = validate(file_turns_failed, Class.POSITIVE, file_turns_succeeded, Class.NEGATIVE, id_column_name, 'task_failed')
 
-    print 'Criteria: User Judgment'
-    print 'Good'
+    print('Criteria: User Judgment')
+    print('Good')
     judged_good_result = validate(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'juged_good')
-    print 'Bad'
+    print('Bad')
     judged_bad_result = validate(file_judged_bad, Class.POSITIVE, file_judged_good, Class.NEGATIVE, id_column_name, 'juged_bad')
         
-    print 'Criteria: Quality of Simulation'
-    print 'Best simulation?'
+    print('Criteria: Quality of Simulation')
+    print('Best simulation?')
     simulation_best_result = validate(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_best')
-    print 'Worst simulation?'
+    print('Worst simulation?')
     simulation_worst_result = validate(file_worst_simulation, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'simulation_quality_worst')
     
-    print 'Criteria: Length of Interaction'
-    print 'Short interaction?'
+    print('Criteria: Length of Interaction')
+    print('Short interaction?')
     length_short_result = validate(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'short_interactions')
-    print 'Long interaction'
+    print('Long interaction')
     length_long_result = validate(file_longest_interaction, Class.POSITIVE, file_shortest_interaction, Class.NEGATIVE, id_column_name, 'long_interactions')
     
-    print 'Criteria: Word Accuracy'
-    print 'Word accuracy is 100?'
+    print('Criteria: Word Accuracy')
+    print('Word accuracy is 100?')
     wa_100_result = validate(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word_accuracy_100')
-    print 'Word accuracy is 60?'
+    print('Word accuracy is 60?')
     wa_60_result = validate(file_wa_60, Class.POSITIVE, file_wa_100, Class.NEGATIVE, id_column_name, 'word_accuracy_60')
     
-    print 'Criteria: Dialogue Source'
-    print 'simulated dialogues?'
+    print('Criteria: Dialogue Source')
+    print('simulated dialogues?')
     sim_result = validate(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated')
-    print 'real dialogues? '
+    print('real dialogues? ')
     real_result = validate(file_experiment, Class.POSITIVE, file_best_simulation, Class.NEGATIVE, id_column_name, 'real')
 
-    print 'Criteria: Dialogue Source'
-    print 'simulated dialogues?'
+    print('Criteria: Dialogue Source')
+    print('simulated dialogues?')
     sim_result = validate(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'simulated_worst_vs_real')
-    print 'real dialogues? '
+    print('real dialogues? ')
     real_result = validate(file_experiment, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'real_vs_simulated_worst')
     
         

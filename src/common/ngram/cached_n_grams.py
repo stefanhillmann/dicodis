@@ -6,7 +6,7 @@ Created on Tue Jul 24 12:58:40 2015
 
 import collections
 import functools
-import cached_pads as cp
+import common.ngram.cached_pads as cp
 
 
 class Memorized(object):
@@ -55,13 +55,13 @@ def get_n_grams(tokens, size):
     padded_tokens = add_pads(tokens, size)
     n_grams = list()
 
-    for idxTerm in xrange(len(padded_tokens) - (size - 1)):
+    for idxTerm in range(len(padded_tokens) - (size - 1)):
             i = idxTerm
             j = idxTerm + size
 
             ngram_parts = []
 
-            for k in xrange(i, j):
+            for k in range(i, j):
                 ngram_parts.append(padded_tokens[k])
 
             ngram = '#'.join(ngram_parts)

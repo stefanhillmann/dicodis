@@ -1,9 +1,11 @@
-import csv
-import ConfigParser
+import configparser
 import common.util.persistence as db
+import pymongo
+from boris_analysis.corpora_names import CorporaNames as CN
+import csv
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 host = config.get('database', 'host')
@@ -12,19 +14,44 @@ database = config.get('dialogue_database', 'dialogues_db_name')
 dialogues_collection = config.get('dialogue_database', 'dialogues_collection')
 
 dbm = db.DbManager(host, port, database)
+db_connection = dbm.get_connection()
+dialogues = db_connection[dialogues_collection]
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
 
+
+file_turns_succeeded        = base_directory + 'data/turnsSucceeded.csv'
+file_turns_failed           = base_directory + 'data/turnsFailed.csv'
+file_shortest_interaction   = base_directory + 'data/shortest49Interactions.csv'
+file_longest_interaction    = base_directory + 'data/longest49Interactions.csv'
+file_wa_100                 = base_directory + 'data/WA_60.csv'
+file_wa_60                  = base_directory + 'data/WA_100.csv'
+file_judged_bad             = base_directory + 'data/badJudged.csv'
+file_judged_good            = base_directory + 'data/goodJudged.csv'
 file_best_simulation        = base_directory + 'data/bestSimulation.csv'
 file_worst_simulation       = base_directory + 'data/worstSimulation.csv'
 file_experiment             = base_directory + 'data/annotatedData_corrected.csv'
 
+file_best_simulation_interaction_parameter = base_directory  + "data/bestSimulationInteractionParameter.csv"
+file_worst_simulation_interaction_parameter = base_directory  + "data/worstSimulationInteractionParameter.csv"
+
 corpora_names = {
-    'simulation good': file_best_simulation,
-    'simulation bad': file_worst_simulation,
-    'real user': file_experiment
+    CN.SUCCESSFUL: file_turns_succeeded,
+    CN.NOT_SUCCESSFUL: file_turns_failed,
+    CN.DIALOGUES_SHORT: file_shortest_interaction,
+    CN.DIALOGUES_LONG: file_longest_interaction,
+    CN.WORD_ACCURACY_100: file_wa_100,
+    CN.WORD_ACCURACY_60: file_wa_60,
+    CN.USER_JUDGMENT_GOOD: file_judged_good,
+    CN.USER_JUDGMENT_BAD: file_judged_bad,
+    CN.SIMULATION_GOOD: file_best_simulation,
+    CN.SIMULATION_BAD: file_worst_simulation,
+    CN.REAL_USER: file_experiment
 }
+
+SUCCESS = ["S", "SCs", "SN", "SCu", "SCuCs"]
+NO_SUCCESS = ["FS", "FU"]
 
 
 def get_rows(file_path):
@@ -48,17 +75,60 @@ def replace_dots_in_keys(d):
     return d
 
 
+def get_task_success(annotation):
+    if annotation in SUCCESS:
+        return 1
+    elif annotation in NO_SUCCESS:
+        return 0
+    else:
+        raise ValueError("Unknown value for task success annotation: '{0}'".format(annotation))
+
+
+def add_task_success_simulations(corpora_name):
+    if CN.SIMULATION_GOOD == corpora_name:
+        file_parameters = file_best_simulation_interaction_parameter
+    elif CN.SIMULATION_BAD == corpora_name:
+        file_parameters = file_worst_simulation_interaction_parameter
+    else:
+        raise ValueError("Cannot handle corpora '{0}'".format(corpora_name))
+
+    data_file = open(file_parameters, 'r')
+    dialogues_parameters = csv.DictReader(data_file)
+
+    for dp in dialogues_parameters:
+        iteration = dp["iteration"]  # id of dialogue
+        task_success = get_task_success(dp["task success"])  # get dialogue's success
+
+        # set task success for all turns belonging to iteration (a dialogue) in corpora
+        dialogues.update_many(
+            {"corpora": corpora_name, "iteration": iteration},
+            {"$set": {"task_success": task_success}}
+        )
+
+    data_file.close()
+
+
 for corpora in corpora_names.keys():
-    print "Corpora: " + corpora
-    print "Read rows"
+    print("Corpora: " + corpora)
+    print("Read rows")
     rows = get_rows(corpora_names[corpora])
 
     rows = map(lambda r: replace_dots_in_keys(r), rows)
     map(lambda r: r.update({"corpora": corpora}), rows)  # add corpora name to each row
 
-    print "Write rows to collection '{0} in database '{1}.".format(database, dialogues_collection)
-    db = dbm.get_connection()
-    dialogues = db[dialogues_collection]
+    print("Write rows to collection '{0} in database '{1}.".format(database, dialogues_collection))
+
     dialogues.insert(rows)
-    dbm.close()
+
+# create index for corpora and iteration
+dialogues.create_index([("corpora", pymongo.ASCENDING), ("iteration", pymongo.ASCENDING)])
+
+print("Setting task success for simulation good.")
+add_task_success_simulations(CN.SIMULATION_GOOD)
+
+print("Setting task success for simulation bad.")
+add_task_success_simulations(CN.SIMULATION_BAD)
+
+
+dbm.close()
 

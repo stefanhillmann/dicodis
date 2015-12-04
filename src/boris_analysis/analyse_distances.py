@@ -1,15 +1,13 @@
-__author__ = 'stefan'
-
-import ConfigParser
+import configparser
 from common.util import persistence
 import numpy as np
 import texttable as tt
-import cross_validation_configuration
+import boris_analysis.cross_validation_configuration as cvc
 import matplotlib.pyplot as plt
 
 
 # read configuration
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
@@ -22,14 +20,14 @@ dbm = persistence.DbManager(host, port, database)
 db = dbm.get_connection()
 db_distances = db[distances_collection]
 
-configurations = cross_validation_configuration.getConfigurations()
+configurations = cvc.getConfigurations()
 
 # describing statistics real vs. best
 
 table = tt.Texttable()
 table.add_row(['Classifier', 'Min', 'Max', 'Mean', "STD"])
 i = 0
-for cn in cross_validation_configuration.classifier_names:
+for cn in cvc.classifier_names:
     i += 1
     distances = list()
     for d in db_distances.find({'data_set': 'real_vs_best_sim', 'classifier': cn}):
@@ -40,14 +38,14 @@ for cn in cross_validation_configuration.classifier_names:
     plt.hist(distances)
     table.add_row([cn, np.min(distances), np.max(distances), np.mean(distances), np.std(distances)])
 
-print table.draw()
+print(table.draw())
 
 
 # describing statistics real vs. best
 table = tt.Texttable()
 table.add_row(['Classifier', 'Min', 'Max', 'Mean', "STD"])
 i = 0
-for cn in cross_validation_configuration.classifier_names:
+for cn in cvc.classifier_names:
     i += 1
     distances = list()
     for d in db_distances.find({'data_set': 'real_vs_worst_sim', 'classifier': cn}):
@@ -58,7 +56,7 @@ for cn in cross_validation_configuration.classifier_names:
     plt.hist(distances)
     table.add_row([cn, np.min(distances), np.max(distances), np.mean(distances), np.std(distances)])
 
-print table.draw()
+print(table.draw())
 
 plt.show()
 

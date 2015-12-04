@@ -164,7 +164,7 @@ class Measure:
 
     @abstractmethod
     def distance(self, x, y, l):
-        print 'Has to be implemented by sub classes.'
+        print('Has to be implemented by sub classes.')
         pass
 
 

@@ -3,7 +3,6 @@ __author__ = 'Stefan Hillmann'
 import unittest
 import common.ngram.model_generator as mg
 import common.util.names as names
-import common.ngram.cached_n_grams as cng
 from common.dialog_document.document import Document
 
 class TestNGram(unittest.TestCase):
