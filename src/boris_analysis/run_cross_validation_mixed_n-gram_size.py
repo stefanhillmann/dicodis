@@ -101,12 +101,12 @@ def validate(corpora_to_be_used):
     print("Generate Jobs...")
     for cor in corpora_to_be_used:
     
-        positive_reader = DialogsReader(cor.positive_data_file)
-        positive_dialogs = dialogs.create_dialogs_documents(positive_reader, cor.id_column_name, cor.positive_class)
+        # positive_reader = DialogsReader(cor.positive_data_file)
+        positive_dialogs = dialogs.create_dialogs_documents_from_database(cor.positive_data_file, cor.positive_class)
         print('Dialogs in positive class: {}'.format( len(positive_dialogs) ))
 
-        negative_reader = DialogsReader(cor.negative_data_file)
-        negative_dialogs = dialogs.create_dialogs_documents(negative_reader, cor.id_column_name, cor.negative_class)
+        # negative_reader = DialogsReader(cor.negative_data_file)
+        negative_dialogs = dialogs.create_dialogs_documents_from_database(cor.negative_data_file, cor.negative_class)
         print('Dialogs in negative class: {}'.format( len(negative_dialogs) ))
 
         for configuration in configurations:
@@ -168,12 +168,12 @@ if __name__ == '__main__':
 
     corpora = [
         Chorpora(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task success'),
-        Chorpora(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'user judgement'),
-        Chorpora(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation quality'),
-        Chorpora(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'dialogue length'),
-        Chorpora(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word accuracy '),
-        Chorpora(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
-        Chorpora(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
+        #Chorpora(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'user judgement'),
+        #Chorpora(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation quality'),
+        #Chorpora(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'dialogue length'),
+        #Chorpora(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word accuracy '),
+        #Chorpora(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
+        #Chorpora(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
     ]
 
     validate(corpora)

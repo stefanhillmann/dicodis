@@ -19,8 +19,10 @@ def create_n_grams_from_document(document, n):
     sizes = list()
     if type(n) is list:
         sizes.extend(n)
-    if type(n) is int:
+    elif type(n) is int:
         sizes.append(n)
+    else:
+        raise ValueError("Unknown type '{0}' for parameter 'n'.".format(type(n)))
 
     n_grams = []
     # The tuple representation (instead of list) of the tokens is needed for the caching mechanism.
@@ -40,6 +42,10 @@ def create_n_grams_from_document_list(document_list, n):
         n_grams.extend(create_n_grams_from_document(document, n))
 
     return n_grams
+
+# TODO: Implment me!
+def get_n_gram_model_from_database_for_documents():
+    raise ValueError("To be implemented")
 
 
 def sort_model_by_n_grams(model):

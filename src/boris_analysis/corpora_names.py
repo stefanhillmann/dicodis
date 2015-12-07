@@ -1,7 +1,4 @@
 class CorporaNames:
-    def __init__(self):
-        pass
-
     SUCCESSFUL = "successful"
     NOT_SUCCESSFUL = "not successful"
     DIALOGUES_SHORT = "dialogues short"
@@ -15,7 +12,7 @@ class CorporaNames:
     REAL_USER = "real user"
 
 
-def get_all_names(self):
+def get_all_names():
     return [
         CorporaNames.SUCCESSFUL,
         CorporaNames.NOT_SUCCESSFUL,

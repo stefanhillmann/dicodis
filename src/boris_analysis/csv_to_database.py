@@ -84,13 +84,13 @@ def get_task_success(annotation):
         raise ValueError("Unknown value for task success annotation: '{0}'".format(annotation))
 
 
-def add_task_success_simulations(corpora_name):
-    if CN.SIMULATION_GOOD == corpora_name:
+def add_task_success_simulations(corpous_name):
+    if CN.SIMULATION_GOOD == corpous_name:
         file_parameters = file_best_simulation_interaction_parameter
-    elif CN.SIMULATION_BAD == corpora_name:
+    elif CN.SIMULATION_BAD == corpous_name:
         file_parameters = file_worst_simulation_interaction_parameter
     else:
-        raise ValueError("Cannot handle corpora '{0}'".format(corpora_name))
+        raise ValueError("Cannot handle corpus '{0}'".format(corpous_name))
 
     data_file = open(file_parameters, 'r')
     dialogues_parameters = csv.DictReader(data_file)
@@ -101,27 +101,30 @@ def add_task_success_simulations(corpora_name):
 
         # set task success for all turns belonging to iteration (a dialogue) in corpora
         dialogues.update_many(
-            {"corpora": corpora_name, "iteration": iteration},
+            {"corpus": corpous_name, "iteration": iteration},
             {"$set": {"task_success": task_success}}
         )
 
     data_file.close()
 
 
-for corpora in corpora_names.keys():
-    print("Corpora: " + corpora)
+for corpus in corpora_names.keys():
+    print("Corpus: " + corpus)
     print("Read rows")
-    rows = get_rows(corpora_names[corpora])
+    rows = get_rows(corpora_names[corpus])
 
-    rows = map(lambda r: replace_dots_in_keys(r), rows)
-    map(lambda r: r.update({"corpora": corpora}), rows)  # add corpora name to each row
+    for r in rows:
+        replace_dots_in_keys(r)
+        r.update({"corpus": corpus})
 
     print("Write rows to collection '{0} in database '{1}.".format(database, dialogues_collection))
 
     dialogues.insert(rows)
 
 # create index for corpora and iteration
-dialogues.create_index([("corpora", pymongo.ASCENDING), ("iteration", pymongo.ASCENDING)])
+dialogues.create_index([("corpus", pymongo.ASCENDING), ("iteration", pymongo.ASCENDING)])
+# create index for iteration
+dialogues.create_index([("iteration", pymongo.ASCENDING)])
 
 print("Setting task success for simulation good.")
 add_task_success_simulations(CN.SIMULATION_GOOD)

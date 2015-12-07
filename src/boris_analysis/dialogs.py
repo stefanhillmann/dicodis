@@ -6,6 +6,18 @@ Created on Thu Jun  6 15:59:01 2013
 """
 
 from common.dialog_document.document import Document
+import common.util.persistence as persistence
+import configparser
+
+
+# read configuration
+config = configparser.ConfigParser()
+config.read('local_config.ini')
+
+host = config.get('database', 'host')
+port = config.getint('database', 'port')
+dialogue_db = config.get('dialogue_database', 'dialogues_db_name')
+dialogue_collection = config.get('dialogue_database', 'dialogues_collection')
 
 
 def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):
@@ -42,6 +54,42 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
     return dialogs_documents
 
 
+def create_dialogs_documents_from_database(corpus, class_name):
+    conn = persistence.DbManager(host, port, dialogue_db).get_connection()
+    dialogues = conn[dialogue_collection]
+    iteration_ids = dialogues.find({"corpus": corpus}).distinct("iteration")
+
+    dialogs_documents = []
+    for iteration in iteration_ids:
+        dialogue_rows = dialogues.find({"corpus": corpus, "iteration": iteration})
+
+        dialog_document = create_dialog_document_from_database(dialogue_rows, class_name, corpus, iteration)
+
+        dialogs_documents.append(dialog_document)
+
+    return dialogs_documents
+
+
+def create_dialog_document_from_database(dialogue, dialogue_label, corpus, iteration):
+    content = []
+
+    for exchange in dialogue:
+        """System Turn"""
+        system_values = create_sub_document(exchange, ['sysSA', 'sysRep_field'])
+        if system_values:
+            content.append( ",".join(system_values) )
+
+        """User Turn"""
+        user_values = create_sub_document(exchange, ['userSA', 'userFields'])
+        if user_values:
+            content.append( ",".join(user_values) )
+
+    dialog_id = iteration + "_" + corpus.replace(" ", "_")
+    document = Document(dialogue_label, content, dialog_id)
+
+    return document
+
+
 def create_sub_document(exchange, parameter):
     values = []
 
@@ -60,7 +108,7 @@ def create_sub_document(exchange, parameter):
         raise ValueError("Unknown parameter!", sa)
 
     # process field value
-    if field == "userFields" or field == "sysRep.field":
+    if field == "userFields" or field == "sysRep_field":
         value = normalize_field_values(exchange[field])
         if value != "":
             values.append(value)
