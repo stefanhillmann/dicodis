@@ -3,7 +3,7 @@ import operator
 
 
 def sort_by_key(d):
-    ordered_dict = collections.OrderedDict( sorted(d.items()) )
+    ordered_dict = collections.OrderedDict( sorted(list(d.items())) )
     
     return ordered_dict
 

@@ -7,22 +7,28 @@ Created on Fri Jun  7 11:56:52 2013
 import logging
 from collections import Counter
 from collections import OrderedDict
-
 from common.ngram import smoothing
 from common.util import dict as du
 import common.ngram.cached_n_grams as cached_n_grams
+import common.ngram.cached_n_gram_query as cached_query
+import configparser
+import common.util.persistence as persistence
+
+
+# read configuration
+config = configparser.ConfigParser()
+config.read('local_config.ini')
+host = config.get('database', 'host')
+port = config.getint('database', 'port')
+database = config.get('database', 'db_name')
+corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
+dbm = persistence.DbManager(host, port, database)
 
 module_logger = logging.getLogger('ngram')
 
 
 def create_n_grams_from_document(document, n):
-    sizes = list()
-    if type(n) is list:
-        sizes.extend(n)
-    elif type(n) is int:
-        sizes.append(n)
-    else:
-        raise ValueError("Unknown type '{0}' for parameter 'n'.".format(type(n)))
+    sizes = get_n_gram_sizes_as_list(n)
 
     n_grams = []
     # The tuple representation (instead of list) of the tokens is needed for the caching mechanism.
@@ -43,9 +49,30 @@ def create_n_grams_from_document_list(document_list, n):
 
     return n_grams
 
-# TODO: Implment me!
-def get_n_gram_model_from_database_for_documents():
-    raise ValueError("To be implemented")
+
+def get_n_gram_sizes_as_list(n_gram_sizes):
+    sizes = list()
+    if type(n_gram_sizes) is list:
+        sizes.extend(n_gram_sizes)
+    elif type(n_gram_sizes) is int:
+        sizes.append(n_gram_sizes)
+    else:
+        raise ValueError("Unknown type '{0}' for parameter 'n'.".format(type(n_gram_sizes)))
+
+    return sizes
+
+
+def get_n_grams_from_database_for_documents(documents, n_gram_sizes):
+    n_grams = list()
+    for document in documents:
+        n_grams.extend(get_n_grams_from_database_for_single_document(document, n_gram_sizes))
+
+    return n_grams
+
+
+def get_n_grams_from_database_for_single_document(document, n_gram_sizes):
+    sizes = get_n_gram_sizes_as_list(n_gram_sizes)
+    return cached_query.get_n_grams_from_database(document.dialog_id, tuple(sizes))
 
 
 def sort_model_by_n_grams(model):
@@ -84,13 +111,13 @@ def smooth_model(model, l):
     module_logger.debug("Smooth model with l = %s.", l)
 
     # get the frequencies as array
-    absolute_values = model.values()
+    absolute_values = list(model.values())
     
     # compute relative probabilities and smooth them with value l
     smoothed_values = smoothing.compute_probabilities(absolute_values, l)
     
     # create new dictionary with with n-grams and the smoothed values
-    n_grams = model.keys()
+    n_grams = list(model.keys())
     for i in range( len(smoothed_values) ):
         n_gram = n_grams[i]
         probability = smoothed_values[i]
@@ -142,7 +169,7 @@ def get_unique_n_grams_from_models(n_gram_models):
 
 def create_rank_model(frequencies_model):
     # create a list of all unique frequency values
-    unique_frequencies = list(set(frequencies_model.values()))
+    unique_frequencies = list(set( list(frequencies_model.values()) ))
 
     # order this list downward
     unique_frequencies = sorted(unique_frequencies, reverse=True)

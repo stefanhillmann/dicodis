@@ -104,7 +104,8 @@ class FoldValidator:
             self.logger.info('Train class %s in classifier %s with %s documents', class_name, self.classifier.name, len(class_documents))
 
             # ... create the n-grams for training
-            class_n_grams = mg.create_n_grams_from_document_list(class_documents, n)
+            # class_n_grams = mg.create_n_grams_from_document_list(class_documents, n)
+            class_n_grams = mg.get_n_grams_from_database_for_documents(class_documents, n)
             self.classifier.add_class(class_name, class_n_grams, frequency_threshold)
 
     def test_classifier(self):
@@ -113,7 +114,7 @@ class FoldValidator:
         """
         self.logger.debug('Test classifier %s by classifying %s dialogs.', self.classifier.name, len(self.test_set))
         for document in self.test_set:
-            n_grams = mg.create_n_grams_from_document(document, self.n)
+            n_grams = mg.get_n_grams_from_database_for_single_document(document, self.n)
 
             classification_result = self.classifier.classify(n_grams)
             self.logger.debug("testClassifier(): Calculated class = %s - Actual class: %s.",

@@ -186,7 +186,7 @@ class CosineMeasure(Measure):
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
 
-        similarity = cosine_similarity(_x.values(), _y.values())
+        similarity = cosine_similarity(list(_x.values()), list(_y.values()))
         
         """
         In order to get the distance we subtract the similarity from 1.
@@ -212,7 +212,7 @@ class KullbackLeiblerMeasure(Measure):
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        divergence = kullback_leibler_divergence(_x.values(), _y.values())
+        divergence = kullback_leibler_divergence(list(_x.values()), list(_y.values()))
         return divergence
 
 class MeanKullbackLeiblerMeasure(Measure):
@@ -235,8 +235,9 @@ class MeanKullbackLeiblerMeasure(Measure):
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = mean_kullback_leibler_distance(_x.values(), _y.values())
+        distance = mean_kullback_leibler_distance(list(_x.values()), list(_y.values()))
         return distance
+
 
 class SymmetricKullbackLeiblerDistance(Measure):
     def distance(self, x, y, l):
@@ -256,7 +257,7 @@ class SymmetricKullbackLeiblerDistance(Measure):
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = symmetric_kullback_leibler_distance(_y.values(), _y.values())
+        distance = symmetric_kullback_leibler_distance(list(_y.values()), list(_y.values()))
         return distance
 
 class JensenMeasure(Measure):
@@ -274,8 +275,9 @@ class JensenMeasure(Measure):
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = jensen_distance(_x.values(), _y.values())
+        distance = jensen_distance(list(_x.values()), list(_y.values()))
         return distance
+
 
 class RankOrderDistanceMeasure(Measure):
     def distance(self, x, y, l):

@@ -10,6 +10,7 @@ import boris_analysis.dialogs as dialogs
 import common.util.persistence as db
 import configparser
 import boris_analysis.corpora_names as cns
+import pymongo
 
 # read configuration
 config = configparser.ConfigParser()
@@ -63,6 +64,10 @@ for corpus in corpora:
 print("Writing {0} n-grams into database...".format(len(db_items)))
 model_collection = conn_analysis[corpus_ngram_model]
 model_collection.insert(db_items)
+
+print("Creating index with 'n' and 'document_id'.")
+model_collection.create_index([("n", pymongo.ASCENDING), ("document_id", pymongo.ASCENDING)])
+
 db_analysis.close()
 print("Finished.")
 

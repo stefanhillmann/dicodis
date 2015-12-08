@@ -1,13 +1,14 @@
+import configparser
 import logging
+import time
+import traceback
 from multiprocessing import Pool, Manager
 
-from common.analyse import cross_validation as cv
-from boris_analysis import cross_validation_configuration_manual, dialogs
-from common.dialog_document.dialog_reader import DialogsReader
 import common.util.persistence as db
+from boris_analysis import cross_validation_configuration_manual, dialogs
+from boris_analysis.corpora_names import CorporaNames as cns
+from common.analyse import cross_validation as cv
 from common.util.names import Class
-import configparser
-import time
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -93,6 +94,7 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
 
 
 def validate(corpora_to_be_used):
+    print("Working on database '{0}'".format(database))
 
     configurations = cross_validation_configuration_manual.getConfigurations()
     jobs = []
@@ -122,52 +124,66 @@ def validate(corpora_to_be_used):
     n_jobs = len(jobs)
     print('{0} to be executed.'.format( n_jobs ))
 
-    pool = Pool(processes=cross_validation_configuration_manual.validation_processes)
-    result = pool.map_async(run_validation, jobs)
-
     jobs_start = time.time()
-    # monitor loop
-    last_size = 1
-    while True:
-        if result.ready():
-            break
-        else:
-            size = q.qsize()
-            if size > last_size:
-                print("{0} of {1} jobs done.".format(size, n_jobs))
-                last_size = size
-        time.sleep(1)
+    if config.getboolean('cross_validation', 'single_process'):
+        for single_job in jobs:
+            run_validation(single_job)
+    else:
+        pool = Pool(processes=cross_validation_configuration_manual.validation_processes)
+        result = pool.map_async(run_validation, jobs)
+
+        # monitor loop
+        last_size = 1
+        while True:
+            if result.ready():
+                break
+            else:
+                size = q.qsize()
+                if size > last_size:
+                    print("{0} of {1} jobs done.".format(size, n_jobs))
+                    last_size = size
+            time.sleep(1)
     jobs_end = time.time()
+
     print('All jobs finished.')
     print('Execution time for all jobs: {0} seconds.'.format(jobs_end - jobs_start))
 
     
 def run_validation(job):
-    size                = job.configuration.size
-    classifier_name     = job.configuration.classifier
-    frequency_threshold  = job.configuration.frequency_threshold
-    smoothing_value     = job.configuration.smoothing_value
-    criteria            = job.criteria
-    
-    print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
-        
-    cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
-    cross_validator.add_documents(job.negative_dialogs)
-    cross_validator.add_documents(job.positive_dialogs)
-    
-    single_results = cross_validator.run_cross_validation()
-    db.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
-                                            smoothing_value, criteria, host, port, database,
-                                            doc_result_collection)
-    q.put(1)  # put an element on the queue, just to count finished jobs
+    try:
+        size                = job.configuration.size
+        classifier_name     = job.configuration.classifier
+        frequency_threshold  = job.configuration.frequency_threshold
+        smoothing_value     = job.configuration.smoothing_value
+        criteria            = job.criteria
 
+        print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
+
+        cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
+        cross_validator.add_documents(job.negative_dialogs)
+        cross_validator.add_documents(job.positive_dialogs)
+
+        single_results = cross_validator.run_cross_validation()
+        db.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
+                                                smoothing_value, criteria, host, port, database,
+                                                doc_result_collection)
+        q.put(1)  # put an element on the queue, just to count finished jobs
+    except Exception as e:
+        print("Caught exception in worker thread (job: {0}):".format(job))
+
+        # This prints the type, value, and stack trace of the
+        # current exception being handled.
+        traceback.print_exc()
+
+        print()
+        raise e
 
 if __name__ == '__main__':
     
     logging.info("Cross validation starts.")
 
     corpora = [
-        Chorpora(file_turns_succeeded, Class.POSITIVE, file_turns_failed, Class.NEGATIVE, id_column_name, 'task success'),
+        Chorpora(cns.SUCCESSFUL, Class.POSITIVE, cns.NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, 'task success'),
         #Chorpora(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'user judgement'),
         #Chorpora(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation quality'),
         #Chorpora(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'dialogue length'),
