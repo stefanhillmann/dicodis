@@ -150,8 +150,12 @@ def prepare_for_probability_based_measure(x, y, l):
     mg.synchronize_n_grams(x, y)
 
     # sort both models by their n-grams
-    du.sort_by_key(x)
-    du.sort_by_key(y)
+    x.sort_by_n_grams()
+    y.sort_by_n_grams()
+
+    # TODO: Remove?
+    # du.sort_by_key(x)
+    # du.sort_by_key(y)
 
     # compute relative probabilities (depending on *l*, smoothing is either performed or not performed)
     mg.compute_probabilities(x, l)

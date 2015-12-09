@@ -13,6 +13,7 @@ import common.ngram.cached_n_grams as cached_n_grams
 import common.ngram.cached_n_gram_query as cached_query
 import configparser
 import common.util.persistence as persistence
+import common.ngram.n_gram_model as ngm
 
 
 # read configuration
@@ -80,8 +81,9 @@ def sort_model_by_n_grams(model):
 
 
 def generate_model(n_grams):
-    counter = Counter(n_grams)
-    model = dict(counter)
+    # counter = Counter(n_grams)
+    # model = dict(counter)
+    model = ngm.NGramModel(n_grams)
     return model
 
 
@@ -135,8 +137,8 @@ def compute_probabilities(model, l):
     :param l: The smoothing value. Has to be <= 0.0 to avoid smoothing.
     :return: nothing, *model* is directly changed.
     """
-    if l > 0.0 and 0 in model.values():
-        model = smooth_model(model, l)
+    if l > 0.0 and 0 in model.get_frequencies():
+        smooth_model(model, l)
     else:
         sum_of_frequencies = sum(model.values())
         for key in model:
@@ -151,20 +153,24 @@ def synchronize_n_grams(model, other_model):
     :param other_model: another n-gram model (a dict)
     :return: nothing
     """
-    unique_n_grams = get_unique_n_grams_from_models([model, other_model])
-    for n_gram in unique_n_grams:
-        if n_gram not in model:
-            model[n_gram] = 0  # if n_gram is not already in *model*, add it with frequency 0
-        if n_gram not in other_model:
-            other_model[n_gram] = 0  # furthermore, if n_gram is not already in *other_model*, add it with frequency 0
+    model.add_n_grams_if_new( set(other_model.get_n_grams()), 0 )
+    other_model.add_n_grams_if_new( set(model.get_n_grams()), 0 )
 
+    # TODO: Remove?
+    # unique_n_grams = get_unique_n_grams_from_models([model, other_model])
+    # for n_gram in unique_n_grams:
+    #     if not model.contains_n_gram(n_gram):
+    #        model[n_gram] = 0  # if n_gram is not already in *model*, add it with frequency 0
+    #    if not other_model.contains_n_gram(n_gram):
+    #        other_model[n_gram] = 0  # furthermore, if n_gram is not already in *other_model*, add it with frequency 0
 
-def get_unique_n_grams_from_models(n_gram_models):
-    unique_ngrams = set()
-    for model in n_gram_models:
-        unique_ngrams.update(model)
-
-    return unique_ngrams
+# TODO: Remove?
+# def get_unique_n_grams_from_models(n_gram_models):
+#     unique_ngrams = set()
+#     for model in n_gram_models:
+#         unique_ngrams.update(model.get_n_grams())
+#
+#     return unique_ngrams
 
 
 def create_rank_model(frequencies_model):

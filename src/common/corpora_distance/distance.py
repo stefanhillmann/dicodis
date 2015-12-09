@@ -4,6 +4,7 @@ from common.measuring import measures
 from common.measuring.measures import MeasureName
 from common.ngram import model_generator as mg
 from common.util import  rank as rank_util
+from common.ngram.n_gram_model import NGramModel
 
 
 class DistanceCalculator:
@@ -37,7 +38,7 @@ class DistanceCalculator:
         
         Parameter:
         ----------
-        n_gram_model: Dictionary
+        n_gram_model: NGramModel
             n-gram-model of the original/reference corpus.
         other_n_grams: array
             ALL n-grams (NOT just the unique ones) of a corpus. These n-grams are
@@ -46,6 +47,12 @@ class DistanceCalculator:
         l: float
             Smoothing factor lambda.
         """
+
+        if type(n_gram_model) is not NGramModel:
+            raise ValueError('Type of parameter n_gram_model is not NGramModel.')
+
+        if type(n_gram_model) is not NGramModel:
+            raise ValueError('Type of parameter other_model is not NGramModel.')
         
         # compute distance between n_gram_model and other_model
         distance = self.measure.distance(n_gram_model, other_model, l)

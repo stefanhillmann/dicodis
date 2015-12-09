@@ -73,7 +73,7 @@ def read_dialogs(file_path):
 def generate_n_gram_model(dialog_list, n, threshold):
     n_grams = mg.create_n_grams_from_document_list(dialog_list, n)
     model = mg.generate_model(n_grams)
-    model = mg.remove_rare_n_grams(model, threshold)
+    model.remove_rare_n_grams(threshold)
 
     return model
 
