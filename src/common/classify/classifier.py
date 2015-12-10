@@ -34,7 +34,7 @@ class Classifier:
         
         # create class_model
         class_model = mg.generate_model(n_grams)  # create raw model
-        class_model = mg.remove_rare_n_grams(class_model, frequency_threshold)  # remove rare n-grams
+        class_model.remove_rare_n_grams(frequency_threshold)  # remove rare n-grams
 
         # for debug and evaluation of the whole process one can 
         # export the  document model here:

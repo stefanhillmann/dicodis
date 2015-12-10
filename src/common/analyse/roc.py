@@ -19,8 +19,8 @@ def get_roc_points(example_ids, positive_probability_dict, true_class_dict, posi
     """
     sorted_ids = sorted(example_ids, key=lambda x: positive_probability_dict[x], reverse=True)
 
-    n_of_positives = true_class_dict.values().count(positive_class)
-    n_of_negatives = true_class_dict.values().count(negative_class)
+    n_of_positives = true_class_dict.value_counts()[positive_class]
+    n_of_negatives = true_class_dict.value_counts()[negative_class]
 
     score_previous = float("inf")
     fp = 0.0  # false positives counter and x axis
@@ -86,15 +86,13 @@ def get_auc(example_ids, positive_probability_dict, true_class_dict, positive_cl
     """
     sorted_ids = sorted(example_ids, key=lambda x: positive_probability_dict[x], reverse=True)
 
-    n_of_positives = true_class_dict.values().count(positive_class)
+    n_of_positives = true_class_dict.value_counts()[positive_class]
     if n_of_positives == 0:
         print('Zero positives.')
 
-    n_of_negatives = true_class_dict.values().count(negative_class)
+    n_of_negatives = true_class_dict.value_counts()[negative_class]
     if n_of_negatives == 0:
         print('Zero negatives.')
-
-
 
     fp = 0.0
     tp = 0.0

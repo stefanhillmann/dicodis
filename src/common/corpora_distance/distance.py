@@ -65,23 +65,30 @@ class DistanceCalculator:
 Factory methods for Classifiers using different measurements
 """
 
+
 def get_cosine_calculator():
     return DistanceCalculator(measures.CosineMeasure(), MeasureName.COSINE)
+
 
 def get_kullback_leibler_calculator():
     return DistanceCalculator(measures.KullbackLeiblerMeasure(), MeasureName.KULLBACK_LEIBLER)
 
+
 def get_mean_kullback_leibler_calculator():
     return DistanceCalculator(measures.MeanKullbackLeiblerMeasure(), MeasureName.MEAN_KULLBACK_LEIBLER)
+
 
 def get_symmetric_kullback_leibler_calculator():
     return DistanceCalculator(measures.SymmetricKullbackLeiblerDistance(), MeasureName.SYMMETRIC_KULLBACK_LEIBLER)
 
+
 def get_jensen_calculator():
     return DistanceCalculator(measures.JensenMeasure(), MeasureName.JENSEN)
 
+
 def get_rank_order_calculator():
     return DistanceCalculator(measures.RankOrderDistanceMeasure(), MeasureName.RANK_ORDER)
+
 
 def get_distance_calculator(measure_name):
     """
@@ -113,7 +120,7 @@ def get_distance_calculator(measure_name):
         We return nothing, and the following code will crash, when trying to to do something
         with a not existing classifier 
         """
-        print('Unknown classifier was requested. Empty string will be returned')
+        raise ValueError("Unknown measure name '{0}. Cannot create distance calculator.".format(measure_name))
         
     return created_calculator
 

@@ -31,7 +31,7 @@ class DbManager:
 
 
 def get_mongo_db_connection(host, port, database):
-    client = MongoClient(host, port)
+    client = MongoClient(host, port, connect=False)
     db = client[database]
 
     return client, db

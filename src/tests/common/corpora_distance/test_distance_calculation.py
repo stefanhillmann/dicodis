@@ -6,12 +6,15 @@ __date__ = "2015-07-09"
 
 import unittest
 import common.corpora_distance.distance as d
+from common.ngram.n_gram_model import NGramModel
+import pandas
+
 
 class TestDistanceCalculation(unittest.TestCase):
 
     def setUp(self):
-        self.model_a = {'d': 20, 'b': 10, 'c': 20, 'a': 20}
-        self.model_b = {'a': 10, 'b': 10, 'c': 20}
+        self.model_a = NGramModel({'d': 20, 'b': 10, 'c': 20, 'a': 20})
+        self.model_b = NGramModel({'a': 10, 'b': 10, 'c': 20})
 
     def test_rank_order_distance(self):
         calc = d.get_rank_order_calculator()

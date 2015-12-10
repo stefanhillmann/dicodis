@@ -12,7 +12,7 @@ class TestNormalization(unittest.TestCase):
                  "EMPTY", "HangUp", "Inform", "Negate", "Provide", "accept", "accept provide", "affirm",
                  "affirm provide", "negate", "neglect", "provide", ""]
 
-        normalized = map(lambda i: dialogs.normalize_speech_act_name(i), test_set)
+        normalized = list(map(lambda i: dialogs.normalize_speech_act_name(i), test_set))
 
         self.assertEqual(len(test_set), len(normalized))
 

@@ -16,12 +16,17 @@ def compute_probability(num_unique_ngrams, num_ngrams, l, ngram_frequency):
 def compute_probabilities(frequencies_array, l):
     num_unique_ngrams   = len(frequencies_array)
     num_ngrams          = np.sum(frequencies_array)
-    
-    probabilities_array = np.zeros(len(frequencies_array))
+
+    # TODO: remove?
+    # probabilities_array = np.zeros(len(frequencies_array))
+
+    probabilities_dict = dict()
+
     unique_frequencies = np.unique(frequencies_array)
     
     for uf in unique_frequencies:
         uf_probability = compute_probability(num_unique_ngrams, num_ngrams, l, uf)
-        probabilities_array[ np.where(frequencies_array == uf) ] = uf_probability
+        probabilities_dict[uf] = uf_probability
+        # probabilities_array[ np.where(frequencies_array == uf) ] = uf_probability
         
-    return probabilities_array
+    return probabilities_dict

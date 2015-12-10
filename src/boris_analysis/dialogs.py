@@ -14,11 +14,13 @@ import configparser
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-dialogue_db = config.get('dialogue_database', 'dialogues_db_name')
-dialogue_collection = config.get('dialogue_database', 'dialogues_collection')
-
+if config.has_section('database') and config.has_section('dialogue_database'):
+    host = config.get('database', 'host')
+    port = config.getint('database', 'port')
+    dialogue_db = config.get('dialogue_database', 'dialogues_db_name')
+    dialogue_collection = config.get('dialogue_database', 'dialogues_collection')
+else:
+    print("Could not load configuration.")
 
 def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):
     content = []

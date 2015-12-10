@@ -8,8 +8,8 @@ import numpy as np
 from math import sqrt
 import logging
 from abc import ABCMeta, abstractmethod
-from common.util import dict as du
 from common.ngram import model_generator as mg
+from common.ngram.n_gram_model import NGramModel
 
 
 module_logger = logging.getLogger('measures')
@@ -80,8 +80,8 @@ def jensen_distance(p, q):
     """
     module_logger.debug('Computing jensen for p = %s and q = %s', p, q)
     
-    _p = np.array(p)
-    _q = np.array(q)
+    _p = p
+    _q = q
         
     s = _p * np.log(_p)
     t = _q * np.log(_q)
@@ -97,12 +97,15 @@ def rank_order_distance(x, y):
     Computes the Rank Order Distance between the rank models x and y.
     x and y have to contain n-grams and their related ranks (which are usually
     not equal to the frequency of the n-grams!).
+    :param x: pandas.Series with n-grams and their ranks
+    :param y:pandas.Series with n-grams and their ranks
+    :return: Distance between x and y as numeric value.
     """
     module_logger.debug('Computing rank order distance for x = %s and y = %s', x, y)
 
     distance = 0
-    min_rank = min(min(x.values()), min(y.values()))  # get minimum rank from both models (probably always 1)
-    max_rank = max(max(x.values()), max(y.values()))  # get the maximum rank from both models
+    min_rank = min(x.min(), y.min())  # get minimum rank from both models (probably always 1)
+    max_rank = max(x.max(), y.max())  # get the maximum rank from both models
 
     # The default difference is used, if a n-gram is only part of one list.
     # The default distance should be greater than any other distance. -> +1
@@ -110,8 +113,8 @@ def rank_order_distance(x, y):
 
     # collect all unique n_grams
     n_grams = set()
-    n_grams.update(x.keys())
-    n_grams.update(y.keys())
+    n_grams.update(list(x.index))
+    n_grams.update(list(y.index))
 
     # compute for each n-gram the rank difference between both models
     # if a n-gram is contained in only on model, then use the default difference
@@ -171,6 +174,11 @@ class Measure:
         print('Has to be implemented by sub classes.')
         pass
 
+    @staticmethod
+    def check_model_type(model):
+        if type(model) != NGramModel:
+            raise TypeError("model must be NGramModel but is {0}.".format(type(model)))
+
 
 class CosineMeasure(Measure):
     def distance(self, x, y, l):
@@ -186,11 +194,14 @@ class CosineMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
 
-        similarity = cosine_similarity(list(_x.values()), list(_y.values()))
+        similarity = cosine_similarity(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         
         """
         In order to get the distance we subtract the similarity from 1.
@@ -213,10 +224,13 @@ class KullbackLeiblerMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        divergence = kullback_leibler_divergence(list(_x.values()), list(_y.values()))
+        divergence = kullback_leibler_divergence(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return divergence
 
 class MeanKullbackLeiblerMeasure(Measure):
@@ -236,10 +250,13 @@ class MeanKullbackLeiblerMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = mean_kullback_leibler_distance(list(_x.values()), list(_y.values()))
+        distance = mean_kullback_leibler_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
 
 
@@ -258,10 +275,13 @@ class SymmetricKullbackLeiblerDistance(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = symmetric_kullback_leibler_distance(list(_y.values()), list(_y.values()))
+        distance = symmetric_kullback_leibler_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
 
 class JensenMeasure(Measure):
@@ -276,10 +296,13 @@ class JensenMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = jensen_distance(list(_x.values()), list(_y.values()))
+        distance = jensen_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
 
 
@@ -293,11 +316,15 @@ class RankOrderDistanceMeasure(Measure):
         :param l: _not used_ in the rank order algorithm, but defined by the interface.
         :return: an integer value between 0 (no difference) and any integer value greater than 0.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         x_rank_model = mg.create_rank_model(x)
         y_rank_model = mg.create_rank_model(y)
 
         distance = rank_order_distance(x_rank_model, y_rank_model)
         return distance
+
 
 class MeasureName:
     COSINE                      = 'cosine'

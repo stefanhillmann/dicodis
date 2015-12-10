@@ -86,6 +86,8 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
     count = r.count()
     is_done = count == no_of_dialogs
 
+    dbm.close()
+
     if not is_done and count > 0:
         print('Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration))
         assert count == 0  # emergency hold

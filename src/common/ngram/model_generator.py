@@ -13,17 +13,20 @@ import common.ngram.cached_n_grams as cached_n_grams
 import common.ngram.cached_n_gram_query as cached_query
 import configparser
 import common.util.persistence as persistence
-import common.ngram.n_gram_model as ngm
+from common.ngram.n_gram_model import NGramModel
 
 
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-dbm = persistence.DbManager(host, port, database)
+if config.has_section('database'):
+    host = config.get('database', 'host')
+    port = config.getint('database', 'port')
+    database = config.get('database', 'db_name')
+    corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
+    dbm = persistence.DbManager(host, port, database)
+else:
+    print("model_generator: No database configuration loaded.")
 
 module_logger = logging.getLogger('ngram')
 
@@ -83,11 +86,17 @@ def sort_model_by_n_grams(model):
 def generate_model(n_grams):
     # counter = Counter(n_grams)
     # model = dict(counter)
-    model = ngm.NGramModel(n_grams)
+    model = NGramModel(n_grams)
     return model
 
 
 def remove_rare_n_grams(model, threshold):
+    """
+    Deprecated, instead use NGramModel.remove_rare_n_grams.
+    :param model:
+    :param threshold:
+    :return:
+    """
     new_model = OrderedDict()
         
     for key in model.keys():
@@ -102,7 +111,7 @@ def smooth_model(model, l):
     Smoothes a n-gram model using the value l as 'add'.
     Parameters
     ----------
-    model : dictionary
+    model : NGramModel
         an n-gram model with absolute frequencies
     l : float
         the value to be added
@@ -110,20 +119,25 @@ def smooth_model(model, l):
     -------
     dictionary : a model with smoothed values for n-gram probabilities.
     """
+    if type(model) is not NGramModel:
+        raise TypeError("'model' must be a NGramModel.")
+
     module_logger.debug("Smooth model with l = %s.", l)
 
     # get the frequencies as array
-    absolute_values = list(model.values())
+    absolute_values = list(model.get_frequencies())
     
     # compute relative probabilities and smooth them with value l
-    smoothed_values = smoothing.compute_probabilities(absolute_values, l)
-    
+    smoothed_probabilities_dict = smoothing.compute_probabilities(absolute_values, l)
+    model.replace_frequencies(smoothed_probabilities_dict)
+
+
     # create new dictionary with with n-grams and the smoothed values
-    n_grams = list(model.keys())
-    for i in range( len(smoothed_values) ):
-        n_gram = n_grams[i]
-        probability = smoothed_values[i]
-        model[n_gram] = probability
+    # n_grams = list(model.keys())
+    # for i in range( len(smoothed_values) ):
+    #    n_gram = n_grams[i]
+    #    probability = smoothed_values[i]
+    #    model[n_gram] = probability
 
 
 def compute_probabilities(model, l):
@@ -140,9 +154,11 @@ def compute_probabilities(model, l):
     if l > 0.0 and 0 in model.get_frequencies():
         smooth_model(model, l)
     else:
-        sum_of_frequencies = sum(model.values())
-        for key in model:
-            model[key] = model[key] / float(sum_of_frequencies)
+        model.transform_to_relative_frequencies()
+        # TODO: remove?
+        #sum_of_frequencies = sum(model.values())
+        #for key in model:
+        #    model[key] = model[key] / float(sum_of_frequencies)
 
 
 def synchronize_n_grams(model, other_model):
@@ -174,26 +190,35 @@ def synchronize_n_grams(model, other_model):
 
 
 def create_rank_model(frequencies_model):
-    # create a list of all unique frequency values
-    unique_frequencies = list(set( list(frequencies_model.values()) ))
+    """
+    Computes a rank model from a frequency based model.
+    :param frequencies_model: A NGramModel.
+    :return: pandas.Series containing the n-grams and their ranks.
+    """
+    if type(frequencies_model) != NGramModel:
+        raise TypeError("frequencies_model must be a NGramModel")
 
-    # order this list downward
-    unique_frequencies = sorted(unique_frequencies, reverse=True)
-
-    # create ordered list of all possible ranks (1 to number of unique frequencies)
-    ranks = list(range(1, len(unique_frequencies) + 1))
-
-    # zip unique freq. and ranks together -> highest frequency will be related to lowest rank (i.e. 1) and so on
-    rank_dict = dict(zip(unique_frequencies, ranks))
-
-    # build rank model
-    rank_model = {}
-    for n_gram in frequencies_model.keys():
-        frequency = frequencies_model[n_gram]  # get frequency of n_gram
-        rank = rank_dict[frequency]            # get the rank of frequency
-        rank_model[n_gram] = rank              # put n_gram and rank in rank_model
-
-    return rank_model
+    return frequencies_model.get_rank_model()
+    # # create a list of all unique frequency values
+    # unique_frequencies = list(set( list(frequencies_model.values()) ))
+    #
+    # # order this list downward
+    # unique_frequencies = sorted(unique_frequencies, reverse=True)
+    #
+    # # create ordered list of all possible ranks (1 to number of unique frequencies)
+    # ranks = list(range(1, len(unique_frequencies) + 1))
+    #
+    # # zip unique freq. and ranks together -> highest frequency will be related to lowest rank (i.e. 1) and so on
+    # rank_dict = dict(zip(unique_frequencies, ranks))
+    #
+    # # build rank model
+    # rank_model = {}
+    # for n_gram in frequencies_model.keys():
+    #     frequency = frequencies_model[n_gram]  # get frequency of n_gram
+    #     rank = rank_dict[frequency]            # get the rank of frequency
+    #     rank_model[n_gram] = rank              # put n_gram and rank in rank_model
+    #
+    # return rank_model
 
 
 class NGramSize:

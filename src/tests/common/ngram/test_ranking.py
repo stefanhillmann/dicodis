@@ -1,12 +1,11 @@
-__author__ = 'Stefan Hillmann'
-
 import unittest
 from common.ngram import model_generator as mg
+from common.ngram.n_gram_model import NGramModel
 
 class TestRanking(unittest.TestCase):
 
     def test_create_rank_model_from_different_frequencies(self):
-        f_model = {'a': 10, 'b': 30, 'c': 20}  # test data
+        f_model = NGramModel({'a': 10, 'b': 30, 'c': 20})  # test data
 
         r_model = mg.create_rank_model(f_model)
 
@@ -16,7 +15,7 @@ class TestRanking(unittest.TestCase):
         self.assertEqual(r_model['c'], 2)
 
     def test_create_rank_model_from_overlapping_frequencies(self):
-        f_model = {'a': 10, 'b': 30, 'c': 10}  # test data
+        f_model = NGramModel({'a': 10, 'b': 30, 'c': 10})  # test data
 
         r_model = mg.create_rank_model(f_model)
 
@@ -26,7 +25,7 @@ class TestRanking(unittest.TestCase):
         self.assertEqual(r_model['c'], 2)
 
     def test_create_rank_model_from_overlapping_frequencies(self):
-        f_model = {'a': 50, 'b': 50, 'c': 50}  # test data
+        f_model = NGramModel({'a': 50, 'b': 50, 'c': 50})  # test data
 
         r_model = mg.create_rank_model(f_model)
 
@@ -36,7 +35,7 @@ class TestRanking(unittest.TestCase):
         self.assertEqual(r_model['c'], 1)
 
     def test_create_rank_model_from_empty_frequencies_model(self):
-        f_model = {}  # test data
+        f_model = NGramModel({})  # test data
 
         r_model = mg.create_rank_model(f_model)
 

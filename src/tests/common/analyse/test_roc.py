@@ -7,6 +7,8 @@ Created on Tue Jul 23 11:32:00 2015
 import unittest
 import common.analyse.roc
 from common.util.names import Class
+from pandas import Series
+
 
 class TestROC(unittest.TestCase):
 
@@ -16,8 +18,8 @@ class TestROC(unittest.TestCase):
 
         probabilities = {'a': 0.5, 'b': 0.7, 'c': 0.8, 'd': 0.3, 'e': 0.8}
 
-        true_classes = {'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
-                        'e': Class.NEGATIVE}
+        true_classes = Series({'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
+                            'e': Class.NEGATIVE})
 
         roc_points = common.analyse.roc.get_roc_points(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
 
@@ -45,8 +47,8 @@ class TestROC(unittest.TestCase):
 
         probabilities = {'a': 0.5, 'b': 0.7, 'c': 0.8, 'd': 0.3, 'e': 0.8}
 
-        true_classes = {'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
-                        'e': Class.NEGATIVE}
+        true_classes = Series({'a': Class.POSITIVE, 'b': Class.POSITIVE, 'c': Class.POSITIVE, 'd': Class.NEGATIVE,
+                        'e': Class.NEGATIVE})
 
         auc = common.analyse.roc.get_auc(ids, probabilities, true_classes, Class.POSITIVE, Class.NEGATIVE)
 

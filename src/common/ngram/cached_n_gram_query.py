@@ -9,13 +9,17 @@ import functools
 import configparser
 import common.util.persistence as persistence
 
+
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-dbm = persistence.DbManager(host, port, database)
+if config.has_section('database'):
+    host = config.get('database', 'host')
+    port = config.getint('database', 'port')
+    database = config.get('database', 'db_name')
+    corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
+    dbm = persistence.DbManager(host, port, database)
+else:
+    print("cached_n_gram_query: No database configuration loaded.")
 
 
 class Memorized(object):
