@@ -5,36 +5,39 @@ Created on Tue Jul 22 15:05:10 2015
 """
 
 from pymongo import MongoClient
+import configparser
 from common.util.names import Class
 
 
-class DbManager:
+config = configparser.ConfigParser()
+config.read('local_config.ini')
 
-    def __init__(self, host, port, database):
-        self.client, self.db = get_mongo_db_connection(host, port, database)
-
-    def write_results_to_database(self, results, collection_name):
-
-        # transform instances to dict
-        dicts = list()
-        for r in results:
-            dicts.append(r.dict_representation())
-
-        collection = self.db[collection_name]
-        collection.insert(dicts)
-
-    def get_connection(self):
-        return self.db
-
-    def close(self):
-        self.client.close()
+if config.has_section('database'):
+    host = config.get('database', 'host')
+    port = config.getint('database', 'port')
+    database = config.get('database', 'name')
+    client = MongoClient(host, port)
+    connection = client[database]
+else:
+    print('Could not load database configuration. Empty values will be used.')
+    client = None
+    connection = None
 
 
-def get_mongo_db_connection(host, port, database):
-    client = MongoClient(host, port, connect=False)
-    db = client[database]
+def close():
+    client.close()
 
-    return client, db
+
+def get_collection(collection_name):
+    return connection[collection_name]
+
+
+def get_database_name():
+    return database
+
+
+def create_client(_host, _port):
+    return MongoClient(_host, _port)
 
 
 class EvaluationResult:
@@ -66,8 +69,19 @@ class EvaluationResult:
         return d
 
 
+def write_results_to_database(self, results, collection_name):
+
+        # transform instances to dict
+        dicts = list()
+        for r in results:
+            dicts.append(r.dict_representation())
+
+        collection = self.db[collection_name]
+        collection.insert(dicts)
+
+
 def write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
-                                         smoothing_value, criteria, host, port, database_name, collection_name):
+                                         smoothing_value, criteria, **kwargs):
     evaluation_results = []
     for sr in single_results:
         er = EvaluationResult(evaluation_id, criteria, sr.document.dialog_id, classifier_name, size,
@@ -76,6 +90,11 @@ def write_evaluation_results_to_database(evaluation_id, single_results, size, cl
                               sr.classification_result.negative_class_distance, Class.POSITIVE, Class.NEGATIVE)
         evaluation_results.append(er)
 
-    con = DbManager(host, port, database_name)
-    con.write_results_to_database(evaluation_results, collection_name)
-    con.close()
+    if 'collection_name' in kwargs.keys():
+        doc_result_collection = kwargs['collection_name']
+    else:
+        doc_result_collection = config.get('collections', 'doc_result')
+    coll_documents = get_collection(doc_result_collection)
+    write_results_to_database(evaluation_results, coll_documents)
+
+

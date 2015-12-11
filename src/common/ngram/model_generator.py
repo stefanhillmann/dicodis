@@ -5,28 +5,13 @@ Created on Fri Jun  7 11:56:52 2013
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 import logging
-from collections import Counter
 from collections import OrderedDict
-from common.ngram import smoothing
-from common.util import dict as du
-import common.ngram.cached_n_grams as cached_n_grams
+
 import common.ngram.cached_n_gram_query as cached_query
-import configparser
-import common.util.persistence as persistence
+import common.ngram.cached_n_grams as cached_n_grams
+from common.ngram import smoothing
 from common.ngram.n_gram_model import NGramModel
-
-
-# read configuration
-config = configparser.ConfigParser()
-config.read('local_config.ini')
-if config.has_section('database'):
-    host = config.get('database', 'host')
-    port = config.getint('database', 'port')
-    database = config.get('database', 'db_name')
-    corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-    dbm = persistence.DbManager(host, port, database)
-else:
-    print("model_generator: No database configuration loaded.")
+from common.util import dict as du
 
 module_logger = logging.getLogger('ngram')
 

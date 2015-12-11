@@ -9,7 +9,7 @@ from common.corpora_distance import distance as d
 from common.corpora_distance import normalized_rank_order_distance as nd
 import common.measuring.measures
 
-import common.util.persistence as db
+import common.util.persistence as pe
 
 
 import configparser
@@ -20,13 +20,7 @@ logging.basicConfig(level=logging.WARNING)
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-distances_collection = config.get('database', 'distances_collection')
-dbm = db.DbManager(host, port, database)
-
+distances_collection_name = config.get('collections', 'distances')
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
 
@@ -101,8 +95,8 @@ for data_set_name in corpora_pairs.keys():
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
-db_connection = dbm.get_connection()
-distances = db_connection[distances_collection]
-
+distances = pe.get_collection(distances_collection_name)
 print('Write {0} results to database.'.format(len(distances_list)))
 distances.insert(distances_list)
+
+pe.close()

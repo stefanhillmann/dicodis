@@ -7,7 +7,7 @@ Created on Tue Jul 23 09:09:30 2015
 from common.ngram import model_generator as mg
 from common.util.names import Class
 import boris_analysis.dialogs as dialogs
-import common.util.persistence as db
+import common.util.persistence as pe
 import configparser
 import boris_analysis.corpora_names as cns
 import pymongo
@@ -16,12 +16,7 @@ import pymongo
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-db_analysis = db.DbManager(host, port, database)
-conn_analysis = db_analysis.get_connection()
+n_grams_collection_name = config.get('collections', 'n_grams')
 
 n_gram_size_list = list(range(1, 8 + 1))  # [1, ..., 8]
 f_min_list = [1, 2]
@@ -62,13 +57,13 @@ for corpus in corpora:
                     db_items.append(db_entry)
 
 print("Writing {0} n-grams into database...".format(len(db_items)))
-model_collection = conn_analysis[corpus_ngram_model]
-model_collection.insert(db_items)
+n_grams_collection = pe.get_collection(n_grams_collection_name)
+n_grams_collection.insert(db_items)
 
 print("Creating index with 'n' and 'document_id'.")
-model_collection.create_index([("n", pymongo.ASCENDING), ("document_id", pymongo.ASCENDING)])
+n_grams_collection.create_index([("n", pymongo.ASCENDING), ("document_id", pymongo.ASCENDING)])
 
-db_analysis.close()
+pe.close()
 print("Finished.")
 
 

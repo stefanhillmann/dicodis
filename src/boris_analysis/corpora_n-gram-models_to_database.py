@@ -8,18 +8,15 @@ from common.ngram import model_generator as mg
 from common.dialog_document.dialog_reader import DialogsReader
 from common.util.names import Class
 import boris_analysis.dialogs as dialogs
-import common.util.persistence as db
+import common.util.persistence as pe
 import configparser
 
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-dbm = db.DbManager(host, port, database)
+n_grams_collection_name = config.get('collections', 'n_grams')
+
 
 base_directory = config.get('cross_validation', 'source_directory')
 id_column_name = 'iteration'
@@ -86,10 +83,9 @@ for corpus in corpus_to_file.keys():
                 db_items.append(db_entry)
 
 print("Writing {0} n-gram into database...".format(len(db_items)))
-db_connection = dbm.get_connection()
-model_collection = db_connection[corpus_ngram_model]
-model_collection.insert(db_items)
-dbm.close()
+n_gram_collection = pe.get_collection(n_grams_collection_name)
+n_gram_collection.insert(db_items)
+pe.close()
 print("Finished.")
 
 

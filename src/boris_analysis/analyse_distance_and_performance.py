@@ -12,17 +12,13 @@ config = configparser.ConfigParser()
 config.read('local_config.ini')
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-distances_collection = config.get('database', 'distances_collection')
-performance_collection = config.get('database', 'performance_collection')
 
-dbm = persistence.DbManager(host, port, database)
-db = dbm.get_connection()
-db_distances = db[distances_collection]
-db_performance = db[performance_collection]
-db_distance_performance = db[config.get('database', 'distance_performance_collection')]
+distances_collection = config.get('collections', 'distances')
+performance_collection = config.get('collections', 'performance')
+
+db_distances = persistence.get_collection(distances_collection)
+db_performance = persistence.get_collection(performance_collection)
+db_distance_performance = persistence.get_collection(config.get('database', 'distance_performance'))
 
 configurations = cvc.getConfigurations()
 
@@ -98,3 +94,4 @@ for criteria in criteria_to_data_set.keys():
         results.append(result)
 
 db_distance_performance.insert(results)
+persistence.close()

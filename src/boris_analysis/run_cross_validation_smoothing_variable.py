@@ -1,14 +1,15 @@
+import configparser
 import logging
 from multiprocessing.pool import Pool
 
+import common.util.persistence as db
+from boris_analysis import cross_validation_configuration, dialogs
 from common.analyse import cross_validation as cv
 from common.analyse.cross_validation import ResultAssessor
-from boris_analysis import cross_validation_configuration, dialogs
-from common.util import time_util
 from common.dialog_document.dialog_reader import DialogsReader
-import common.util.persistence as db
+from common.util import time_util
 from common.util.names import Class
-import configparser
+import common.util.persistence as pe
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -17,12 +18,7 @@ logging.basicConfig(level=logging.WARNING)
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-doc_result_collection = config.get('database', 'doc_result_collection')
-
-dbm = db.DbManager(host, port, database)
+doc_result_collection = config.get('collections', 'doc_result')
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
@@ -63,8 +59,7 @@ class Job:
         
 
 def is_job_already_done(criteria, configuration, no_of_dialogs):
-    db_con = dbm.get_connection()
-    doc_res = db_con[doc_result_collection]
+    doc_res = pe.get_collection(doc_result_collection)
     r = doc_res.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
                             'classifier_name': configuration.classifier, 'frequency_threshold': configuration.frequency_threshold,
                             'smoothing_value': configuration.smoothing_value})
@@ -127,8 +122,7 @@ def run_validation(job):
     
     single_results = cross_validator.run_cross_validation()
     db.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
-                                            smoothing_value, criteria, host, port, database,
-                                            doc_result_collection)
+                                            smoothing_value, criteria)
 
     assessor = ResultAssessor(single_results, Class.POSITIVE, Class.NEGATIVE,
                               classifier_name, size, frequency_threshold, criteria,

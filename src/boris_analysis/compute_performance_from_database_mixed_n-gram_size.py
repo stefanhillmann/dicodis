@@ -6,16 +6,9 @@ import numpy as np
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 
 configurations = cvc.getConfigurations()
-
-dbm = pe.DbManager(host, port, database)
-db = dbm.get_connection()
 
 # Prepare R connection
 rc = pyr.connect()
@@ -23,8 +16,8 @@ rc.voidEval("library(pROC)")
 rc.r.levels = ['positive', 'negative']
 
 
-results = db[config.get('database', 'doc_result_collection')]
-performance = db[config.get('database', 'performance_collection')]
+results = pe.get_collection(config.get('collections', 'doc_result'))
+performance = pe.get_collection(config.get('collections', 'performance'))
 
 # get criteria from database
 criteria = results.distinct('criteria')
@@ -77,7 +70,7 @@ for cri in criteria:
     performance.insert(performance_results)
     print('Results for criteria {0} were written to database\n'.format(cri))
 
-dbm.close()
+pe.close()
 
 
 

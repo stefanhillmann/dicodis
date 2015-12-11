@@ -5,9 +5,9 @@ __author__ = 'Stefan Hillmann (public@stefan-hillmann.net)'
 __date__ = "2015-07-09"
 
 import unittest
+
 import common.corpora_distance.distance as d
 from common.ngram.n_gram_model import NGramModel
-import pandas
 
 
 class TestDistanceCalculation(unittest.TestCase):

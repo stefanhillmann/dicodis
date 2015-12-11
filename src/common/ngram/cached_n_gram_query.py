@@ -13,11 +13,7 @@ import common.util.persistence as persistence
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 if config.has_section('database'):
-    host = config.get('database', 'host')
-    port = config.getint('database', 'port')
-    database = config.get('database', 'db_name')
-    corpus_ngram_model = config.get('database', 'corpus_ngram_model_collection')
-    dbm = persistence.DbManager(host, port, database)
+    corpus_ngram_model = config.get('collections', 'n_grams')
 else:
     print("cached_n_gram_query: No database configuration loaded.")
 
@@ -53,14 +49,10 @@ class Memorized(object):
         return functools.partial(self.__call__, obj)
 
 
-
-
-
 @Memorized
 def get_n_grams_from_database(document_id, sizes):
     # connect to database
-    conn = dbm.get_connection()
-    coll_n_grams = conn[corpus_ngram_model]
+    coll_n_grams = persistence.get_collection(corpus_ngram_model)
 
     # get n-grams for each n-gram size and the current document
     # Hint: currently we use the precomputed n-grams from the database.

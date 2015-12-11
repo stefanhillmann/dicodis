@@ -4,7 +4,7 @@ import time
 import traceback
 from multiprocessing import Pool, Manager
 
-import common.util.persistence as db
+from common.util import persistence
 from boris_analysis import cross_validation_configuration_manual, dialogs
 from boris_analysis.corpora_names import CorporaNames as cns
 from common.analyse import cross_validation as cv
@@ -16,13 +16,9 @@ logging.basicConfig(level=logging.WARNING)
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
+doc_result_collection = config.get('collection', 'doc_result')
+coll_documents = persistence.get_collection(doc_result_collection)
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-doc_result_collection = config.get('database', 'doc_result_collection')
-
-dbm = db.DbManager(host, port, database)
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
@@ -78,15 +74,12 @@ class Job:
         
 
 def is_job_already_done(criteria, configuration, no_of_dialogs):
-    db_con = dbm.get_connection()
-    doc_res = db_con[doc_result_collection]
-    r = doc_res.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
-                            'classifier_name': configuration.classifier, 'frequency_threshold': configuration.frequency_threshold,
-                            'smoothing_value': configuration.smoothing_value})
+    r = coll_documents.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
+                             'classifier_name': configuration.classifier,
+                             'frequency_threshold': configuration.frequency_threshold,
+                             'smoothing_value': configuration.smoothing_value})
     count = r.count()
     is_done = count == no_of_dialogs
-
-    dbm.close()
 
     if not is_done and count > 0:
         print('Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration))
@@ -96,7 +89,7 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
 
 
 def validate(corpora_to_be_used):
-    print("Working on database '{0}'".format(database))
+    print("Working on database '{0}'".format(persistence.get_database_name()))
 
     configurations = cross_validation_configuration_manual.getConfigurations()
     jobs = []
@@ -166,9 +159,8 @@ def run_validation(job):
         cross_validator.add_documents(job.positive_dialogs)
 
         single_results = cross_validator.run_cross_validation()
-        db.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
-                                                smoothing_value, criteria, host, port, database,
-                                                doc_result_collection)
+        persistence.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name,
+                                                         frequency_threshold, smoothing_value, criteria)
         q.put(1)  # put an element on the queue, just to count finished jobs
     except Exception as e:
         print("Caught exception in worker thread (job: {0}):".format(job))
