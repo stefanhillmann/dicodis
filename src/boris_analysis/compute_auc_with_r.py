@@ -7,7 +7,7 @@ import numpy as np
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-results = pe.get_collection(config.get('collections', 'doc_result'))
+results = pe.get_collection(pe.Collection.doc_result)
 
 # , 'positive_class_distance:': {'$gt': 0.8}
 

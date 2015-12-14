@@ -7,7 +7,7 @@ from common.util.names import Class
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-coll_doc_results = persistence.get_collection(config.get('collections', 'doc_result'))
+coll_doc_results = persistence.get_collection(persistence.Collection.doc_result)
 
 # , 'positive_class_distance:': {'$gt': 0.8}
 

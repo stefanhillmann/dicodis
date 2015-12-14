@@ -121,7 +121,7 @@ def rank_order_distance(x, y):
     for n_gram in n_grams:
         difference = default_difference
 
-        if n_gram in x and n_gram in y:
+        if n_gram in y and n_gram in x:
             difference = abs(x[n_gram] - y[n_gram])  # compute the difference
 
         distance += difference  # add n-gram difference to total distance

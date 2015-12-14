@@ -13,12 +13,9 @@ config.read('local_config.ini')
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 
-distances_collection = config.get('collections', 'distances')
-performance_collection = config.get('collections', 'performance')
-
-db_distances = persistence.get_collection(distances_collection)
-db_performance = persistence.get_collection(performance_collection)
-db_distance_performance = persistence.get_collection(config.get('database', 'distance_performance'))
+db_distances = persistence.get_collection(persistence.Collection.distances)
+db_performance = persistence.get_collection(persistence.Collection.performance)
+db_distance_performance = persistence.get_collection(persistence.Collection.distance_performance)
 
 configurations = cvc.getConfigurations()
 

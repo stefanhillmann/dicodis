@@ -7,37 +7,96 @@ Created on Tue Jul 22 15:05:10 2015
 from pymongo import MongoClient
 import configparser
 from common.util.names import Class
-
+from enum import Enum
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
+
+class Collection(Enum):
+    doc_result = 1
+    performance = 2
+    distances = 3
+    distance_performance = 4
+    n_grams = 5
+    dialogues = 6
+
+
+COLLECTION_NAMES = {
+    Collection.doc_result: "documents_result_TEST",
+    Collection.performance: "performance",
+    Collection.distances: "distances_fitted_size",
+    Collection.distance_performance: "distance_performance",
+    Collection.n_grams: "n_grams",
+    Collection.dialogues: "dialogues"
+}
+
+
+class Database(Enum):
+    production = 1
+    unit_testing = 2
+
+
+DATABASE_NAMES = {
+    Database.production: "cross_validation_mixed_TEST",
+    Database.unit_testing: "UNITTEST_classification_cross_validation"
+}
+
+current_database = Database.production
+
+
+class DbClient(object):
+    __state = {}
+
+    def __init__(self, host, port):
+        self.__dict__ = self.__state
+        self.host = host
+        self.port = port
+
+    def connect(self):
+        try:
+            # does client exist?
+            self.client
+        except AttributeError:
+            # no! Create it!
+            print("Create MongoClient.")
+            self.client = MongoClient(self.host, self.port, connect=False)
+
+    def get_connection(self, database):
+        self.connect()
+        if type(database) is not Database:
+            raise TypeError(
+                "Parameter database has to be from type Database (see persistence.py). Current type and value: {0} ({1}".format(
+                    type(database), str(database)
+                ))
+
+        return self.client[DATABASE_NAMES[database]]
+
+    def close(self):
+        self.client.close()
+
+host = "host"
+port = 0
 if config.has_section('database'):
     host = config.get('database', 'host')
     port = config.getint('database', 'port')
-    database = config.get('database', 'name')
-    client = MongoClient(host, port)
-    connection = client[database]
 else:
-    print('Could not load database configuration. Empty values will be used.')
-    client = None
-    connection = None
+    print('Could not load database configuration. Empty values are used.')
+
+db_client = DbClient(host, port)
 
 
 def close():
-    client.close()
+    db_client.close()
 
 
-def get_collection(collection_name):
-    return connection[collection_name]
+def get_collection(collection):
+    if type(collection) is not Collection:
+        raise TypeError("Parameter collection has to be from type Collection (see persistence.py.")
 
-
-def get_database_name():
-    return database
-
-
-def create_client(_host, _port):
-    return MongoClient(_host, _port)
+    db_connection = db_client.get_connection(current_database)
+    collection_name = COLLECTION_NAMES[collection]
+    return db_connection[collection_name]
 
 
 class EvaluationResult:
@@ -69,19 +128,19 @@ class EvaluationResult:
         return d
 
 
-def write_results_to_database(self, results, collection_name):
+def write_results_to_database(results):
 
         # transform instances to dict
         dicts = list()
         for r in results:
             dicts.append(r.dict_representation())
 
-        collection = self.db[collection_name]
+        collection = get_collection(Collection.doc_result)
         collection.insert(dicts)
 
 
 def write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name, frequency_threshold,
-                                         smoothing_value, criteria, **kwargs):
+                                         smoothing_value, criteria):
     evaluation_results = []
     for sr in single_results:
         er = EvaluationResult(evaluation_id, criteria, sr.document.dialog_id, classifier_name, size,
@@ -90,11 +149,5 @@ def write_evaluation_results_to_database(evaluation_id, single_results, size, cl
                               sr.classification_result.negative_class_distance, Class.POSITIVE, Class.NEGATIVE)
         evaluation_results.append(er)
 
-    if 'collection_name' in kwargs.keys():
-        doc_result_collection = kwargs['collection_name']
-    else:
-        doc_result_collection = config.get('collections', 'doc_result')
-    coll_documents = get_collection(doc_result_collection)
-    write_results_to_database(evaluation_results, coll_documents)
-
+    write_results_to_database(evaluation_results)
 

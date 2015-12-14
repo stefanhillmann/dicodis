@@ -16,8 +16,7 @@ logging.basicConfig(level=logging.WARNING)
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-doc_result_collection = config.get('collection', 'doc_result')
-coll_documents = persistence.get_collection(doc_result_collection)
+coll_documents = persistence.get_collection(persistence.Collection.doc_result)
 
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
@@ -89,8 +88,6 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
 
 
 def validate(corpora_to_be_used):
-    print("Working on database '{0}'".format(persistence.get_database_name()))
-
     configurations = cross_validation_configuration_manual.getConfigurations()
     jobs = []
     job_number = 0
@@ -108,13 +105,10 @@ def validate(corpora_to_be_used):
 
         for configuration in configurations:
             print('Generate job: criteria: {0}, configuration: {1}'.format(cor.criteria, configuration))
-            if is_job_already_done(cor.criteria, configuration, len(positive_dialogs) + len(negative_dialogs)):
-                print('Already done! (criteria: {0}, configuration: {1})'.format(cor.criteria, configuration))
-            else:
-                job_number += 1
-                job = Job(configuration, positive_dialogs, negative_dialogs, cor.positive_class,
-                          cor.negative_class, cor.criteria, job_number)
-                jobs.append(job)
+            job_number += 1
+            job = Job(configuration, positive_dialogs, negative_dialogs, cor.positive_class,
+                      cor.negative_class, cor.criteria, job_number)
+            jobs.append(job)
 
     n_jobs = len(jobs)
     print('{0} to be executed.'.format( n_jobs ))
@@ -152,15 +146,19 @@ def run_validation(job):
         smoothing_value     = job.configuration.smoothing_value
         criteria            = job.criteria
 
-        print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
+        if is_job_already_done(job.criteria, job.configuration, len(job.positive_dialogs) + len(job.negative_dialogs)):
+            print('Already done! (criteria: {0}, configuration: {1})'.format(criteria, job.configuration))
+        else:
+            print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
 
-        cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
-        cross_validator.add_documents(job.negative_dialogs)
-        cross_validator.add_documents(job.positive_dialogs)
+            cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
+            cross_validator.add_documents(job.negative_dialogs)
+            cross_validator.add_documents(job.positive_dialogs)
 
-        single_results = cross_validator.run_cross_validation()
-        persistence.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name,
-                                                         frequency_threshold, smoothing_value, criteria)
+            single_results = cross_validator.run_cross_validation()
+            persistence.write_evaluation_results_to_database(evaluation_id, single_results, size, classifier_name,
+                                                             frequency_threshold, smoothing_value, criteria)
+
         q.put(1)  # put an element on the queue, just to count finished jobs
     except Exception as e:
         print("Caught exception in worker thread (job: {0}):".format(job))

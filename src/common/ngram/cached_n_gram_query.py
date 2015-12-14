@@ -6,16 +6,7 @@ Created on Tue Jul 24 12:58:40 2015
 
 import collections
 import functools
-import configparser
 import common.util.persistence as persistence
-
-
-config = configparser.ConfigParser()
-config.read('local_config.ini')
-if config.has_section('database'):
-    corpus_ngram_model = config.get('collections', 'n_grams')
-else:
-    print("cached_n_gram_query: No database configuration loaded.")
 
 
 class Memorized(object):
@@ -52,7 +43,7 @@ class Memorized(object):
 @Memorized
 def get_n_grams_from_database(document_id, sizes):
     # connect to database
-    coll_n_grams = persistence.get_collection(corpus_ngram_model)
+    coll_n_grams = persistence.get_collection(persistence.Collection.n_grams)
 
     # get n-grams for each n-gram size and the current document
     # Hint: currently we use the precomputed n-grams from the database.

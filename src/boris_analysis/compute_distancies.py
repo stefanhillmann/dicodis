@@ -95,7 +95,7 @@ for data_set_name in corpora_pairs.keys():
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
-distances = pe.get_collection(distances_collection_name)
+distances = pe.get_collection(pe.Collection.distances)
 print('Write {0} results to database.'.format(len(distances_list)))
 distances.insert(distances_list)
 

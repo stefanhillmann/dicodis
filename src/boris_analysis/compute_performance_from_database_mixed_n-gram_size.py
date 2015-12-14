@@ -16,8 +16,8 @@ rc.voidEval("library(pROC)")
 rc.r.levels = ['positive', 'negative']
 
 
-results = pe.get_collection(config.get('collections', 'doc_result'))
-performance = pe.get_collection(config.get('collections', 'performance'))
+results = pe.get_collection(pe.Collection.doc_result)
+performance = pe.get_collection(pe.Collection.performance)
 
 # get criteria from database
 criteria = results.distinct('criteria')

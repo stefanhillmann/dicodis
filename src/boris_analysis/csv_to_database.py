@@ -10,8 +10,7 @@ from common.util import persistence
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-dialogues_collection_name = config.get('collections', 'dialogues')
-coll_dialogues = persistence.get_collection(dialogues_collection_name)
+coll_dialogues = persistence.get_collection(persistence.Collection.dialogues)
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
@@ -113,8 +112,7 @@ for corpus in corpora_names.keys():
         replace_dots_in_keys(r)
         r.update({"corpus": corpus})
 
-    print("Write rows to collection '{0} in database '{1}.".format(persistence.get_database_name(),
-                                                                   dialogues_collection_name))
+    print("Write rows to collection '{0}'".format(coll_dialogues))
 
     coll_dialogues.insert(rows)
 

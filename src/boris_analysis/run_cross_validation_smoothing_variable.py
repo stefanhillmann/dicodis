@@ -59,7 +59,7 @@ class Job:
         
 
 def is_job_already_done(criteria, configuration, no_of_dialogs):
-    doc_res = pe.get_collection(doc_result_collection)
+    doc_res = pe.get_collection(pe.Collection.doc_result)
     r = doc_res.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
                             'classifier_name': configuration.classifier, 'frequency_threshold': configuration.frequency_threshold,
                             'smoothing_value': configuration.smoothing_value})

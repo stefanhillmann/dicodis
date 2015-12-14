@@ -33,6 +33,9 @@ class NGramModel:
     def get_n_grams(self):
         return list(self.model.index)
 
+    def get_tuples(self):
+        return list(self.model.iteritems())
+
     def get_rank_model(self):
         return self.model.rank(method="dense", ascending=False)
 

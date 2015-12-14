@@ -14,13 +14,6 @@ import configparser
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-if config.has_section('database') and config.has_section('dialogue_database'):
-    host = config.get('database', 'host')
-    port = config.getint('database', 'port')
-    dialogue_db = config.get('dialogue_database', 'dialogues_db_name')
-    dialogue_collection = config.get('dialogue_database', 'dialogues_collection')
-else:
-    print("Could not load configuration.")
 
 def create_dialog_document(id_column, system_parameter, user_parameter, dialog, dialog_label):
     content = []
@@ -57,8 +50,7 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
 
 
 def create_dialogs_documents_from_database(corpus, class_name):
-    conn = persistence.DbManager(host, port, dialogue_db).get_connection()
-    dialogues = conn[dialogue_collection]
+    dialogues = persistence.get_collection(persistence.Collection.dialogues)
     iteration_ids = dialogues.find({"corpus": corpus}).distinct("iteration")
 
     dialogs_documents = []

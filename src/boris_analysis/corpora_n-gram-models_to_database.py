@@ -83,7 +83,7 @@ for corpus in corpus_to_file.keys():
                 db_items.append(db_entry)
 
 print("Writing {0} n-gram into database...".format(len(db_items)))
-n_gram_collection = pe.get_collection(n_grams_collection_name)
+n_gram_collection = pe.get_collection(pe.Collection.n_grams)
 n_gram_collection.insert(db_items)
 pe.close()
 print("Finished.")

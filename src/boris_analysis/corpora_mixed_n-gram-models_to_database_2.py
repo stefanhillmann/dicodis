@@ -16,8 +16,6 @@ import pymongo
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-n_grams_collection_name = config.get('collections', 'n_grams')
-
 n_gram_size_list = list(range(1, 8 + 1))  # [1, ..., 8]
 f_min_list = [1, 2]
 db_items = list()
@@ -28,7 +26,7 @@ corpora = cns.get_all_names()
 def generate_n_gram_model(dialog_list, n, f_min):
     n_grams = mg.create_n_grams_from_document_list(dialog_list, n)
     model = mg.generate_model(n_grams)
-    model = mg.remove_rare_n_grams(model, f_min)
+    model.remove_rare_n_grams(f_min)
     return model
 
 
@@ -45,23 +43,24 @@ for corpus in corpora:
             for document in corpus_documents:
                 n_gram_model = generate_n_gram_model([document], size, f_min)
                 # create database entries
-                for n_gram in n_gram_model.keys():
+                for n_gram, freq in n_gram_model.get_tuples():
                     db_entry = {
                         'corpus': corpus,
                         'document_id': document.dialog_id,
                         'n': size,
                         'f_min': f_min,
                         'n_gram': n_gram,
-                        'freq': n_gram_model[n_gram]
+                        'freq': int(freq)
                     }
                     db_items.append(db_entry)
 
 print("Writing {0} n-grams into database...".format(len(db_items)))
-n_grams_collection = pe.get_collection(n_grams_collection_name)
+n_grams_collection = pe.get_collection(pe.Collection.n_grams)
 n_grams_collection.insert(db_items)
 
-print("Creating index with 'n' and 'document_id'.")
-n_grams_collection.create_index([("n", pymongo.ASCENDING), ("document_id", pymongo.ASCENDING)])
+print("Creating index with 'n', 'document_id' and 'f_min.")
+n_grams_collection.create_index([("n", pymongo.ASCENDING), ("document_id", pymongo.ASCENDING),
+                                 ("f_min", pymongo.ASCENDING)])
 
 pe.close()
 print("Finished.")
