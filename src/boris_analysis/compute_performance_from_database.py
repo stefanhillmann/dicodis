@@ -1,11 +1,12 @@
-__author__ = 'stefan'
-
-import common.util.persistence as pe
-import boris_analysis.cross_validation_configuration as cvc
-from common.analyse import performance as per
 import configparser
-import pyRserve as pyr
+
 import numpy as np
+import pyRserve as pyR
+from pyRserve.rexceptions import REvalError
+
+import boris_analysis.cross_validation_configuration_manual as cvc
+import common.util.persistence as pe
+from common.analyse import performance as per
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
@@ -15,7 +16,14 @@ configurations = cvc.getConfigurations()
 
 
 # Prepare R connection
-rc = pyr.connect()
+try:
+    rc = pyR.connect()
+except ConnectionRefusedError as cre:
+    print("Could not connect to Reserve Server, .")
+    print("Is the Reserve Server started in an R session?  Try in R:")
+    print("R> library(Rserve)")
+    print("R> Rserve()")
+
 rc.voidEval("library(pROC)")
 rc.r.levels = ['positive', 'negative']
 
@@ -35,9 +43,19 @@ def get_auc(data):
         predictions.append(cursor['positive_class_distance'] - cursor['negative_class_distance'])
         true_classes.append(cursor['true_class'])
 
+    # if len(set(true_classes)) == 1:
+    #     raise ValueError(
+    #         "Only one class ('{0}') used for true classes. "
+    #         "Two classes are necessary for further processing".format(set(true_classes)))
+
     rc.r.predictor = np.array(predictions)
     rc.r.response = np.array(true_classes)
-    rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
+
+    try:
+        rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
+    except REvalError as e:
+        print("Error while computing ROC in R: {0}".format(e))
+
     auc = rc.eval("roc$auc")
     print(auc[0])
 
@@ -94,10 +112,10 @@ for cri in criteria:
 
     # write results collected for the current criteria into database
     print('Start writing results for criteria {0}'.format(cri))
-    performance.insert(performance_results)
+    performance.insert_many(performance_results)
     print('Results for criteria {0} were written to database\n'.format(cri))
 
-dbm.close()
+pe.close()
 
 
 

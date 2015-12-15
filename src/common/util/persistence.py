@@ -23,9 +23,9 @@ class Collection(Enum):
 
 
 COLLECTION_NAMES = {
-    Collection.doc_result: "documents_result_TEST",
+    Collection.doc_result: "documents_result",
     Collection.performance: "performance",
-    Collection.distances: "distances_fitted_size",
+    Collection.distances: "distances",
     Collection.distance_performance: "distance_performance",
     Collection.n_grams: "n_grams",
     Collection.dialogues: "dialogues"
@@ -75,6 +75,10 @@ class DbClient(object):
     def close(self):
         self.client.close()
 
+    def reset(self):
+        self.close()
+        self.client = MongoClient(self.host, self.port, connect=False)
+
 host = "host"
 port = 0
 if config.has_section('database'):
@@ -88,6 +92,10 @@ db_client = DbClient(host, port)
 
 def close():
     db_client.close()
+
+
+def reset():
+    db_client.reset()
 
 
 def get_collection(collection):

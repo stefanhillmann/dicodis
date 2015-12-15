@@ -6,9 +6,11 @@ Created on Fri Jun  7 15:05:29 2013
 """
 
 import logging
+import time
+
 import common.ngram.model_generator as mg
-from common.measuring import measures
 import common.util.names as names
+from common.measuring import measures
 
 
 class Classifier:
@@ -44,8 +46,16 @@ class Classifier:
         
     def classify(self, document_n_grams):
         # compute distances between document an all classes in classifier
+        # TODO: remove timing
+        # start_pos = time.time()
         positive_class_distance = self.compute_distances(document_n_grams, names.Class.POSITIVE)
+        # end_pos = time.time()
+        # start_neg = time.time()
         negative_class_distance = self.compute_distances(document_n_grams, names.Class.NEGATIVE)
+        # end_neg = time.time()
+
+        # print("Compute pos distance lasts {0} second".format(end_pos - start_pos))
+        # print("Compute neg distance lasts {0} second".format(end_neg - start_neg))
 
 
         # find and return class (the 'best_class') with lowest distance (lowest_distance)
@@ -59,9 +69,17 @@ class Classifier:
             
     def compute_distances(self, doc_n_grams, class_name):
         class_model = self.class_models[class_name]
-        document_model = mg.generate_model(doc_n_grams)
 
+        # TODO: remove timing
+        # start_doc_model = time.time()
+        document_model = mg.generate_model(doc_n_grams)
+        # end_doc_model = time.time()
+        # print("Doc model creation lasts {0} seconds".format(end_doc_model - start_doc_model))
+
+        # start_distance = time.time()
         class_distance = self.measure.distance(class_model, document_model, self.smoothing_value)
+        # end_distance = time.time()
+        # print("Distance computation lasts {0} seconds.".format(end_distance - start_distance))
 
         return class_distance
 
@@ -112,6 +130,10 @@ def get_rank_order_classifier():
     return Classifier(measures.RankOrderDistanceMeasure(), measures.MeasureName.RANK_ORDER)
 
 
+def get_normalized_rank_order_classifier():
+    return Classifier(measures.NormalizedRankOrderDistanceMeasure(), measures.MeasureName.NORMALIZED_RANK_ORDER)
+
+
 def get_classifier(classifier_name):
     created_classifier = ""
     
@@ -127,11 +149,13 @@ def get_classifier(classifier_name):
         created_classifier = get_jensen_classifier()
     elif classifier_name == measures.MeasureName.RANK_ORDER:
         created_classifier = get_rank_order_classifier()
+    elif classifier_name == measures.MeasureName.NORMALIZED_RANK_ORDER:
+        created_classifier = get_normalized_rank_order_classifier()
     else:
         """
         We return nothing, and the following code will crash, when trying to to do something
         with a not existing classifier 
         """
-        print('Unknown classifier was requested. Empty string will be returned')
+        raise ValueError("Unknown classifier '{0} was requested.".format(classifier_name))
         
     return created_classifier

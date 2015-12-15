@@ -3,8 +3,8 @@ import logging
 from common.measuring import measures
 from common.measuring.measures import MeasureName
 from common.ngram import model_generator as mg
-from common.util import  rank as rank_util
 from common.ngram.n_gram_model import NGramModel
+from common.util import rank as rank_util
 
 
 class DistanceCalculator:
@@ -90,6 +90,10 @@ def get_rank_order_calculator():
     return DistanceCalculator(measures.RankOrderDistanceMeasure(), MeasureName.RANK_ORDER)
 
 
+def get_normalized_rank_order_calculator():
+    return DistanceCalculator(measures.NormalizedRankOrderDistanceMeasure(), MeasureName.NORMALIZED_RANK_ORDER)
+
+
 def get_distance_calculator(measure_name):
     """
     Creates an instance of DistanceCalculator. The calculator will be
@@ -115,6 +119,8 @@ def get_distance_calculator(measure_name):
         created_calculator = get_jensen_calculator()
     elif measure_name == MeasureName.RANK_ORDER:
         created_calculator = get_rank_order_calculator()
+    elif measure_name == MeasureName.NORMALIZED_RANK_ORDER:
+        created_calculator = get_normalized_rank_order_calculator()
     else:
         """
         We return nothing, and the following code will crash, when trying to to do something

@@ -39,6 +39,12 @@ def getConfigurations():
     #  f_min = 2
     configurations.append(Configuration(sizes, MeasureName.RANK_ORDER, 2, 0.5))
 
+    # normalized Rank Order
+    #  f_min = 1
+    configurations.append(Configuration(sizes, MeasureName.NORMALIZED_RANK_ORDER, 1, 0.5))
+    #  f_min = 2
+    configurations.append(Configuration(sizes, MeasureName.NORMALIZED_RANK_ORDER, 2, 0.5))
+
     # Cosine
     #  f_min = 1
     configurations.append(Configuration(sizes, MeasureName.COSINE, 1, 0.05))

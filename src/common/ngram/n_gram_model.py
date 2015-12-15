@@ -54,6 +54,9 @@ class NGramModel:
             if ng not in self.model.index:
                 self.model[ng] = frequency
 
+    def add_n_grams_with_frequency(self, n_grams, frequencies):
+        self.model = self.model.append(pandas.Series(frequencies, n_grams))
+
     def remove_rare_n_grams(self, f_min):
         m = self.model
         m.drop(m[m < f_min].index, inplace=True)

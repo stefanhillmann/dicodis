@@ -4,13 +4,15 @@ Created on Tue Jul 23 09:09:30 2015
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
 
-from common.ngram import model_generator as mg
-from common.util.names import Class
+import configparser
+
+import pymongo
+
+import boris_analysis.corpora_names as cns
 import boris_analysis.dialogs as dialogs
 import common.util.persistence as pe
-import configparser
-import boris_analysis.corpora_names as cns
-import pymongo
+from common.ngram import model_generator as mg
+from common.util.names import Class
 
 # read configuration
 config = configparser.ConfigParser()

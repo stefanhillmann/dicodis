@@ -154,8 +154,19 @@ def synchronize_n_grams(model, other_model):
     :param other_model: another n-gram model (a dict)
     :return: nothing
     """
-    model.add_n_grams_if_new( set(other_model.get_n_grams()), 0 )
-    other_model.add_n_grams_if_new( set(model.get_n_grams()), 0 )
+    x = set(model.get_n_grams())
+    y = set(other_model.get_n_grams())
+
+    # find n_grams which are only in one of the models
+    only_in_model = list(x - y)
+    only_in_other_model = list(y - x)
+
+    # add missing n-grams too each other with a frequency 0 (zero)
+    model.add_n_grams_with_frequency(only_in_other_model, [0] * len(only_in_other_model))
+    other_model.add_n_grams_with_frequency(only_in_model, [0] * len(only_in_model))
+
+
+
 
     # TODO: Remove?
     # unique_n_grams = get_unique_n_grams_from_models([model, other_model])

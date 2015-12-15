@@ -1,5 +1,3 @@
-__author__ = 'stefan'
-
 import common.ngram.model_generator as mg
 import common.util.rank as ru
 

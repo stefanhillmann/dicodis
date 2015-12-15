@@ -1,18 +1,16 @@
+import configparser
 import logging
+
 from numpy.core.numeric import NaN
 
+import common.measuring.measures
+import common.util.persistence as pe
 from boris_analysis import cross_validation_configuration_manual, dialogs
-from common.dialog_document.dialog_reader import DialogsReader
-from common.util.names import Class
-from common.ngram import model_generator as mg
 from common.corpora_distance import distance as d
 from common.corpora_distance import normalized_rank_order_distance as nd
-import common.measuring.measures
-
-import common.util.persistence as pe
-
-
-import configparser
+from common.dialog_document.dialog_reader import DialogsReader
+from common.ngram import model_generator as mg
+from common.util.names import Class
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -86,17 +84,12 @@ for data_set_name in corpora_pairs.keys():
         measure = d.get_distance_calculator(con.classifier)
         distance = measure.compute_distance(c1_model, c2_model, con.smoothing_value)
 
-        norm_rank_order_distance = NaN
-        if con.classifier == common.measuring.measures.MeasureName.RANK_ORDER:
-            norm_rank_order_distance = nd.rank_order_normalized_distance(c1_model, c2_model, distance)
-
-        db_distance = {'data_set': data_set_name, 'distance': distance,
-                       'norm_rank_order_distance': norm_rank_order_distance, 'evaluation_id': evaluation_id}
+        db_distance = {'data_set': data_set_name, 'distance': distance, 'evaluation_id': evaluation_id}
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
 distances = pe.get_collection(pe.Collection.distances)
 print('Write {0} results to database.'.format(len(distances_list)))
-distances.insert(distances_list)
+distances.insert_many(distances_list)
 
 pe.close()

@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.WARNING)
 # read configuration
 config = configparser.ConfigParser()
 config.read('local_config.ini')
-coll_documents = persistence.get_collection(persistence.Collection.doc_result)
+
 
 
 evaluation_id = config.get('cross_validation', 'evaluation_id')
@@ -73,6 +73,7 @@ class Job:
         
 
 def is_job_already_done(criteria, configuration, no_of_dialogs):
+    coll_documents = persistence.get_collection(persistence.Collection.doc_result)
     r = coll_documents.find({'evaluation_id': evaluation_id, 'criteria': criteria, 'n_gram_size': configuration.size,
                              'classifier_name': configuration.classifier,
                              'frequency_threshold': configuration.frequency_threshold,
@@ -112,6 +113,9 @@ def validate(corpora_to_be_used):
 
     n_jobs = len(jobs)
     print('{0} to be executed.'.format( n_jobs ))
+
+    # close exiting database client/connections before forking
+    persistence.reset()
 
     jobs_start = time.time()
     if config.getboolean('cross_validation', 'single_process'):
