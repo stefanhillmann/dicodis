@@ -180,12 +180,12 @@ if __name__ == '__main__':
 
     corpora = [
         Chorpora(cns.SUCCESSFUL, Class.POSITIVE, cns.NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, 'task success'),
-        #Chorpora(file_judged_good, Class.POSITIVE, file_judged_bad, Class.NEGATIVE, id_column_name, 'user judgement'),
-        #Chorpora(file_best_simulation, Class.POSITIVE, file_worst_simulation, Class.NEGATIVE, id_column_name, 'simulation quality'),
-        #Chorpora(file_shortest_interaction, Class.POSITIVE, file_longest_interaction, Class.NEGATIVE, id_column_name, 'dialogue length'),
-        #Chorpora(file_wa_100, Class.POSITIVE, file_wa_60, Class.NEGATIVE, id_column_name, 'word accuracy '),
-        #Chorpora(file_best_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
-        #Chorpora(file_worst_simulation, Class.POSITIVE, file_experiment, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
+        Chorpora(cns.USER_JUDGMENT_GOOD, Class.POSITIVE, cns.USER_JUDGMENT_BAD, Class.NEGATIVE, id_column_name, 'user judgement'),
+        Chorpora(cns.SIMULATION_GOOD, Class.POSITIVE, cns.SIMULATION_BAD, Class.NEGATIVE, id_column_name, 'simulation quality'),
+        Chorpora(cns.DIALOGUES_SHORT, Class.POSITIVE, cns.DIALOGUES_LONG, Class.NEGATIVE, id_column_name, 'dialogue length'),
+        Chorpora(cns.WORD_ACCURACY_100, Class.POSITIVE, cns.WORD_ACCURACY_60, Class.NEGATIVE, id_column_name, 'word accuracy '),
+        Chorpora(cns.SIMULATION_GOOD, Class.POSITIVE, cns.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
+        Chorpora(cns.SIMULATION_BAD, Class.POSITIVE, cns.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
     ]
 
     validate(corpora)
