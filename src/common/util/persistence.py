@@ -7,7 +7,7 @@ Created on Tue Jul 22 15:05:10 2015
 from pymongo import MongoClient
 import configparser
 from common.util.names import Class
-from enum import Enum
+from flufl.enum import Enum
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
