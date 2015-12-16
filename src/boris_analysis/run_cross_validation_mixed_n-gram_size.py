@@ -155,7 +155,7 @@ def run_validation(job):
             print('Already done! (criteria: {0}, configuration: {1})'.format(criteria, job.configuration))
         else:
             print("{3}: Starting job: {0} for criteria {1} with configuration: {2}"
-                  .format(job.job_number, criteria, job.configuration, time.strptime(time_format)))
+                  .format(job.job_number, criteria, job.configuration, time.strftime(time_format)))
 
             cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
             cross_validator.add_documents(job.negative_dialogs)
@@ -166,7 +166,7 @@ def run_validation(job):
                                                              frequency_threshold, smoothing_value, criteria)
 
         q.put(1)  # put an element on the queue, just to count finished jobs
-        print("{0}: Finished job: {1}.".format(time.strptime(time_format), job.job_number))
+        print("{0}: Finished job: {1}.".format(time.strftime(time_format), job.job_number))
     except Exception as e:
         print("Caught exception in worker thread (job: {0}):".format(job))
 

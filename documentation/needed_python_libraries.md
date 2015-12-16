@@ -7,6 +7,7 @@ Libraries
 - matplotlib
 - numpy
 - pymongo
+- pandas
 
 ## boris_analysis ##
 - pyRserve
