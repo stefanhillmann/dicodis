@@ -144,6 +144,7 @@ def validate(corpora_to_be_used):
 
     
 def run_validation(job):
+    start_time = time.time()
     try:
         size                = job.configuration.size
         classifier_name     = job.configuration.classifier
@@ -166,7 +167,10 @@ def run_validation(job):
                                                              frequency_threshold, smoothing_value, criteria)
 
         q.put(1)  # put an element on the queue, just to count finished jobs
-        print("{0}: Finished job: {1}.".format(time.strftime(time_format), job.job_number))
+
+        print("{3}: Finished job: {0} for criteria {1} with configuration: {2}. Needed time: {4} seconds."
+              .format(job.job_number, criteria, job.configuration, time.strftime(time_format),
+                      time.time() - start_time))
     except Exception as e:
         print("Caught exception in worker thread (job: {0}):".format(job))
 
@@ -186,7 +190,7 @@ if __name__ == '__main__':
         Chorpora(cns.USER_JUDGMENT_GOOD, Class.POSITIVE, cns.USER_JUDGMENT_BAD, Class.NEGATIVE, id_column_name, 'user judgement'),
         Chorpora(cns.SIMULATION_GOOD, Class.POSITIVE, cns.SIMULATION_BAD, Class.NEGATIVE, id_column_name, 'simulation quality'),
         Chorpora(cns.DIALOGUES_SHORT, Class.POSITIVE, cns.DIALOGUES_LONG, Class.NEGATIVE, id_column_name, 'dialogue length'),
-        Chorpora(cns.WORD_ACCURACY_100, Class.POSITIVE, cns.WORD_ACCURACY_60, Class.NEGATIVE, id_column_name, 'word accuracy '),
+        Chorpora(cns.WORD_ACCURACY_100, Class.POSITIVE, cns.WORD_ACCURACY_60, Class.NEGATIVE, id_column_name, 'word accuracy'),
         Chorpora(cns.SIMULATION_GOOD, Class.POSITIVE, cns.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
         Chorpora(cns.SIMULATION_BAD, Class.POSITIVE, cns.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
     ]
