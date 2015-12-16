@@ -17,8 +17,7 @@ logging.basicConfig(level=logging.WARNING)
 config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-
-
+time_format = "%d-%m-%Y %H:%M:%S"
 evaluation_id = config.get('cross_validation', 'evaluation_id')
 base_directory = config.get('cross_validation', 'source_directory')
 
@@ -82,9 +81,11 @@ def is_job_already_done(criteria, configuration, no_of_dialogs):
     is_done = count == no_of_dialogs
 
     if not is_done and count > 0:
-        print('Results not valid for criteria: {0} and configuration: {1}'.format(criteria, configuration))
-        assert count == 0  # emergency hold
-
+        raise ValueError("Results not valid for criteria '{0}' and configuration '{1}'"
+                         "Number of dialogues is {2}, but there {3} results in the database".format(criteria,
+                                                                                                    configuration,
+                                                                                                    no_of_dialogs,
+                                                                                                    count))
     return is_done
 
 
@@ -112,7 +113,7 @@ def validate(corpora_to_be_used):
             jobs.append(job)
 
     n_jobs = len(jobs)
-    print('{0} to be executed.'.format( n_jobs ))
+    print('{0} Jobs to be executed.'.format( n_jobs ))
 
     # close exiting database client/connections before forking
     persistence.reset()
@@ -153,7 +154,8 @@ def run_validation(job):
         if is_job_already_done(job.criteria, job.configuration, len(job.positive_dialogs) + len(job.negative_dialogs)):
             print('Already done! (criteria: {0}, configuration: {1})'.format(criteria, job.configuration))
         else:
-            print('Executing job: {0} for criteria {1} with configuration: {2}'.format(job.job_number, criteria, job.configuration))
+            print("{3}: Starting job: {0} for criteria {1} with configuration: {2}"
+                  .format(job.job_number, criteria, job.configuration, time.strptime(time_format)))
 
             cross_validator = cv.CrossValidator(classifier_name, size, frequency_threshold, smoothing_value)
             cross_validator.add_documents(job.negative_dialogs)
@@ -164,6 +166,7 @@ def run_validation(job):
                                                              frequency_threshold, smoothing_value, criteria)
 
         q.put(1)  # put an element on the queue, just to count finished jobs
+        print("{0}: Finished job: {1}.".format(time.strptime(time_format), job.job_number))
     except Exception as e:
         print("Caught exception in worker thread (job: {0}):".format(job))
 

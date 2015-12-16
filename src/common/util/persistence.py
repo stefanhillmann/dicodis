@@ -3,11 +3,10 @@ Created on Tue Jul 22 15:05:10 2015
 
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
-
 from pymongo import MongoClient
 import configparser
 from common.util.names import Class
-from flufl.enum import Enum
+from enum import Enum
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
