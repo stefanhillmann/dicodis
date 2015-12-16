@@ -37,7 +37,7 @@ class Database(Enum):
 
 
 DATABASE_NAMES = {
-    Database.production: "cross_validation_mixed_TEST",
+    Database.production: "cross_validation_mixed_2015_12_16",
     Database.unit_testing: "UNITTEST_classification_cross_validation"
 }
 

@@ -5,6 +5,7 @@ import pymongo
 
 from boris_analysis.corpora_names import CorporaNames as CN
 from common.util import persistence
+from common.util import dict as du
 
 # read configuration
 config = configparser.ConfigParser()
@@ -62,14 +63,6 @@ def get_rows(file_path):
     return read_rows
 
 
-def replace_dots_in_keys(d):
-    for old_key in d.keys():
-        new_key = old_key.replace(".", "_")
-        d[new_key] = d.pop(old_key)
-
-    return d
-
-
 def get_task_success(annotation):
     if annotation in SUCCESS:
         return 1
@@ -109,7 +102,8 @@ for corpus in corpora_names.keys():
     rows = get_rows(corpora_names[corpus])
 
     for r in rows:
-        replace_dots_in_keys(r)
+        du.replace_dots_in_keys(r)
+        du.convert_string_to_integer(r, ["iteration", "exchange_no"])
         r.update({"corpus": corpus})
 
     print("Write rows to collection '{0}'".format(coll_dialogues))

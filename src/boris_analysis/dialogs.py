@@ -8,6 +8,7 @@ Created on Thu Jun  6 15:59:01 2013
 from common.dialog_document.document import Document
 import common.util.persistence as persistence
 import configparser
+import pymongo
 
 
 # read configuration
@@ -55,7 +56,8 @@ def create_dialogs_documents_from_database(corpus, class_name):
 
     dialogs_documents = []
     for iteration in iteration_ids:
-        dialogue_rows = dialogues.find({"corpus": corpus, "iteration": iteration})
+        # get dialogue turns in correct order
+        dialogue_rows = dialogues.find({"corpus": corpus, "iteration": iteration}).sort('exchange_no', pymongo.ASCENDING)
 
         dialog_document = create_dialog_document_from_database(dialogue_rows, class_name, corpus, iteration)
 
@@ -78,7 +80,7 @@ def create_dialog_document_from_database(dialogue, dialogue_label, corpus, itera
         if user_values:
             content.append( ",".join(user_values) )
 
-    dialog_id = iteration + "_" + corpus.replace(" ", "_")
+    dialog_id = str(iteration) + "_" + corpus.replace(" ", "_")
     document = Document(dialogue_label, content, dialog_id)
 
     return document
