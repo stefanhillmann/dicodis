@@ -37,7 +37,6 @@ def get_auc(data):
     rc.r.response = np.array(true_classes)
     rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
     auc = rc.eval("roc$auc")
-    print(auc[0])
 
     return auc[0]
 
@@ -68,10 +67,11 @@ for cri in criteria:
         performance_results.append(classificator_performance)
 
     # write results collected for the current criteria into database
-    print('Start writing results for criteria {0}'.format(cri))
-    performance.insert(performance_results)
+    print('Start writing {1} results for criteria {0}'.format(cri, len(performance_results)))
+    performance.insert_many(performance_results)
     print('Results for criteria {0} were written to database\n'.format(cri))
-    print("Finished")
+
+print("Finished")
 
 pe.close()
 
