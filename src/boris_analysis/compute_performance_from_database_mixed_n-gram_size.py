@@ -1,8 +1,10 @@
-import common.util.persistence as pe
-import boris_analysis.cross_validation_configuration_manual as cvc
 import configparser
-import pyRserve as pyr
+
 import numpy as np
+import pyRserve as pyr
+
+import boris_analysis.cross_validation_configuration_manual as cvc
+import common.util.persistence as pe
 
 config = configparser.ConfigParser()
 config.read('local_config.ini')
@@ -69,6 +71,7 @@ for cri in criteria:
     print('Start writing results for criteria {0}'.format(cri))
     performance.insert(performance_results)
     print('Results for criteria {0} were written to database\n'.format(cri))
+    print("Finished")
 
 pe.close()
 
