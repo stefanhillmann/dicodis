@@ -1,29 +1,42 @@
-class CorporaNames:
-    SUCCESSFUL = "successful"
-    NOT_SUCCESSFUL = "not successful"
-    DIALOGUES_SHORT = "dialogues short"
-    DIALOGUES_LONG = "dialogues long"
-    WORD_ACCURACY_100 = "word accuracy 100"
-    WORD_ACCURACY_60 = "word accuracy 60"
-    USER_JUDGMENT_GOOD = "user judgment good"
-    USER_JUDGMENT_BAD = "user judgment bad"
-    SIMULATION_GOOD = "simulation good"
-    SIMULATION_BAD = "simulation bad"
-    REAL_USER = "real user"
+class CorpusData:
+
+    def __init__(self, name, is_static, constraints):
+        self.name = name
+        self.is_static = is_static
+        self.constraints = constraints
+
+    def __str__(self):
+        return self.name
 
 
-def get_all_names():
+SUCCESSFUL = CorpusData("successful", True, {})
+NOT_SUCCESSFUL = CorpusData("not successful", True, {})
+DIALOGUES_SHORT = CorpusData("dialogues short", True, {})
+DIALOGUES_LONG = CorpusData("dialogues long", True, {})
+WORD_ACCURACY_100 = CorpusData("word accuracy 100", True, {})
+WORD_ACCURACY_60 = CorpusData("word accuracy 60", True, {})
+USER_JUDGMENT_GOOD = CorpusData("user judgment good", True, {})
+USER_JUDGMENT_BAD = CorpusData("user judgment bad", True, {})
+SIMULATION_GOOD = CorpusData("simulation good", True, {})
+SIMULATION_BAD = CorpusData("simulation bad", True, {})
+REAL_USER = CorpusData("real user", True, {})
+GOOD_SIMULATION_SUCCESSFUL = CorpusData("good simulation successful", False, {})
+GOOD_SIMULATION_NOT_SUCCESSFUL = CorpusData("good simulation not successful", False, {})
+GOOD_SIMULATION_SUB_SET_SAMPLE = CorpusData("good simulation sub set sample", False, {})
+
+
+def get_all_corpus_data():
     return [
-        CorporaNames.SUCCESSFUL,
-        CorporaNames.NOT_SUCCESSFUL,
-        CorporaNames.DIALOGUES_SHORT,
-        CorporaNames.DIALOGUES_LONG,
-        CorporaNames.WORD_ACCURACY_100,
-        CorporaNames.WORD_ACCURACY_60,
-        CorporaNames.USER_JUDGMENT_GOOD,
-        CorporaNames.USER_JUDGMENT_BAD,
-        CorporaNames.SIMULATION_GOOD,
-        CorporaNames.SIMULATION_BAD,
-        CorporaNames.REAL_USER
+        SUCCESSFUL,
+        NOT_SUCCESSFUL,
+        DIALOGUES_SHORT,
+        DIALOGUES_LONG,
+        WORD_ACCURACY_100,
+        WORD_ACCURACY_60,
+        USER_JUDGMENT_GOOD,
+        USER_JUDGMENT_BAD,
+        SIMULATION_GOOD,
+        SIMULATION_BAD,
+        REAL_USER
     ]
 

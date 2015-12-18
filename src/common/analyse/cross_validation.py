@@ -6,7 +6,6 @@ Created on Tue Jun 18 14:34:56 2013
 """
 
 import logging
-import time
 
 from pandas import Series
 

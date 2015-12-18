@@ -1,13 +1,9 @@
 import configparser
 import logging
 
-from numpy.core.numeric import NaN
-
-import common.measuring.measures
 import common.util.persistence as pe
 from boris_analysis import cross_validation_configuration_manual, dialogs
 from common.corpora_distance import distance as d
-from common.corpora_distance import normalized_rank_order_distance as nd
 from common.dialog_document.dialog_reader import DialogsReader
 from common.ngram import model_generator as mg
 from common.util.names import Class

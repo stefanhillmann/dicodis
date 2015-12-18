@@ -106,6 +106,12 @@ def get_collection(collection):
     return db_connection[collection_name]
 
 
+def get_collection_name(collection):
+    if type(collection) is not Collection:
+        raise TypeError("Parameter collection has to be from type Collection (see persistence.py.")
+    return COLLECTION_NAMES[collection]
+
+
 class EvaluationResult:
 
     def __init__(self, evaluation_id, criteria, document_id, classifier_name, n_gram_size, frequency_threshold, smoothing_value,

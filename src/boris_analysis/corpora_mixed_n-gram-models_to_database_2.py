@@ -8,7 +8,7 @@ import configparser
 
 import pymongo
 
-import boris_analysis.corpora_names as cns
+import boris_analysis.corpora_names as cd
 import boris_analysis.dialogs as dialogs
 import common.util.persistence as pe
 from common.ngram import model_generator as mg
@@ -22,7 +22,7 @@ n_gram_size_list = list(range(1, 8 + 1))  # [1, ..., 8]
 f_min_list = [1, 2]
 db_items = list()
 
-corpora = cns.get_all_names()
+corpora = cd.get_all_corpus_data()
 
 
 def generate_n_gram_model(dialog_list, n, f_min):
@@ -34,7 +34,7 @@ def generate_n_gram_model(dialog_list, n, f_min):
 
 db_items = list()
 for corpus in corpora:
-    print("Create n-grams for corpus '{0}'.".format(corpus))
+    print("Create n-grams for corpus '{0}'.".format(str(corpus)))
 
     corpus_n_grams = list()
 
@@ -47,7 +47,7 @@ for corpus in corpora:
                 # create database entries
                 for n_gram, freq in n_gram_model.get_tuples():
                     db_entry = {
-                        'corpus': corpus,
+                        'corpus': corpus.name,
                         'document_id': document.dialog_id,
                         'n': size,
                         'f_min': f_min,

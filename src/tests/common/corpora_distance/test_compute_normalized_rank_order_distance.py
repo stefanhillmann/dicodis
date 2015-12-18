@@ -4,9 +4,8 @@ __author__ = 'stefan'
 
 import unittest
 
-import common.corpora_distance.normalized_rank_order_distance as nd
-import common.ngram.model_generator as mg
 import common.corpora_distance.distance as d
+import common.ngram.model_generator as mg
 
 
 class TestComputeNormalizedDistance(unittest.TestCase):

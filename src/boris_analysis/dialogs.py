@@ -9,6 +9,8 @@ from common.dialog_document.document import Document
 import common.util.persistence as persistence
 import configparser
 import pymongo
+import boris_analysis.corpora_names as cd
+import math
 
 
 # read configuration
@@ -51,18 +53,85 @@ def create_dialogs_documents(dialog_reader, id_column_name, class_name):
 
 
 def create_dialogs_documents_from_database(corpus, class_name):
-    dialogues = persistence.get_collection(persistence.Collection.dialogues)
-    iteration_ids = dialogues.find({"corpus": corpus}).distinct("iteration")
+    if type(corpus) != cd.CorpusData:
+        raise TypeError("Parameter 'corpus' has to be 'CorpusData' but is '{0}'.".format(type(corpus)))
 
+    iteration_ids = []
+    if corpus.is_static:
+        iteration_ids = get_iteration_ids_for_static_corpus(corpus)
+    else:
+        iteration_ids = get_iteration_ids_for_dynamic_corpus(corpus)
+
+    return create_documents_by_iteration_ids(class_name, corpus, iteration_ids)
+
+
+def get_iteration_ids_for_static_corpus(corpus):
+    dialogues = persistence.get_collection(persistence.Collection.dialogues)
+    iteration_ids = dialogues.find({"corpus": corpus.name}).distinct("iteration")
+    return iteration_ids
+
+
+def get_iteration_ids_for_dynamic_corpus(corpus_data):
+    if corpus_data == cd.GOOD_SIMULATION_SUCCESSFUL:
+        return get_iteration_ids_for_good_simulation_by_success(1)
+    elif corpus_data == cd.GOOD_SIMULATION_NOT_SUCCESSFUL:
+        return get_iteration_ids_for_good_simulation_by_success(0)
+    elif corpus_data == cd.GOOD_SIMULATION_SUB_SET_SAMPLE:
+        return get_iteration_ids_for_good_simulation_sub_set_sample(corpus_data)
+    else:
+        raise ValueError("No implementation to get iterations for dynamic corpus {0}".format(str(corpus_data)))
+
+
+def get_iteration_ids_for_good_simulation_by_success(success):
+    dialogues = persistence.get_collection(persistence.Collection.dialogues)
+    query = {"corpus": cd.SIMULATION_GOOD.name, "task_success": success}
+    iteration_ids = dialogues.find(query).distinct("iteration")
+    return iteration_ids
+
+
+def get_iteration_ids_for_good_simulation_sub_set_sample(corpus_data):
+    """
+    Samples a number iteration ids (dialogues) from the good simulation.
+     The ratio between successful/not successful dialogues will be preserved.
+    :param corpus_data:
+    :return:
+    """
+    # get number of successful/not successful dialogues
+    count_success = len(get_iteration_ids_for_good_simulation_by_success(1))
+    count_no_success = len(get_iteration_ids_for_good_simulation_by_success(0))
+
+    # the total number of sampled dialogues is equal to the number of unsuccessful dialogues
+    goal_count = count_no_success
+    k = (count_success + count_no_success) / goal_count  # get ratio between origin count and goal count
+    sample_count_success = math.floor(count_success / k)
+    sample_count_no_success = math.floor(count_no_success / k)
+
+    # In order to get always the same dialogues, but have some kind of random, we get the ordered list of
+    # iteration_ids and select the first n ones. This works under the assumption that the dialogues are independent
+    # from the order in which they were generated.
+    success_iterations = get_iteration_ids_for_good_simulation_by_success(1)
+    success_iterations.sort()
+    no_success_iterations = get_iteration_ids_for_good_simulation_by_success(0)
+    no_success_iterations.sort()
+
+    iterations = list()
+    iterations.extend(success_iterations[0:sample_count_success])  # sampled iterations of successful dialogues
+    iterations.extend(no_success_iterations[0:sample_count_no_success])  # sampled iterations of unsuccessful dialogues
+
+    return iterations
+
+
+def create_documents_by_iteration_ids(class_name, corpus, iteration_ids):
     dialogs_documents = []
+    dialogues = persistence.get_collection(persistence.Collection.dialogues)
     for iteration in iteration_ids:
         # get dialogue turns in correct order
-        dialogue_rows = dialogues.find({"corpus": corpus, "iteration": iteration}).sort('exchange_no', pymongo.ASCENDING)
+        dialogue_rows = dialogues.find({"corpus": corpus.name, "iteration": iteration}) \
+            .sort('exchange_no', pymongo.ASCENDING)
 
         dialog_document = create_dialog_document_from_database(dialogue_rows, class_name, corpus, iteration)
 
         dialogs_documents.append(dialog_document)
-
     return dialogs_documents
 
 
@@ -80,7 +149,7 @@ def create_dialog_document_from_database(dialogue, dialogue_label, corpus, itera
         if user_values:
             content.append( ",".join(user_values) )
 
-    dialog_id = str(iteration) + "_" + corpus.replace(" ", "_")
+    dialog_id = str(iteration) + "_" + corpus.name.replace(" ", "_")
     document = Document(dialogue_label, content, dialog_id)
 
     return document

@@ -4,14 +4,14 @@ Created on Wed Jun  5 17:19:42 2013
 
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
-import numpy as np
-from math import sqrt
 import logging
-import time
 from abc import ABCMeta, abstractmethod
+from math import sqrt
+
+import numpy as np
+
 from common.ngram import model_generator as mg
 from common.ngram.n_gram_model import NGramModel
-
 
 module_logger = logging.getLogger('measures')
 

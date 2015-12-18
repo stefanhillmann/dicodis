@@ -3,7 +3,7 @@ import logging
 
 import common.util.persistence as pe
 from boris_analysis import cross_validation_configuration_manual, dialogs
-from boris_analysis.corpora_names import CorporaNames as CNs
+import boris_analysis.corpora_names as cd
 from common.corpora_distance import distance as d
 from common.ngram import model_generator as mg
 from common.util.names import Class
@@ -18,20 +18,22 @@ evaluation_id = config.get('cross_validation', 'evaluation_id')
 
 
 corpora_pairs = {
-    'success': (CNs.SUCCESSFUL, CNs.NOT_SUCCESSFUL),
-    'simulation_quality': (CNs.SIMULATION_GOOD, CNs.SIMULATION_BAD),
-    'dialogue_length': (CNs.DIALOGUES_SHORT, CNs.DIALOGUES_LONG),
-    'word_accuracy': (CNs.WORD_ACCURACY_60, CNs.WORD_ACCURACY_100),
-    'user_judgement': (CNs.USER_JUDGMENT_GOOD, CNs.USER_JUDGMENT_BAD),
-    'real_vs_worst_sim': (CNs.REAL_USER, CNs.SIMULATION_BAD),
-    'real_vs_best_sim': (CNs.REAL_USER, CNs.SIMULATION_GOOD)
+    'success': (cd.SUCCESSFUL, cd.NOT_SUCCESSFUL),
+    'simulation_quality': (cd.SIMULATION_GOOD, cd.SIMULATION_BAD),
+    'dialogue_length': (cd.DIALOGUES_SHORT, cd.DIALOGUES_LONG),
+    'word_accuracy': (cd.WORD_ACCURACY_60, cd.WORD_ACCURACY_100),
+    'user_judgement': (cd.USER_JUDGMENT_GOOD, cd.USER_JUDGMENT_BAD),
+    'real_vs_worst_sim': (cd.REAL_USER, cd.SIMULATION_BAD),
+    'real_vs_best_sim': (cd.REAL_USER, cd.SIMULATION_GOOD),
+    'real_vs_sampled_best_sim': (cd.REAL_USER, cd.GOOD_SIMULATION_SUB_SET_SAMPLE),
+    'real_vs_best_sim_no_success': (cd.REAL_USER, cd.GOOD_SIMULATION_NOT_SUCCESSFUL)
 }
 
 configurations = cross_validation_configuration_manual.getConfigurations()
 
 
-def read_dialogs(corpus_name):
-    dialogues = dialogs.create_dialogs_documents_from_database(corpus_name, Class.POSITIVE)
+def read_dialogs(corpus):
+    dialogues = dialogs.create_dialogs_documents_from_database(corpus, Class.POSITIVE)
     return dialogues
 
 
@@ -61,6 +63,9 @@ for data_set_name in corpora_pairs.keys():
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
+distances = pe.get_collection(pe.Collection.distances)
+print("Drop existing collection '{0}'".format(pe.get_collection_name(pe.Collection.distances)))
+distances.drop()
 distances = pe.get_collection(pe.Collection.distances)
 print('Write {0} results to database.'.format(len(distances_list)))
 distances.insert_many(distances_list)
