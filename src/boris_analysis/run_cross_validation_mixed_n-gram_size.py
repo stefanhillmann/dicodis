@@ -189,13 +189,26 @@ if __name__ == '__main__':
     logging.info("Cross validation starts.")
 
     corpora = [
-        Corpora(cd.SUCCESSFUL, Class.POSITIVE, cd.NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, 'task success'),
-        Corpora(cd.USER_JUDGMENT_GOOD, Class.POSITIVE, cd.USER_JUDGMENT_BAD, Class.NEGATIVE, id_column_name, 'user judgement'),
-        Corpora(cd.SIMULATION_GOOD, Class.POSITIVE, cd.SIMULATION_BAD, Class.NEGATIVE, id_column_name, 'simulation quality'),
-        Corpora(cd.DIALOGUES_SHORT, Class.POSITIVE, cd.DIALOGUES_LONG, Class.NEGATIVE, id_column_name, 'dialogue length'),
-        Corpora(cd.WORD_ACCURACY_100, Class.POSITIVE, cd.WORD_ACCURACY_60, Class.NEGATIVE, id_column_name, 'word accuracy'),
-        Corpora(cd.SIMULATION_GOOD, Class.POSITIVE, cd.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
-        Corpora(cd.SIMULATION_BAD, Class.POSITIVE, cd.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. bad vs real')
+        Corpora(cd.SUCCESSFUL, Class.POSITIVE,
+                cd.NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, 'task success'),
+        Corpora(cd.USER_JUDGMENT_GOOD, Class.POSITIVE,
+                cd.USER_JUDGMENT_BAD, Class.NEGATIVE, id_column_name, 'user judgement'),
+        Corpora(cd.SIMULATION_GOOD, Class.POSITIVE,
+                cd.SIMULATION_BAD, Class.NEGATIVE, id_column_name, 'simulation quality'),
+        Corpora(cd.DIALOGUES_SHORT, Class.POSITIVE,
+                cd.DIALOGUES_LONG, Class.NEGATIVE, id_column_name, 'dialogue length'),
+        Corpora(cd.WORD_ACCURACY_100, Class.POSITIVE,
+                cd.WORD_ACCURACY_60, Class.NEGATIVE, id_column_name, 'word accuracy'),
+        Corpora(cd.SIMULATION_GOOD, Class.POSITIVE,
+                cd.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. good vs real'),
+        Corpora(cd.SIMULATION_BAD, Class.POSITIVE,
+                cd.REAL_USER, Class.NEGATIVE, id_column_name, 'sim. bad vs real'),
+        Corpora(cd.GOOD_SIMULATION_NOT_SUCCESSFUL, Class.POSITIVE,
+                cd.REAL_USER, Class.NEGATIVE, id_column_name, "sim. no succ. vs real"),
+        Corpora(cd.GOOD_SIMULATION_SUB_SET_SAMPLE, Class.POSITIVE,
+                cd.REAL_USER, Class.NEGATIVE, id_column_name, "sim. samp. vs real"),
+        Corpora(cd.GOOD_SIMULATION_SUB_SET_SAMPLE, Class.POSITIVE,
+                cd.GOOD_SIMULATION_NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, "sim. samp. vs sim. no succ."),
     ]
 
     validate(corpora)
