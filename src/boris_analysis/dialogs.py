@@ -6,6 +6,7 @@ Created on Thu Jun  6 15:59:01 2013
 """
 
 from common.dialog_document.document import Document
+from boris_analysis.corpora_names import CorpusData
 import common.util.persistence as persistence
 import configparser
 import pymongo
@@ -57,18 +58,31 @@ def create_dialogs_documents_from_database(corpus, class_name):
         raise TypeError("Parameter 'corpus' has to be 'CorpusData' but is '{0}'.".format(type(corpus)))
 
     iteration_ids = []
+    _corpus = None
     if corpus.is_static:
         iteration_ids = get_iteration_ids_for_static_corpus(corpus)
+        _corpus = corpus
     else:
         iteration_ids = get_iteration_ids_for_dynamic_corpus(corpus)
+        _corpus = get_static_base_corpus_for_dynamic_corpus(corpus)
 
-    return create_documents_by_iteration_ids(class_name, corpus, iteration_ids)
+    return create_documents_by_iteration_ids(class_name, _corpus, iteration_ids)
 
 
 def get_iteration_ids_for_static_corpus(corpus):
     dialogues = persistence.get_collection(persistence.Collection.dialogues)
     iteration_ids = dialogues.find({"corpus": corpus.name}).distinct("iteration")
     return iteration_ids
+
+
+def get_static_base_corpus_for_dynamic_corpus(dynamic_corpus):
+
+    if dynamic_corpus == cd.GOOD_SIMULATION_SUB_SET_SAMPLE\
+            or dynamic_corpus == cd.GOOD_SIMULATION_NOT_SUCCESSFUL\
+            or dynamic_corpus == cd.GOOD_SIMULATION_SUCCESSFUL:
+        return cd.SIMULATION_GOOD
+    else:
+        raise ValueError("Cannot determine base corpus for dynamic corpus '{0}'".format(str(dynamic_corpus)))
 
 
 def get_iteration_ids_for_dynamic_corpus(corpus_data):
@@ -122,12 +136,24 @@ def get_iteration_ids_for_good_simulation_sub_set_sample(corpus_data):
 
 
 def create_documents_by_iteration_ids(class_name, corpus, iteration_ids):
+
+    if type(corpus) != CorpusData:
+        raise TypeError("Parameter 'corpus' has to be from type CorpusData but is '{0}'".format(type(corpus)))
+
+    if len(iteration_ids) == 0:
+        raise ValueError("Cannot create documents for zero (0) iteration_ids, as the resulting dialogue document will"
+                         " have no content (turns).")
+
     dialogs_documents = []
     dialogues = persistence.get_collection(persistence.Collection.dialogues)
     for iteration in iteration_ids:
         # get dialogue turns in correct order
         dialogue_rows = dialogues.find({"corpus": corpus.name, "iteration": iteration}) \
             .sort('exchange_no', pymongo.ASCENDING)
+
+        if dialogue_rows.count() == 0:
+            raise ValueError("Found no content (turns) for dialogue with iteration = {0} in corpus {1}."
+                             .format(iteration, str(corpus)))
 
         dialog_document = create_dialog_document_from_database(dialogue_rows, class_name, corpus, iteration)
 

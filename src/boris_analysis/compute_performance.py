@@ -2,6 +2,7 @@ import configparser
 
 import numpy as np
 import pyRserve as pyr
+from pyRserve.rexceptions import REvalError
 
 import boris_analysis.cross_validation_configuration_manual as cvc
 import common.util.persistence as pe
@@ -35,13 +36,19 @@ def get_auc(data):
 
     rc.r.predictor = np.array(predictions)
     rc.r.response = np.array(true_classes)
-    rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
+    try:
+        rc.voidEval("roc <- roc(response = response, predictor = predictor, levels = levels)")
+    except REvalError as e:
+        print("Error while computing ROC with predictions: '{0}' and true_classes: '{1}. Will re-raise the error."
+              .format(str(predictions), str(true_classes)))
+        raise e
+
     auc = rc.eval("roc$auc")
 
     return auc[0]
 
 for cri in criteria:
-    print('Computing performance results for criteria {0}'.format(cri))
+    print("Computing performance results for criteria '{0}'.".format(cri))
     # collect performance results for each criteria and write them into the database
     performance_results = []
     for conf in configurations:
