@@ -7,6 +7,7 @@ import boris_analysis.corpora_names as cd
 from common.corpora_distance import distance as d
 from common.ngram import model_generator as mg
 from common.util.names import Class
+from boris_analysis import criteria
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -18,15 +19,16 @@ evaluation_id = config.get('cross_validation', 'evaluation_id')
 
 
 corpora_pairs = {
-    'success': (cd.SUCCESSFUL, cd.NOT_SUCCESSFUL),
-    'simulation_quality': (cd.SIMULATION_GOOD, cd.SIMULATION_BAD),
-    'dialogue_length': (cd.DIALOGUES_SHORT, cd.DIALOGUES_LONG),
-    'word_accuracy': (cd.WORD_ACCURACY_60, cd.WORD_ACCURACY_100),
-    'user_judgement': (cd.USER_JUDGMENT_GOOD, cd.USER_JUDGMENT_BAD),
-    'real_vs_worst_sim': (cd.REAL_USER, cd.SIMULATION_BAD),
-    'real_vs_best_sim': (cd.REAL_USER, cd.SIMULATION_GOOD),
-    'real_vs_sampled_best_sim': (cd.REAL_USER, cd.GOOD_SIMULATION_SUB_SET_SAMPLE),
-    'real_vs_best_sim_no_success': (cd.REAL_USER, cd.GOOD_SIMULATION_NOT_SUCCESSFUL)
+    criteria.TASK_SUCCESS: (cd.SUCCESSFUL, cd.NOT_SUCCESSFUL),
+    criteria.SIMULATION_QUALITY: (cd.SIMULATION_GOOD, cd.SIMULATION_BAD),
+    criteria.DIALOGUE_LENGTH: (cd.DIALOGUES_SHORT, cd.DIALOGUES_LONG),
+    criteria.DIALOGUE_LENGTH: (cd.WORD_ACCURACY_60, cd.WORD_ACCURACY_100),
+    criteria.USER_JUDGEMENT: (cd.USER_JUDGMENT_GOOD, cd.USER_JUDGMENT_BAD),
+    criteria.SIM_BAD_VS_REAL: (cd.REAL_USER, cd.SIMULATION_BAD),
+    criteria.SIM_GOOD_VS_REAL: (cd.REAL_USER, cd.SIMULATION_GOOD),
+    criteria.SIM_SAMPlED_VS_REAL: (cd.REAL_USER, cd.GOOD_SIMULATION_SUB_SET_SAMPLE),
+    criteria.SIM_NO_SUCCESS_VS_REAL: (cd.REAL_USER, cd.GOOD_SIMULATION_NOT_SUCCESSFUL),
+    criteria.SIM_SAMPLED_VS_SIM_NO_SUCCESS: (cd.GOOD_SIMULATION_SUB_SET_SAMPLE, cd.GOOD_SIMULATION_NOT_SUCCESSFUL)
 }
 
 configurations = cross_validation_configuration_manual.getConfigurations()
@@ -46,9 +48,9 @@ def generate_n_gram_model(dialog_list, n, threshold):
 
 
 distances_list = list()
-for data_set_name in corpora_pairs.keys():
-    print('Computing distances for {0}.'.format(data_set_name))
-    pair = corpora_pairs[data_set_name]
+for _criteria in corpora_pairs.keys():
+    print('Computing distances for {0}.'.format(_criteria.name))
+    pair = corpora_pairs[_criteria]
     c1_dialogs = read_dialogs(pair[0])
     c2_dialogs = read_dialogs(pair[1])
 
@@ -59,7 +61,7 @@ for data_set_name in corpora_pairs.keys():
         measure = d.get_distance_calculator(con.classifier)
         distance = measure.compute_distance(c1_model, c2_model, con.smoothing_value)
 
-        db_distance = {'data_set': data_set_name, 'distance': distance, 'evaluation_id': evaluation_id}
+        db_distance = {'criteria': _criteria.name, 'distance': distance, 'evaluation_id': evaluation_id}
         db_distance.update(con.__dict__)
         distances_list.append(db_distance)
 
