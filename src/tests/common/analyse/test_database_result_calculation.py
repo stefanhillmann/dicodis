@@ -1,5 +1,3 @@
-__author__ = 'Stefan Hillmann'
-
 import unittest
 from common.analyse.cross_validation import SingleTestResult
 
@@ -9,6 +7,7 @@ from common.classify.classifier import ClassificationResult
 from common.util.names import Class
 from common.util import persistence as pe
 from common.analyse import performance
+
 
 class TestDatabaseResultCalculation(unittest.TestCase):
 
@@ -30,12 +29,17 @@ class TestDatabaseResultCalculation(unittest.TestCase):
 
         self.host = 'localhost'
         self.port = 27017
-        self.database = 'UNITTEST_classification_cross_validation'
         self.evaluation_id = '1'
-        self.dbm = pe.DbManager(self.host, self.port, self.database)
-        self.db = self.dbm.get_connection()
-        self.db.performance.drop()
-        self.db.document_results.drop()
+        self.db_client = pe.DbClient(self.host, self.port)
+        pe.db_client = self.db_client
+        pe.current_database = pe.Database.unit_testing
+        self.coll_doc_result = pe.get_collection(pe.Collection.doc_result)
+        self.coll_doc_result.drop()
+        self.coll_performance = pe.get_collection(pe.Collection.performance)
+        self.coll_performance.drop()
+
+    def tearDown(self):
+        pe.close()
 
     def getHit(self):
         return SingleTestResult(self.document_pos, self.classifier_a, self.result_pos, self.n_gram_size)
@@ -48,11 +52,11 @@ class TestDatabaseResultCalculation(unittest.TestCase):
 
         pe.write_evaluation_results_to_database(self.evaluation_id, [sr], self.n_gram_size, self.classifier_a,
                                                 self.frequency_threshold, self.smoothing_vale,
-                                                self.criteria, self.host, self.port, self.database, 'document_results')
+                                                self.criteria)
 
         count = performance.get_db_true_positive_count(self.evaluation_id, self.classifier_a, self.frequency_threshold,
                                                        self.n_gram_size, self.smoothing_vale, self.criteria,
-                                                       self.db.document_results)
+                                                       self.coll_doc_result)
 
         self.assertEqual(count, 1)
 
@@ -61,11 +65,11 @@ class TestDatabaseResultCalculation(unittest.TestCase):
 
         pe.write_evaluation_results_to_database(self.evaluation_id, [sr], self.n_gram_size, self.classifier_a,
                                                 self.frequency_threshold, self.smoothing_vale,
-                                                self.criteria, self.host, self.port, self.database, 'document_results')
+                                                self.criteria)
 
         count = performance.get_db_false_negative_count(self.evaluation_id, self.classifier_a, self.frequency_threshold,
                                                         self.n_gram_size, self.smoothing_vale, self.criteria,
-                                                        self.db.document_results)
+                                                        self.coll_doc_result)
 
         self.assertEqual(count, 1)
 
@@ -74,11 +78,11 @@ class TestDatabaseResultCalculation(unittest.TestCase):
 
         pe.write_evaluation_results_to_database(self.evaluation_id, [sr], self.n_gram_size, self.classifier_a,
                                                 self.frequency_threshold, self.smoothing_vale,
-                                                self.criteria, self.host, self.port, self.database, 'document_results')
+                                                self.criteria)
 
         count = performance.get_db_false_positive_count(self.evaluation_id, self.classifier_a, self.frequency_threshold,
                                                         self.n_gram_size, self.smoothing_vale, self.criteria,
-                                                        self.db.document_results)
+                                                        self.coll_doc_result)
 
         self.assertEqual(count, 1)
 
@@ -87,10 +91,10 @@ class TestDatabaseResultCalculation(unittest.TestCase):
 
         pe.write_evaluation_results_to_database(self.evaluation_id, [sr], self.n_gram_size, self.classifier_a,
                                                 self.frequency_threshold, self.smoothing_vale,
-                                                self.criteria, self.host, self.port, self.database, 'document_results')
+                                                self.criteria)
 
         count = performance.get_db_true_negative_count(self.evaluation_id, self.classifier_a, self.frequency_threshold,
                                                        self.n_gram_size, self.smoothing_vale, self.criteria,
-                                                       self.db.document_results)
+                                                       self.coll_doc_result)
 
         self.assertEqual(count, 1)

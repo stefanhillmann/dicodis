@@ -2,6 +2,9 @@ import logging
 
 from common.measuring import measures
 from common.measuring.measures import MeasureName
+from common.ngram import model_generator as mg
+from common.ngram.n_gram_model import NGramModel
+from common.util import rank as rank_util
 
 
 class DistanceCalculator:
@@ -35,7 +38,7 @@ class DistanceCalculator:
         
         Parameter:
         ----------
-        n_gram_model: Dictionary
+        n_gram_model: NGramModel
             n-gram-model of the original/reference corpus.
         other_n_grams: array
             ALL n-grams (NOT just the unique ones) of a corpus. These n-grams are
@@ -44,6 +47,12 @@ class DistanceCalculator:
         l: float
             Smoothing factor lambda.
         """
+
+        if type(n_gram_model) is not NGramModel:
+            raise ValueError('Type of parameter n_gram_model is not NGramModel.')
+
+        if type(n_gram_model) is not NGramModel:
+            raise ValueError('Type of parameter other_model is not NGramModel.')
         
         # compute distance between n_gram_model and other_model
         distance = self.measure.distance(n_gram_model, other_model, l)
@@ -56,23 +65,34 @@ class DistanceCalculator:
 Factory methods for Classifiers using different measurements
 """
 
+
 def get_cosine_calculator():
     return DistanceCalculator(measures.CosineMeasure(), MeasureName.COSINE)
+
 
 def get_kullback_leibler_calculator():
     return DistanceCalculator(measures.KullbackLeiblerMeasure(), MeasureName.KULLBACK_LEIBLER)
 
+
 def get_mean_kullback_leibler_calculator():
     return DistanceCalculator(measures.MeanKullbackLeiblerMeasure(), MeasureName.MEAN_KULLBACK_LEIBLER)
+
 
 def get_symmetric_kullback_leibler_calculator():
     return DistanceCalculator(measures.SymmetricKullbackLeiblerDistance(), MeasureName.SYMMETRIC_KULLBACK_LEIBLER)
 
+
 def get_jensen_calculator():
     return DistanceCalculator(measures.JensenMeasure(), MeasureName.JENSEN)
 
+
 def get_rank_order_calculator():
     return DistanceCalculator(measures.RankOrderDistanceMeasure(), MeasureName.RANK_ORDER)
+
+
+def get_normalized_rank_order_calculator():
+    return DistanceCalculator(measures.NormalizedRankOrderDistanceMeasure(), MeasureName.NORMALIZED_RANK_ORDER)
+
 
 def get_distance_calculator(measure_name):
     """
@@ -99,12 +119,14 @@ def get_distance_calculator(measure_name):
         created_calculator = get_jensen_calculator()
     elif measure_name == MeasureName.RANK_ORDER:
         created_calculator = get_rank_order_calculator()
+    elif measure_name == MeasureName.NORMALIZED_RANK_ORDER:
+        created_calculator = get_normalized_rank_order_calculator()
     else:
         """
         We return nothing, and the following code will crash, when trying to to do something
         with a not existing classifier 
         """
-        print 'Unknown classifier was requested. Empty string will be returned'
+        raise ValueError("Unknown measure name '{0}. Cannot create distance calculator.".format(measure_name))
         
     return created_calculator
 
@@ -118,8 +140,8 @@ def rank_order_normalized_distance(p, q, distance_p_q):
     p_r = mg.create_rank_model(p)  # rank model of p
     q_r = mg.create_rank_model(q)  # rank model of q
 
-    min_rank = ru.min_rank([p_r.values(), q_r.values()])  # get minimum rank from both models (probably always 1)
-    max_rank = ru.max_rank([p_r.values(), q_r.values()])  # get the maximum rank from both models
+    min_rank = rank_util.min_rank([p_r.values(), q_r.values()])  # get minimum rank from both models (probably always 1)
+    max_rank = rank_util.max_rank([p_r.values(), q_r.values()])  # get the maximum rank from both models
 
     default_distance = max_rank + min_rank + 1  # distance for an n-gram which is contained by only one model (p or q)
 

@@ -143,25 +143,29 @@ Creating test data.
 
 def get_test_probabilities_vector_r(l):
     v = get_test_frequencies_vector_r()
-    p = smoothing.compute_probabilities(v, l)
+    p_dict = smoothing.compute_probabilities(v, l)
+    p = np.array(list(map(lambda x: p_dict[x], v)))
     return p
 
 
 def get_test_probabilities_vector_m(l):
     v = get_test_frequencies_vector_m()
-    m = smoothing.compute_probabilities(v, l)
+    m_dict = smoothing.compute_probabilities(v, l)
+    m = np.array(list(map(lambda x: m_dict[x], v)))
     return m
 
 
 def get_test_probabilities_vector_p(l):
     v = get_test_frequencies_vector_p()
-    p = smoothing.compute_probabilities(v, l)
+    p_dict = smoothing.compute_probabilities(v, l)
+    p = np.array(list(map(lambda x: p_dict[x], v)))
     return p
 
 
 def get_test_probabilities_vector_q(l):
     v = get_test_frequencies_vector_q()
-    q = smoothing.compute_probabilities(v, l)
+    q_dict = smoothing.compute_probabilities(v, l)
+    q = np.array(list(map(lambda x: q_dict[x], v)))
     return q
     
 

@@ -50,9 +50,9 @@ class TestSmoothing(unittest.TestCase):
         a = 1. / 19.
         b = 2. / 19.
         frequencies             = np.array([1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
-        reference_probabilities = np.array([a, a, a, a, a, b, b, a, a, a, a, a, a, a, a, a, a], dtype=float)
         l = 0.0
 
-        probabilities = smoothing.compute_probabilities(frequencies, l)
+        smoothed_probabilities = smoothing.compute_probabilities(frequencies, l)
 
-        self.assertTrue(np.array_equal(reference_probabilities, probabilities))
+        self.assertEqual(smoothed_probabilities[1], a)
+        self.assertEqual(smoothed_probabilities[2], b)

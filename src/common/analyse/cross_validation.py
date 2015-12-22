@@ -7,11 +7,13 @@ Created on Tue Jun 18 14:34:56 2013
 
 import logging
 
-import common.util.list as lu
-import common.ngram.model_generator as mg
+from pandas import Series
+
+import common.analyse.roc as roc
 import common.classify.classifier as classifier
+import common.ngram.model_generator as mg
+import common.util.list as lu
 from common.util.names import Class
-import roc
 
 
 
@@ -104,7 +106,8 @@ class FoldValidator:
             self.logger.info('Train class %s in classifier %s with %s documents', class_name, self.classifier.name, len(class_documents))
 
             # ... create the n-grams for training
-            class_n_grams = mg.create_n_grams_from_document_list(class_documents, n)
+            # class_n_grams = mg.create_n_grams_from_document_list(class_documents, n)
+            class_n_grams = mg.get_n_grams_from_database_for_documents(class_documents, n)
             self.classifier.add_class(class_name, class_n_grams, frequency_threshold)
 
     def test_classifier(self):
@@ -112,10 +115,21 @@ class FoldValidator:
         Classify each document in test_set and returns the single results.
         """
         self.logger.debug('Test classifier %s by classifying %s dialogs.', self.classifier.name, len(self.test_set))
+        # TODO: Should the classifier be tested with each single document, or with a corpus of all test documents?
         for document in self.test_set:
-            n_grams = mg.create_n_grams_from_document(document, self.n)
+            # TODO: remove timing
+            # print("Test with document: {0}".format(document.dialog_id))
 
+            # start_ngraming = time.time()
+            n_grams = mg.get_n_grams_from_database_for_single_document(document, self.n)
+            # end_ngraming = time.time()
+            # print("Ngraming lasts {0} seconds".format(end_ngraming - start_ngraming))
+
+            # start_classification = time.time()
             classification_result = self.classifier.classify(n_grams)
+            # end_classification = time.time()
+            # print("Classification lasts {0} seconds".format(end_classification - start_classification))
+
             self.logger.debug("testClassifier(): Calculated class = %s - Actual class: %s.",
                               classification_result.estimated_class, document.true_class)
 
@@ -256,10 +270,10 @@ class ResultAssessor:
         # collect input data for roc points calculation
         ids = list()
         probabilities = dict()
-        true_classes = dict()
+        true_classes = Series()
 
         for result in self.data:
-            id = result.document.dialog_id
+            id = str(result.document.dialog_id)
             ids.append(id)
             probabilities[id] = result.classification_result.positive_class_distance
             true_classes[id] = result.true_class

@@ -1,23 +1,13 @@
-__author__ = 'stefan'
-
 import common.util.persistence as pe
-import ConfigParser
+import configparser
 import pyRserve as pyr
 import numpy as np
 
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-
-
-dbm = pe.DbManager(host, port, database)
-db = dbm.get_connection()
-
-results = db[config.get('database', 'doc_result_collection')]
+results = pe.get_collection(pe.Collection.doc_result)
 
 # , 'positive_class_distance:': {'$gt': 0.8}
 
@@ -49,5 +39,6 @@ auc = rc.eval("roc$auc")
 print(auc)
 
 rc.close()
+pe.close()
 
 

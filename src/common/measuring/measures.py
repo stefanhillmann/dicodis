@@ -4,13 +4,14 @@ Created on Wed Jun  5 17:19:42 2013
 
 @author: Stefan Hillmann (stefan.hillmann@tu-berlin.de)
 """
-import numpy as np
-from math import sqrt
 import logging
 from abc import ABCMeta, abstractmethod
-from common.util import dict as du
-from common.ngram import model_generator as mg
+from math import sqrt
 
+import numpy as np
+
+from common.ngram import model_generator as mg
+from common.ngram.n_gram_model import NGramModel
 
 module_logger = logging.getLogger('measures')
 
@@ -80,8 +81,8 @@ def jensen_distance(p, q):
     """
     module_logger.debug('Computing jensen for p = %s and q = %s', p, q)
     
-    _p = np.array(p)
-    _q = np.array(q)
+    _p = p
+    _q = q
         
     s = _p * np.log(_p)
     t = _q * np.log(_q)
@@ -97,33 +98,61 @@ def rank_order_distance(x, y):
     Computes the Rank Order Distance between the rank models x and y.
     x and y have to contain n-grams and their related ranks (which are usually
     not equal to the frequency of the n-grams!).
+    :param x: pandas.Series with n-grams and their ranks
+    :param y:pandas.Series with n-grams and their ranks
+    :return: Distance between x and y as numeric value.
     """
     module_logger.debug('Computing rank order distance for x = %s and y = %s', x, y)
 
     distance = 0
-    min_rank = min(min(x.values()), min(y.values()))  # get minimum rank from both models (probably always 1)
-    max_rank = max(max(x.values()), max(y.values()))  # get the maximum rank from both models
+    default_difference = get_rank_order_default_distance(x, y)
 
+    # collect all unique n_grams
+    # n_grams = set()
+    # n_grams.update(list(x.index))
+    # n_grams.update(list(y.index))
+
+    set_x = set(x.index)
+    set_y = set(y.index)
+    in_both_models = list(set_x.intersection(set_y))
+    in_just_one_model = list(set_x.symmetric_difference(set_y))
+
+    # compute for each n-gram the rank difference between both models
+    # for each n-gram in both models compute the individual distance
+    for n_gram in in_both_models:
+        difference = abs(x[n_gram] - y[n_gram])  # compute the difference
+        distance += difference  # add n-gram difference to total distance
+
+    # for each n-gram which is only in one of the models, use the default difference
+    distance += default_difference * len(in_just_one_model)
+
+    return distance
+
+
+def normalized_rank_order_distance(x, y):
+    """
+    Computes the normalized Rank Order Distance between the rank models x and y.
+    x and y have to contain n-grams and their related ranks (which are usually
+    not equal to the frequency of the n-grams!).
+    :param x: pandas.Series with n-grams and their ranks
+    :param y:pandas.Series with n-grams and their ranks
+    :return: Distance between x and y as numeric value.
+    """
+    rank_order_dist = rank_order_distance(x, y)
+    default_distance = get_rank_order_default_distance(x, y)
+    # maximum possible distance between p and q (all n-grams are only part of either p or q)
+    max_distance = (len(x) + len(y)) * default_distance
+
+    return rank_order_dist / max_distance
+
+
+def get_rank_order_default_distance(x, y):
+    min_rank = min(x.min(), y.min())  # get minimum rank from both models (probably always 1)
+    max_rank = max(x.max(), y.max())  # get the maximum rank from both models
     # The default difference is used, if a n-gram is only part of one list.
     # The default distance should be greater than any other distance. -> +1
     default_difference = max_rank - min_rank + 1
-
-    # collect all unique n_grams
-    n_grams = set()
-    n_grams.update(x.keys())
-    n_grams.update(y.keys())
-
-    # compute for each n-gram the rank difference between both models
-    # if a n-gram is contained in only on model, then use the default difference
-    for n_gram in n_grams:
-        difference = default_difference
-
-        if n_gram in x and n_gram in y:
-            difference = abs(x[n_gram] - y[n_gram])  # compute the difference
-
-        distance += difference  # add n-gram difference to total distance
-
-    return distance
+    return default_difference
 
 
 """
@@ -146,17 +175,30 @@ def prepare_for_probability_based_measure(x, y, l):
     :return: nothing, but *x* and *y* are changed in place. *x* and *y* contain relative probabilities when the method
     returns.
     """
+    # TODO: remove timing
     # both models need to have same length
+    # start_sync = time.time()
     mg.synchronize_n_grams(x, y)
+    # end_sync = time.time()
+    # print("Syncing lasts {0} seconds.".format(end_sync - start_sync))
 
     # sort both models by their n-grams
-    du.sort_by_key(x)
-    du.sort_by_key(y)
+    # start_sort = time.time()
+    x.sort_by_n_grams()
+    y.sort_by_n_grams()
+    # end_sort = time.time()
+    # print("Sortimg modles lasts {0} seconds.".format(end_sort - start_sort))
+
+    # TODO: Remove?
+    # du.sort_by_key(x)
+    # du.sort_by_key(y)
 
     # compute relative probabilities (depending on *l*, smoothing is either performed or not performed)
+    # start_probs = time.time()
     mg.compute_probabilities(x, l)
     mg.compute_probabilities(y, l)
-
+    # end_probs = time.time()
+    # print("Probability computation lasts {0} seconds.".format(end_probs - start_probs))
 
 
 class Measure:
@@ -164,8 +206,13 @@ class Measure:
 
     @abstractmethod
     def distance(self, x, y, l):
-        print 'Has to be implemented by sub classes.'
+        print('Has to be implemented by sub classes.')
         pass
+
+    @staticmethod
+    def check_model_type(model):
+        if type(model) != NGramModel:
+            raise TypeError("model must be NGramModel but is {0}.".format(type(model)))
 
 
 class CosineMeasure(Measure):
@@ -182,11 +229,25 @@ class CosineMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
+        # TODO: remove timing
+        # start_copy = time.time()
         _x = x.copy()
         _y = y.copy()
-        prepare_for_probability_based_measure(_x, _y, l)
+        # end_copy = time.time()
+        # print("Copying lasts {0} seconds.".format(end_copy - start_copy))
 
-        similarity = cosine_similarity(_x.values(), _y.values())
+        # start_prep = time.time()
+        prepare_for_probability_based_measure(_x, _y, l)
+        # end_prep = time.time()
+        # print("Preparation lasts {0} seconds.".format(end_prep - start_prep))
+
+        # start_sim = time.time()
+        similarity = cosine_similarity(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
+        # end_sim = time.time()
+        # print("Similarity computation lasts {0} seconds".format(end_sim - start_sim))
         
         """
         In order to get the distance we subtract the similarity from 1.
@@ -209,10 +270,13 @@ class KullbackLeiblerMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        divergence = kullback_leibler_divergence(_x.values(), _y.values())
+        divergence = kullback_leibler_divergence(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return divergence
 
 class MeanKullbackLeiblerMeasure(Measure):
@@ -232,11 +296,15 @@ class MeanKullbackLeiblerMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = mean_kullback_leibler_distance(_x.values(), _y.values())
+        distance = mean_kullback_leibler_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
+
 
 class SymmetricKullbackLeiblerDistance(Measure):
     def distance(self, x, y, l):
@@ -253,10 +321,13 @@ class SymmetricKullbackLeiblerDistance(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = symmetric_kullback_leibler_distance(_y.values(), _y.values())
+        distance = symmetric_kullback_leibler_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
 
 class JensenMeasure(Measure):
@@ -271,11 +342,15 @@ class JensenMeasure(Measure):
         :param l: smoothing factor (lambda). I *l* == 0, smoothing is _not_ executed.
         :return: a float value between 0 and 1.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         _x = x.copy()
         _y = y.copy()
         prepare_for_probability_based_measure(_x, _y, l)
-        distance = jensen_distance(_x.values(), _y.values())
+        distance = jensen_distance(_x.get_frequencies_as_array(), _y.get_frequencies_as_array())
         return distance
+
 
 class RankOrderDistanceMeasure(Measure):
     def distance(self, x, y, l):
@@ -287,11 +362,35 @@ class RankOrderDistanceMeasure(Measure):
         :param l: _not used_ in the rank order algorithm, but defined by the interface.
         :return: an integer value between 0 (no difference) and any integer value greater than 0.
         """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
         x_rank_model = mg.create_rank_model(x)
         y_rank_model = mg.create_rank_model(y)
 
         distance = rank_order_distance(x_rank_model, y_rank_model)
         return distance
+
+
+class NormalizedRankOrderDistanceMeasure(Measure):
+    def distance(self, x, y, l):
+        """
+        Computes the _rank order distance_ between *x* and *y*. The computed distance ranges from 0 (no distance)
+        til any value less than infinite. As greater the value, as higher the distance.
+        :param x: n-grm model (dict) with absolute frequencies
+        :param y: n-gram model (dict) with absolute frequencies
+        :param l: _not used_ in the rank order algorithm, but defined by the interface.
+        :return: an integer value between 0 (no difference) and any integer value greater than 0.
+        """
+        Measure.check_model_type(x)
+        Measure.check_model_type(y)
+
+        x_rank_model = mg.create_rank_model(x)
+        y_rank_model = mg.create_rank_model(y)
+
+        distance = normalized_rank_order_distance(x_rank_model, y_rank_model)
+        return distance
+
 
 class MeasureName:
     COSINE                      = 'cosine'
@@ -300,5 +399,6 @@ class MeasureName:
     SYMMETRIC_KULLBACK_LEIBLER  = 'symmetric kullback leibler'
     JENSEN                      = 'jensen'
     RANK_ORDER                  = 'rank order'
+    NORMALIZED_RANK_ORDER       = 'norm. rank order'
 
 

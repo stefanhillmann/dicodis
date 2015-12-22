@@ -1,22 +1,13 @@
-__author__ = 'stefan'
+import configparser
 
-import common.util.persistence as pe
 from common.analyse import roc
+from common.util import persistence
 from common.util.names import Class
-import ConfigParser
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('local_config.ini')
 
-host = config.get('database', 'host')
-port = config.getint('database', 'port')
-database = config.get('database', 'db_name')
-
-
-dbm = pe.DbManager(host, port, database)
-db = dbm.get_connection()
-
-results = db[config.get('database', 'doc_result_collection')]
+coll_doc_results = persistence.get_collection(persistence.Collection.doc_result)
 
 # , 'positive_class_distance:': {'$gt': 0.8}
 
@@ -31,7 +22,7 @@ example_ids = list()
 positive_probability_dict = dict()
 true_class_dict = dict()
 
-query_results = results.find(query)
+query_results = coll_doc_results.find(query)
 print(query_results.count())
 for cursor in query_results:
     id = cursor['document_id']
@@ -44,9 +35,7 @@ plt = roc.create_plot(roc_points)
 plt.show()
 
 
-
-
-dbm.close()
+persistence.close()
 
 
 
