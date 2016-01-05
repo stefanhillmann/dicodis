@@ -1,4 +1,0 @@
-Criteria,Classifier,n,Freq. Threshold,TP,FP,TN,FN,Recall,Precision,F-Measure
-task_success,cosine,1,1,63.0,38.0,35.0,60.0,0.512195121951,0.623762376238,0.5625
-length_of_interaction,cosine,1,1,48.0,23.0,27.0,1.0,0.979591836735,0.676056338028,0.8
-word_accuracy,cosine,1,1,7.0,20.0,79.0,10.0,0.411764705882,0.259259259259,0.318181818182

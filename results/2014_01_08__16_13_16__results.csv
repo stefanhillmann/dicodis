@@ -1,4 +1,0 @@
-Criteria;Classifier;n;Freq. Threshold;TP;FP;TN;FN;Recall;Precision;F-Measure
-task_success;kullback leibler;1;1;55.0;20.0;53.0;68.0;0.447154471545;0.733333333333;0.555555555556
-task_success;kullback leibler;2;1;39.0;15.0;58.0;84.0;0.317073170732;0.722222222222;0.440677966102
-task_success;kullback leibler;3;1;31.0;14.0;59.0;92.0;0.252032520325;0.688888888889;0.369047619048

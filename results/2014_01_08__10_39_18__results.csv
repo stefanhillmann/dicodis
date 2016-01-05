@@ -1,4 +1,0 @@
-Criteria;Classifier;n;Freq. Threshold;TP;FP;TN;FN;Recall;Precision;F-Measure
-task_success;cosine;1;1;57.0;27.0;46.0;66.0;0.463414634146;0.678571428571;0.550724637681
-task_success;cosine;2;1;33.0;13.0;60.0;90.0;0.268292682927;0.717391304348;0.390532544379
-task_success;cosine;3;1;16.0;2.0;71.0;107.0;0.130081300813;0.888888888889;0.22695035461

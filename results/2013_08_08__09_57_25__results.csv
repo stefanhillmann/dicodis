@@ -1,4 +1,0 @@
-Criteria,Classifier,n,TP,FP,TN,FN,Recall,Precision,F-Measure
-task_success,cosine,1,78,49,24,45,0,0,0
-length_of_interaction,cosine,1,49,18,32,0,1,0,0
-word_accuracy,cosine,1,11,71,28,6,0,0,0
