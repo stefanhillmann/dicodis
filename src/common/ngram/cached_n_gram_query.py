@@ -54,6 +54,8 @@ def get_n_grams_from_database(document_id, sizes):
     # copy query result into list
     n_grams = list()
     for cursor in db_n_grams:
-        n_grams.append(cursor['n_gram'])
+        n_gram = cursor["freq"]
+        freq = cursor["freq"]
+        n_grams.extend([n_gram] * freq)
 
     return n_grams
