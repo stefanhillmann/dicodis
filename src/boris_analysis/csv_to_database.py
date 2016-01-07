@@ -99,6 +99,10 @@ def add_task_success_simulations(corpus):
 
     data_file.close()
 
+# create unique index for corpus, iteration and exchange_no in order to prevent
+# multiple insertions of the same dialogue
+coll_dialogues.create_index([("corpus", pymongo.ASCENDING), ("iteration", pymongo.ASCENDING),
+                             ("exchange_no", pymongo.ASCENDING)], unique=True)
 
 for corpus in corpora_files.keys():
     print("Corpus: " + str(corpus))
