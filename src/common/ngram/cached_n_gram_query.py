@@ -47,14 +47,13 @@ def get_n_grams_from_database(document_id, sizes):
 
     # get n-grams for each n-gram size and the current document
     # Hint: currently we use the precomputed n-grams from the database.
-    # As all post-processing is done by the classifier, we get the n-grams for frequency threshold == 1.
-    query = {'document_id': document_id, 'n': {'$in': list(sizes)}, 'f_min': 1}
+    query = {'document_id': document_id, 'n': {'$in': list(sizes)}}
     db_n_grams = coll_n_grams.find(query)
 
     # copy query result into list
     n_grams = list()
     for cursor in db_n_grams:
-        n_gram = cursor["freq"]
+        n_gram = cursor["n_gram"]
         freq = cursor["freq"]
         n_grams.extend([n_gram] * freq)
 
