@@ -207,7 +207,7 @@ if __name__ == '__main__':
         Corpora(cd.GOOD_SIMULATION_NOT_SUCCESSFUL, Class.POSITIVE,
                 cd.REAL_USER, Class.NEGATIVE, id_column_name, criteria.SIM_NO_SUCCESS_VS_REAL.name),
         Corpora(cd.GOOD_SIMULATION_SUB_SET_SAMPLE, Class.POSITIVE,
-                cd.REAL_USER, Class.NEGATIVE, id_column_name, criteria.SIM_SAMPlED_VS_REAL),
+                cd.REAL_USER, Class.NEGATIVE, id_column_name, criteria.SIM_SAMPlED_VS_REAL.name),
         Corpora(cd.GOOD_SIMULATION_SUB_SET_SAMPLE, Class.POSITIVE,
                 cd.GOOD_SIMULATION_NOT_SUCCESSFUL, Class.NEGATIVE, id_column_name, criteria.SIM_SAMPLED_VS_SIM_NO_SUCCESS.name),
     ]
