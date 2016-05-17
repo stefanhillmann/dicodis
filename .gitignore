@@ -3,5 +3,6 @@
 *.log
 *.synctex.gz
 src/boris_analysis/local_config.ini
+src/tests/boris_analysis/.cache
 .idea
 *.Rhistory
